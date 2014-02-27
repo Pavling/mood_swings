@@ -3,7 +3,7 @@ class CreateAnswers < ActiveRecord::Migration
     create_table :answers do |t|
       t.references :answer_set
       t.references :metric
-      t.string :value
+      t.integer :value
       t.text :comments
 
       t.timestamps

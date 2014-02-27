@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(:version => 20140227134345) do
   create_table "answers", :force => true do |t|
     t.integer  "answer_set_id"
     t.integer  "metric_id"
-    t.string   "value"
+    t.integer  "value"
     t.text     "comments"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false

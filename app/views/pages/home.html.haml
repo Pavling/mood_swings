@@ -5,4 +5,18 @@
   = link_to 'sign in', new_user_session_path unless signed_in?
   - if signed_in?
     hey, moody
+    =link_to 'sign out', destroy_user_session_path, method: :delete
 
+
+- if signed_in?
+  =form_for @answer_set do |f|
+    =f.fields_for :answers do |m|
+      .answer
+        =m.hidden_field :metric_id
+        =m.label :value, m.object.metric.measure
+        =m.collection_select :value, (1..5), :to_s, :to_i
+        =m.text_field :comments
+    =f.submit
+
+
+  

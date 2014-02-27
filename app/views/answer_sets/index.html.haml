@@ -1,0 +1,25 @@
+%h1 Listing answer_sets
+
+%table
+  %tr
+    %th User
+    %th Answers
+    %th
+    %th
+    %th
+
+  - @answer_sets.each do |answer_set|
+    %tr
+      %td= answer_set.user.email
+      %td
+        -answer_set.answers.each do |answer|
+          =answer.value
+          =answer.metric.measure
+          %br
+      %td= link_to 'Show', answer_set
+      %td= link_to 'Edit', edit_answer_set_path(answer_set)
+      %td= link_to 'Destroy', answer_set, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Answer set', new_answer_set_path
