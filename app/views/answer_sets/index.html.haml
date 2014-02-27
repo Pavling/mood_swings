@@ -15,6 +15,7 @@
         -answer_set.answers.each do |answer|
           =answer.value
           =answer.metric.measure
+          =answer.comments
           %br
       %td= link_to 'Show', answer_set
       %td= link_to 'Edit', edit_answer_set_path(answer_set)

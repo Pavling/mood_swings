@@ -11,3 +11,17 @@
  *= require_self
  *= require_tree .
  */
+
+.answer {
+  float: left;
+}
+
+.answer li {
+  list-style: none;
+}
+
+
+#new_answer_set .submit_button {
+  float: left;
+  clear: both;
+}
