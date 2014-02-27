@@ -1,6 +1,16 @@
-%p#notice= notice
+Email
+= @answer_set.user.email
+
+%h2 Answers
+-@answer_set.answers.each do |answer|
+  =answer.value
+  =answer.metric.measure
+  =answer.comments
+  %br
 
 
 = link_to 'Edit', edit_answer_set_path(@answer_set)
 \|
 = link_to 'Back', answer_sets_path
+\|
+= link_to 'Destroy', answer_set, :method => :delete, :data => { :confirm => 'Are you sure?' }

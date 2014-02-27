@@ -14,6 +14,27 @@ class AnswerSet < ActiveRecord::Base
     answer_set
   end
 
+  def chart_data
+    data = { timestamp: created_at.strftime('%Y-%m-%d %H:%M:%S') }
+    answers.each do |answer|
+      data["#{user.id}##{answer.metric.id}"] = answer.value
+    end
+    data
+  end
+
+
+  def chart_data_label_keys
+    answers.map do |answer|
+      # '"' + user.id.to_s + '#' + answer.metric.id.to_s + '"'
+      user.id.to_s + '#' + answer.metric.id.to_s
+    end
+  end
+
+  private
+  def chart_color
+    @chart_colour ||= "%06x" % (rand * 0xffffff)
+  end
+
   private
   def self.from_last_set_for(user)
     answer_set = populated_with_answers

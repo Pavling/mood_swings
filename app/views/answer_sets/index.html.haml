@@ -1,26 +1,21 @@
-%h1 Listing answer_sets
+%h1 Listing Answer Sets
 
-%table
-  %tr
-    %th User
-    %th Answers
-    %th
-    %th
-    %th
+#myChart{height: 400 }
 
-  - @answer_sets.each do |answer_set|
-    %tr
-      %td= answer_set.user.email
-      %td
-        -answer_set.answers.each do |answer|
-          =answer.value
-          =answer.metric.measure
-          =answer.comments
-          %br
-      %td= link_to 'Show', answer_set
-      %td= link_to 'Edit', edit_answer_set_path(answer_set)
-      %td= link_to 'Destroy', answer_set, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
-%br
-
-= link_to 'New Answer set', new_answer_set_path
+:javascript
+  new Morris.Line({
+    // ID of the element in which to draw the chart.
+    element: 'myChart',
+    // Chart data records -- each entry in this array corresponds to a point on
+    // the chart.
+    data: #{@answer_sets.map(&:chart_data).to_json}
+    ,
+    // The name of the data record attribute that contains x-values.
+    xkey: 'timestamp',
+    // A list of names of data record attributes that contain y-values.
+    ykeys: #{@answer_sets.map(&:chart_data_label_keys).flatten.uniq.to_json},
+    // Labels for the ykeys -- will be displayed when you hover over the
+    // chart.
+    // labels: ['Value']
+  });
