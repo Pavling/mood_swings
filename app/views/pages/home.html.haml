@@ -1,2 +1,8 @@
 %h1
   Welcome to the Machine
+
+%p
+  = link_to 'sign in', new_user_session_path unless signed_in?
+  - if signed_in?
+    hey, moody
+
