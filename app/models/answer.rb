@@ -4,4 +4,7 @@ class Answer < ActiveRecord::Base
   attr_accessible :comments, :value
 
   validates :value, inclusion: (1..5)
+  validates :metric_id, uniqueness: {scope: :answer_set_id}
+  validates :metric_id, presence: true
+
 end
