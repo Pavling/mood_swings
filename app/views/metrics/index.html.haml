@@ -1,0 +1,21 @@
+%h1 Listing metrics
+
+%table
+  %tr
+    %th Measure
+    %th Active
+    %th
+    %th
+    %th
+
+  - @metrics.each do |metric|
+    %tr
+      %td= metric.measure
+      %td= metric.active
+      %td= link_to 'Show', metric
+      %td= link_to 'Edit', edit_metric_path(metric)
+      %td= link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Metric', new_metric_path

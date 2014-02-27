@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Measure:
+  = @metric.measure
+%p
+  %b Active:
+  = @metric.active
+
+= link_to 'Edit', edit_metric_path(@metric)
+\|
+= link_to 'Back', metrics_path

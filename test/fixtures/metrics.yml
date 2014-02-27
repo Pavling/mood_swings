@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  measure: MyString
+  active: false
+
+two:
+  measure: MyString
+  active: false
