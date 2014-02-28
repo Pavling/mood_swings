@@ -1,4 +1,6 @@
 class MetricsController < ApplicationController
+  load_and_authorize_resource
+  
   # GET /metrics
   # GET /metrics.json
   def index

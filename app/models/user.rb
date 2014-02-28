@@ -10,4 +10,9 @@ class User < ActiveRecord::Base
 
   has_many :answer_sets
   has_many :answers, through: :answer_sets
+  
+
+  def admin?
+    role == 'admin'
+  end
 end

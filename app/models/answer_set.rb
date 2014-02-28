@@ -8,7 +8,7 @@ class AnswerSet < ActiveRecord::Base
 
   def self.populated_with_answers
     answer_set = new
-    Metric.all.each do |metric|
+    Metric.active.each do |metric|
       answer_set.answers.build(metric_id: metric.id)
     end
     answer_set

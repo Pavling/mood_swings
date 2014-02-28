@@ -1,4 +1,6 @@
 class AnswerSetsController < ApplicationController
+  load_and_authorize_resource
+
   # GET /answer_sets
   # GET /answer_sets.json
   def index
@@ -48,7 +50,7 @@ class AnswerSetsController < ApplicationController
         format.html { redirect_to home_path, notice: 'Answer set was successfully created.' }
         format.json { render json: @answer_set, status: :created, location: @answer_set }
       else
-        format.html { render action: "new" }
+        format.html { render "pages/home" }
         format.json { render json: @answer_set.errors, status: :unprocessable_entity }
       end
     end

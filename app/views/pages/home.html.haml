@@ -6,21 +6,9 @@
   - if signed_in?
     hey, moody
     =link_to 'sign out', destroy_user_session_path, method: :delete
-
+    =link_to 'historic moods', answer_sets_path
 
 - if signed_in?
-  =form_for @answer_set do |f|
-    =f.fields_for :answers do |m|
-      .answer
-        =m.hidden_field :metric_id
-        %ul
-          %li
-            =m.label :value, m.object.metric.measure
-          %li
-            =m.text_field :value, class: :knob, data: m.object.knob_data
-          %li
-            =m.text_field :comments
-    =f.submit 'share mood', class: :submit_button
-
+  =render partial: 'answer_sets/form'
 
   
