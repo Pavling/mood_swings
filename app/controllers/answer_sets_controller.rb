@@ -10,6 +10,13 @@ class AnswerSetsController < ApplicationController
       @answer_sets = current_user.answer_sets
     end
 
+    @answer_sets = case params[:group].to_s.downcase
+    when 'person'
+      
+    else
+      @answer_sets
+    end
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @answer_sets }

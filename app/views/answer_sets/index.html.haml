@@ -1,21 +1,10 @@
+- content_for :header do
+  = javascript_include_tag 'answer_set_index'
+
 %h1 Listing Answer Sets
 
 #myChart{height: 400 }
+-data = @answer_sets.map(&:chart_data).to_json#.gsub('"', "'").gsub("'timestamp'", 'timestamp').html_safe
+-keys = @answer_sets.map(&:chart_data_label_keys).flatten.uniq#.to_json.gsub('"', "'").gsub('"timestamp"', 'timestamp').html_safe
 
-
-:javascript
-  new Morris.Line({
-    // ID of the element in which to draw the chart.
-    element: 'myChart',
-    // Chart data records -- each entry in this array corresponds to a point on
-    // the chart.
-    data: #{@answer_sets.map(&:chart_data).to_json}
-    ,
-    // The name of the data record attribute that contains x-values.
-    xkey: 'timestamp',
-    // A list of names of data record attributes that contain y-values.
-    ykeys: #{@answer_sets.map(&:chart_data_label_keys).flatten.uniq.to_json},
-    // Labels for the ykeys -- will be displayed when you hover over the
-    // chart.
-    // labels: ['Value']
-  });
+=content_tag :div, "", id: "line-chart", data: {data: data, keys: keys}

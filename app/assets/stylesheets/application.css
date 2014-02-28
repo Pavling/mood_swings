@@ -9,7 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree .
+ *= require_tree
  */
 
 .answer {
@@ -18,8 +18,12 @@
 
 .answer li {
   list-style: none;
+  text-align: center;
 }
 
+.answer li.label {
+  padding-bottom: 5px;
+}
 
 #new_answer_set .submit_button {
   float: left;
