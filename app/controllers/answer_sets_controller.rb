@@ -4,7 +4,11 @@ class AnswerSetsController < ApplicationController
   # GET /answer_sets
   # GET /answer_sets.json
   def index
-    @answer_sets = AnswerSet.all
+    if current_user.admin?
+      @answer_sets = AnswerSet.all
+    else
+      @answer_sets = current_user.answer_sets
+    end
 
     respond_to do |format|
       format.html # index.html.erb
