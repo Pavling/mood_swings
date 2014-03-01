@@ -3,8 +3,31 @@
 
 %h1 Listing Answer Sets
 
-#myChart{height: 400 }
--data = @answer_sets.map(&:chart_data).to_json#.gsub('"', "'").gsub("'timestamp'", 'timestamp').html_safe
--keys = @answer_sets.map(&:chart_data_label_keys).flatten.uniq#.to_json.gsub('"', "'").gsub('"timestamp"', 'timestamp').html_safe
+=form_tag answer_sets_path, method: :get do
 
-=content_tag :div, "", id: "line-chart", data: {data: data, keys: keys}
+  .field
+    = label_tag :from_date
+    = text_field_tag :from_date, params[:from_date]
+
+  .field
+    = label_tag :to_date
+    = text_field_tag :to_date, params[:to_date]
+
+  .field
+    - granularity_options = %w(metric person)
+    - granularity_options << 'class' if can?(:granularity_by_class, AnswerSet)
+    = label_tag :granularity
+    = select_tag :granularity, options_for_select(granularity_options, params[:granularity])
+
+  .field
+    - group_options = %w(moment day week)
+    = label_tag :group
+    = select_tag :group, options_for_select(group_options, params[:group])
+
+  .controls
+    = submit_tag "refresh chart"
+
+
+#myChart{height: 400 }
+
+=content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, xlabels: @xlabels}

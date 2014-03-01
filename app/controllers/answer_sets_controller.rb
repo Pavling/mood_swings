@@ -5,17 +5,56 @@ class AnswerSetsController < ApplicationController
   # GET /answer_sets.json
   def index
     if current_user.admin?
-      @answer_sets = AnswerSet.all
+      @answer_sets = AnswerSet.scoped
     else
       @answer_sets = current_user.answer_sets
     end
 
-    @answer_sets = case params[:group].to_s.downcase
-    when 'person'
-      
-    else
-      @answer_sets
+    if params[:from_date].present?
+      @answer_sets = @answer_sets.where("created_at >= ?", params[:from_date])
     end
+    if params[:to_date].present?
+      @answer_sets = @answer_sets.where("created_at <= ?", params[:to_date])
+    end
+
+
+    # setup the core query of the answer_set data
+    @answer_sets = @answer_sets.select('avg(answers.value) as value').joins(:answers)
+
+
+    # set the granularity of the data as required
+    @answer_sets = case params[:granularity].to_s.downcase
+      when 'person'
+        # remove the granularity of seeing the individual metric - instead, show each user's average for the set
+        @answer_sets.select('answer_sets.user_id as metric_id, answer_sets.user_id as user_id').group('answer_sets.user_id')
+
+      when 'class'
+        authorize! :granularity_by_class, AnswerSet
+        @answer_sets.select("'class' as metric_id, 'class' as user_id")
+
+      else
+        # default to grouping as finely-grained as possible - right down to the individual metric
+        @answer_sets.select('answers.metric_id as metric_id, answer_sets.user_id as user_id').group('answers.metric_id, answer_sets.user_id')
+    end
+
+
+    # group the data into days/weeks if required
+    @answer_sets = case params[:group].to_s.downcase
+      when 'day'
+        @xlabels = 'day'
+        @answer_sets.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
+
+      when 'week'
+        @xlabels = 'day'
+        @answer_sets.select('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at').group('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text')
+
+      else
+        @answer_sets.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
+    end
+
+
+    @data = chart_data(@answer_sets)
+    @keys = chart_data_keys(@answer_sets)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -94,4 +133,26 @@ class AnswerSetsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+
+  private
+  def chart_data(data)
+    data.map do |datum|
+      { 
+        :timestamp => datum.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        "#{datum.user_id}##{datum.metric_id}" => datum.value
+      }
+    end
+  end
+
+  private
+  def chart_data_keys(data)
+    data.map do |datum|
+      datum.user_id.to_s + '#' + datum.metric_id.to_s
+    end
+  end
+
+
+
+
 end
