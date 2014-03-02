@@ -15,6 +15,23 @@
     <%= link_to image_tag("ga-lockup.png"), root_path %>
     <%#= link_to image_tag('general-assembly.svg'), "#navigation", class: :skip %>
   </div>
+
+  <div id='nav_container'>
+    <% if signed_in? %>
+      <ul>
+        <li>Hey, <%= current_user.email %></li>
+        <li>
+          <%= link_to 'historic moods', answer_sets_path %>
+        </li>
+        <li>
+          <%= link_to 'sign out', destroy_user_session_path, method: :delete %>
+        </li>
+      </ul>
+    <% else %>
+      <%= link_to 'sign in', new_user_session_path %>
+    <% end %>
+  </div>
+
 </div>
 
 <div id="page_content">

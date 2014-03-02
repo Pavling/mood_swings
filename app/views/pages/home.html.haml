@@ -2,14 +2,11 @@
   %h1
     Welcome to the Mood&nbsp;Machine
 
-%p
-  = link_to 'sign in', new_user_session_path unless signed_in?
-  - if signed_in?
-    hey, moody
-    =link_to 'sign out', destroy_user_session_path, method: :delete
-    =link_to 'historic moods', answer_sets_path
-
 - if signed_in?
   =render partial: 'answer_sets/form'
+- else
+  %p.login-notice
+    =link_to 'Log in', new_user_session_path
+    to snapshot your mood.
 
   
