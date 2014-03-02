@@ -42,13 +42,17 @@ class AnswerSetsController < ApplicationController
 
     # group the data into days/weeks if required
     @answer_sets = case params[:group].to_s.downcase
+      when 'hour'
+        @x_labels = 'hour'
+        @answer_sets.select("date_trunc('hour', answer_sets.created_at) as created_at").group("date_trunc('hour', answer_sets.created_at)")
+
       when 'day'
-        @xlabels = 'day'
+        @x_labels = 'day'
         @answer_sets.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
 
       when 'week'
         # TODO: the week-grouping chart labels get fubard... try to sort them
-        @xlabels = 'day'
+        @x_labels = 'day'
         @answer_sets.select('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at').group('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text')
 
       else
@@ -143,7 +147,17 @@ class AnswerSetsController < ApplicationController
   def chart_data(data)
     # collate all of the data for each given created_at value (TODO: Should be able to replace with a group-by)
     data.inject({}) do |memo, datum|
-      timestamp = datum.created_at.strftime('%Y-%m-%d %H:%M:%S')
+      date_format = case params[:group]
+        when 'day'
+          '%Y-%m-%d'
+        when 'week'
+          '%Y-%m-%d'
+        else
+          '%Y-%m-%d %H:%M:%S'
+      end
+
+      timestamp = datum.created_at.strftime(date_format)
+      
       memo[timestamp] ||= {timestamp: timestamp}
       memo[timestamp]["#{datum.user_id}##{datum.metric_id}"] = datum.value.to_f.round(1)
       memo
@@ -161,8 +175,6 @@ class AnswerSetsController < ApplicationController
   def chart_data_labels(data)
     data.map(&:label)
   end
-
-
 
 
 end

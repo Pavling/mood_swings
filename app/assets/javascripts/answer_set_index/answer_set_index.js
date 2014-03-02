@@ -10,7 +10,7 @@ $(function(){
       labels: $('#line-chart').data('labels'),
       xkey: 'timestamp',
       ykeys: $('#line-chart').data('keys'),
-      xLabels: $('#line-chart').data('xlabels')
+      xLabels: $('#line-chart').data('x_labels')
     });
 
   };

@@ -20,7 +20,7 @@
     = select_tag :granularity, options_for_select(granularity_options, params[:granularity])
 
   .field
-    - group_options = %w(moment day week)
+    - group_options = %w(moment hour day week)
     = label_tag :group
     = select_tag :group, options_for_select(group_options, params[:group])
 
@@ -30,4 +30,4 @@
 
 #myChart{height: 400 }
 
-=content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, labels: @labels, xlabels: @xlabels}
+=content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, labels: @labels, x_labels: @x_labels}
