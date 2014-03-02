@@ -4,6 +4,8 @@ class AnswerSetsController < ApplicationController
   # GET /answer_sets
   # GET /answer_sets.json
   def index
+    # TODO: Gotta be able to replace all this imperative scoping with `Ransack` or summit...
+
     if current_user.admin?
       @answer_sets = AnswerSet.scoped
     else
@@ -26,15 +28,15 @@ class AnswerSetsController < ApplicationController
     @answer_sets = case params[:granularity].to_s.downcase
       when 'person'
         # remove the granularity of seeing the individual metric - instead, show each user's average for the set
-        @answer_sets.select('answer_sets.user_id as metric_id, answer_sets.user_id as user_id').group('answer_sets.user_id')
+        @answer_sets.select('answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('answer_sets.user_id, users.email').joins(:user)
 
       when 'class'
         authorize! :granularity_by_class, AnswerSet
-        @answer_sets.select("'class' as metric_id, 'class' as user_id")
+        @answer_sets.select("'class' as metric_id, 'class' as user_id, 'class' as label")
 
       else
         # default to grouping as finely-grained as possible - right down to the individual metric
-        @answer_sets.select('answers.metric_id as metric_id, answer_sets.user_id as user_id').group('answers.metric_id, answer_sets.user_id')
+        @answer_sets.select("answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
     end
 
 
@@ -45,6 +47,7 @@ class AnswerSetsController < ApplicationController
         @answer_sets.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
 
       when 'week'
+        # TODO: the week-grouping chart labels get fubard... try to sort them
         @xlabels = 'day'
         @answer_sets.select('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at').group('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text')
 
@@ -55,6 +58,7 @@ class AnswerSetsController < ApplicationController
 
     @data = chart_data(@answer_sets)
     @keys = chart_data_keys(@answer_sets)
+    @labels = chart_data_labels(@answer_sets)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -137,19 +141,25 @@ class AnswerSetsController < ApplicationController
 
   private
   def chart_data(data)
-    data.map do |datum|
-      { 
-        :timestamp => datum.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-        "#{datum.user_id}##{datum.metric_id}" => datum.value
-      }
-    end
+    # collate all of the data for each given created_at value (TODO: Should be able to replace with a group-by)
+    data.inject({}) do |memo, datum|
+      timestamp = datum.created_at.strftime('%Y-%m-%d %H:%M:%S')
+      memo[timestamp] ||= {timestamp: timestamp}
+      memo[timestamp]["#{datum.user_id}##{datum.metric_id}"] = datum.value.to_f.round(1)
+      memo
+    end.values
   end
 
   private
   def chart_data_keys(data)
     data.map do |datum|
       datum.user_id.to_s + '#' + datum.metric_id.to_s
-    end
+    end.uniq
+  end
+
+  private
+  def chart_data_labels(data)
+    data.map(&:label)
   end
 
 

@@ -7,6 +7,7 @@ $(function(){
       ymin: 1,
       smooth: false,
       data: $('#line-chart').data('data'),
+      labels: $('#line-chart').data('labels'),
       xkey: 'timestamp',
       ykeys: $('#line-chart').data('keys'),
       xLabels: $('#line-chart').data('xlabels')
