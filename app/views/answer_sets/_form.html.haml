@@ -16,7 +16,7 @@
           %li
             =m.text_field :value, class: :knob, data: m.object.knob_data
           %li
-            =m.text_field :comments, placeholder: 'any comments?'
+            =m.text_area :comments, placeholder: 'any comments?', class: 'answer-comments', cols: 25
   #actions
     =f.submit 'share mood', class: :submit_button, id: 'button-share-mood'
 

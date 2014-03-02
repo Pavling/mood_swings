@@ -54,6 +54,7 @@ h1 {
 
 .answer {
   display: inline-block;
+  padding: 5px;
 }
 
 .answer li {
@@ -71,6 +72,10 @@ h1 {
 
 #new_answer_set #actions { 
   padding-top: 2rem;
+}
+
+#new_answer_set textarea.answer-comments { 
+  height: 3rem;
 }
 
 #new_answer_set #actions .submit_button { 
