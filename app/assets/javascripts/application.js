@@ -18,4 +18,10 @@ $(function() {
   $(".knob").knob({
 
   });
+
+  $('#button-share-mood').on('mouseover', function() {
+
+  });
+
+
 });
