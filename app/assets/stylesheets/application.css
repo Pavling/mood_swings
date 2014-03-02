@@ -19,6 +19,7 @@ body {
   font-size:100%;
   line-height:1.5;
   background:#fff;
+  padding-bottom: 5rem;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -92,6 +93,15 @@ h1 {
   text-transform:uppercase;
   text-align:center;-webkit-font-smoothing:antialiased;-webkit-appearance:none;
   cursor:pointer;
+
+  -webkit-transition:all 0.15s ease-in-out;
+  -moz-transition:all 0.15s ease-in-out;
+  -o-transition:all 0.15s ease-in-out;
+  transition:all 0.15s ease-in-out;
+}
+
+#new_answer_set #actions .submit_button:hover { 
+  background-color: #E6002E; 
 }
 
 .banner {
