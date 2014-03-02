@@ -10,9 +10,20 @@
 </head>
 <body>
 
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
-<%= yield %>
+<div class="banner">
+  <div class="masthead">
+    <%= link_to image_tag("ga-lockup.png"), root_path %>
+    <%#= link_to image_tag('general-assembly.svg'), "#navigation", class: :skip %>
+  </div>
+</div>
+
+<div id="page_content">
+  <div id="notices">
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+  </div>
+  <%= yield %>
+</div>
 
 </body>
 </html>

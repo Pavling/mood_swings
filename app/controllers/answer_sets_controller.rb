@@ -157,7 +157,7 @@ class AnswerSetsController < ApplicationController
       end
 
       timestamp = datum.created_at.strftime(date_format)
-      
+
       memo[timestamp] ||= {timestamp: timestamp}
       memo[timestamp]["#{datum.user_id}##{datum.metric_id}"] = datum.value.to_f.round(1)
       memo
