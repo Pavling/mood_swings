@@ -2,6 +2,8 @@ class AnswerSet < ActiveRecord::Base
   belongs_to :user
   has_many :answers
 
+  scope :with_comments, includes(:answers).where("answers.comments > ''")
+
   attr_accessible :answers_attributes
 
   accepts_nested_attributes_for :answers

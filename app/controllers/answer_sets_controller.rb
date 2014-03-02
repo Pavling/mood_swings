@@ -21,52 +21,52 @@ class AnswerSetsController < ApplicationController
 
 
     # setup the core query of the answer_set data
-    @answer_sets = @answer_sets.select('avg(answers.value) as value').joins(:answers)
+    @chart_data = @answer_sets.select('avg(answers.value) as value').joins(:answers)
 
 
     # set the granularity of the data as required
-    @answer_sets = case params[:granularity].to_s.downcase
+    @chart_data = case params[:granularity].to_s.downcase
       when 'person'
         # remove the granularity of seeing the individual metric - instead, show each user's average for the set
-        @answer_sets.select('answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('answer_sets.user_id, users.email').joins(:user)
+        @chart_data.select('answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('answer_sets.user_id, users.email').joins(:user)
 
       when 'class'
         authorize! :granularity_by_class, AnswerSet
-        @answer_sets.select("'class' as metric_id, 'class' as user_id, 'class' as label")
+        @chart_data.select("'class' as metric_id, 'class' as user_id, 'class' as label")
 
       else
         # default to grouping as finely-grained as possible - right down to the individual metric
-        @answer_sets.select("answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
+        @chart_data.select("answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
     end
 
 
     # group the data into days/weeks if required
-    @answer_sets = case params[:group].to_s.downcase
+    @chart_data = case params[:group].to_s.downcase
       when 'hour'
         @x_labels = 'hour'
-        @answer_sets.select("date_trunc('hour', answer_sets.created_at) as created_at").group("date_trunc('hour', answer_sets.created_at)")
+        @chart_data.select("date_trunc('hour', answer_sets.created_at) as created_at").group("date_trunc('hour', answer_sets.created_at)")
 
       when 'day'
         @x_labels = 'day'
-        @answer_sets.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
+        @chart_data.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
 
       when 'week'
         # TODO: the week-grouping chart labels get fubard... try to sort them
         @x_labels = 'day'
-        @answer_sets.select('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at').group('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text')
+        @chart_data.select('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at').group('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text')
 
       else
-        @answer_sets.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
+        @chart_data.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
     end
 
 
-    @data = chart_data(@answer_sets)
-    @keys = chart_data_keys(@answer_sets)
-    @labels = chart_data_labels(@answer_sets)
+    @data = chart_data(@chart_data)
+    @keys = chart_data_keys(@chart_data)
+    @labels = chart_data_labels(@chart_data)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @answer_sets }
+      format.json { render json: @chart_data }
     end
   end
 

@@ -31,3 +31,25 @@
 #myChart{height: 400 }
 
 =content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, labels: @labels, x_labels: @x_labels}
+
+
+%section#comments
+  - answer_sets = @answer_sets.with_comments.group_by{|a|a.created_at.to_date}
+  - answer_sets.keys.each do |date|
+    %h2 Comments on #{date}
+    - answer_sets[date].each do |answer_set|
+      %article
+        - if current_user.admin?
+          %p= answer_set.user.email
+        %dl
+          %ul
+            - answer_set.answers.each do |answer|
+              - if answer.comments.present?
+                %li
+                  =answer.metric.measure
+                  =answer.comments
+
+
+
+
+
