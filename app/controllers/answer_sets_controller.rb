@@ -1,5 +1,6 @@
 class AnswerSetsController < ApplicationController
   load_and_authorize_resource
+  before_filter :authenticate_user!
 
   # GET /answer_sets
   # GET /answer_sets.json
@@ -105,7 +106,7 @@ class AnswerSetsController < ApplicationController
     
     respond_to do |format|
       if @answer_set.save
-        format.html { redirect_to home_path, notice: 'Answer set was successfully created.' }
+        format.html { redirect_to root_path, notice: 'Your current mood has been recorded. Thank you.' }
         format.json { render json: @answer_set, status: :created, location: @answer_set }
       else
         format.html { render "pages/home" }
