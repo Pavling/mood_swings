@@ -20,10 +20,6 @@ $(function() {
 
   });
 
-  $('#button-share-mood').on('mouseover', function() {
-
-  });
-
 });
 
 //= require turbolinks
