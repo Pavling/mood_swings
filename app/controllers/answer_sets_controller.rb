@@ -54,7 +54,7 @@ class AnswerSetsController < ApplicationController
       when 'week'
         # TODO: the week-grouping chart labels get fubard... try to sort them
         @x_labels = 'day'
-        @chart_data.select('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at').group('EXTRACT(YEAR FROM answer_sets.created_at)::text || EXTRACT(WEEK FROM answer_sets.created_at)::text')
+        @chart_data.select("EXTRACT(YEAR FROM answer_sets.created_at)::text as created_at_year, EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at_week").group("EXTRACT(YEAR FROM answer_sets.created_at)::text, EXTRACT(WEEK FROM answer_sets.created_at)::text")
 
       else
         @chart_data.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
@@ -152,6 +152,7 @@ class AnswerSetsController < ApplicationController
         when 'day'
           '%Y-%m-%d'
         when 'week'
+          datum.created_at = Date.parse("#{datum.created_at_year}-01-01") + (datum.created_at_week.to_i*7).days
           '%Y-%m-%d'
         else
           '%Y-%m-%d %H:%M:%S'
@@ -167,15 +168,19 @@ class AnswerSetsController < ApplicationController
 
   private
   def chart_data_keys(data)
-    data.map do |datum|
-      datum.user_id.to_s + '#' + datum.metric_id.to_s
-    end.uniq
+    keys_and_data_for(data).map(&:keys).flatten
   end
 
   private
   def chart_data_labels(data)
-    data.map(&:label)
+    keys_and_data_for(data).map(&:values).flatten
   end
 
+  private
+  def keys_and_data_for(data)
+    data.map do |datum|
+      {datum.user_id.to_s + '#' + datum.metric_id.to_s => datum.label }
+    end.uniq
+  end
 
 end
