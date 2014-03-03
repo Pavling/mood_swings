@@ -10,6 +10,8 @@ gem 'haml-rails'
 gem 'devise'
 gem 'cancan'
 gem 'high_voltage'
+gem 'turbolinks'
+gem 'jquery-turbolinks'
 
 group :development, :test do
   gem 'pry-rails'
