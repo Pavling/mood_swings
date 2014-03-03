@@ -53,7 +53,7 @@ class AnswerSetsController < ApplicationController
 
       when 'week'
         # TODO: the week-grouping chart labels get fubard... try to sort them
-        @x_labels = 'day'
+        @x_labels = 'month'
         @chart_data.select("EXTRACT(YEAR FROM answer_sets.created_at)::text as created_at_year, EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at_week").group("EXTRACT(YEAR FROM answer_sets.created_at)::text, EXTRACT(WEEK FROM answer_sets.created_at)::text")
 
       else
