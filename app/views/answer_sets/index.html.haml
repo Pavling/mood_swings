@@ -3,29 +3,29 @@
 
 %h1 Listing Answer Sets
 
-=form_tag answer_sets_path, method: :get do
+=form_tag answer_sets_path, method: :get, id: :answer_set_index do
+  %fieldset
+    .field
+      = label_tag :from_date
+      = text_field_tag :from_date, params[:from_date]
 
-  .field
-    = label_tag :from_date
-    = text_field_tag :from_date, params[:from_date]
+    .field
+      = label_tag :to_date
+      = text_field_tag :to_date, params[:to_date]
 
-  .field
-    = label_tag :to_date
-    = text_field_tag :to_date, params[:to_date]
+    .field
+      - granularity_options = %w(metric person)
+      - granularity_options << 'class' if can?(:granularity_by_class, AnswerSet)
+      = label_tag :granularity
+      = select_tag :granularity, options_for_select(granularity_options, params[:granularity])
 
-  .field
-    - granularity_options = %w(metric person)
-    - granularity_options << 'class' if can?(:granularity_by_class, AnswerSet)
-    = label_tag :granularity
-    = select_tag :granularity, options_for_select(granularity_options, params[:granularity])
+    .field
+      - group_options = %w(moment hour day week)
+      = label_tag :group
+      = select_tag :group, options_for_select(group_options, params[:group])
 
-  .field
-    - group_options = %w(moment hour day week)
-    = label_tag :group
-    = select_tag :group, options_for_select(group_options, params[:group])
-
-  .controls
-    = submit_tag "refresh chart"
+  .actions
+    = submit_tag "refresh chart", class: :submit_button
 
 
 #myChart{height: 400 }

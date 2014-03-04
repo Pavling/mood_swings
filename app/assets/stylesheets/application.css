@@ -37,6 +37,20 @@ h1 {
   margin-bottom: 2rem;
 }
 
+label {
+  font-size: 1.2rem;
+  display: inline-block;
+  width: 120px;
+}
+
+input, select {
+  font-size: 1.2rem;
+}
+
+th {
+  font-weight: bold;
+}
+
 #header h1 {
   font-size:4.5rem;
 }
@@ -68,6 +82,10 @@ h1 {
   padding-bottom: 0.8em;
 }
 
+.answer li label {
+    width: 200px;
+}
+
 #new_answer_set #actions {
   text-align: center;
 }
@@ -80,7 +98,7 @@ h1 {
   height: 3rem;
 }
 
-#new_answer_set #actions .submit_button { 
+.submit_button { 
   height:3.6rem;
   min-width:8rem;
   padding:0.5rem;
@@ -100,7 +118,7 @@ h1 {
   transition:all 0.15s ease-in-out;
 }
 
-#new_answer_set #actions .submit_button:hover { 
+.submit_button:hover { 
   background-color: #E6002E; 
 }
 
@@ -148,7 +166,28 @@ h1 {
   line-height: 1.4rem;
 }
 
+#answer_set_index {
+  display: inline-block;
+  font-size: 1.2rem;
+}
 
+#new_answer_set input, #new_answer_set select { 
+  width: 100px;
+}
+
+#answer_set_index .actions {
+  padding: 10px 0;
+  display: inline-block;
+  float:right;
+}
+
+#answer_set_index .actions {
+
+}
+
+#answer_set_index .submit_button { 
+  min-width: 10rem;
+}
 
 
 
