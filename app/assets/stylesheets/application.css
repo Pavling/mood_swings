@@ -83,7 +83,7 @@ th {
 }
 
 .answer li label {
-    width: 200px;
+    width: 250px;
 }
 
 #new_answer_set #actions {
@@ -188,6 +188,38 @@ th {
 #answer_set_index .submit_button { 
   min-width: 10rem;
 }
+
+#comments p {
+  color: silver;
+}
+
+#comments dt {
+  font-family: sans-serif;
+  display: inline-block;
+  font-style: italic;
+  padding-right: 0.5rem;
+  color: rgb(114, 114, 114);
+}
+
+#comments dd {
+  display: inline-block;
+}
+
+#comments dl {
+  -webkit-transition:all 0.15s ease-in-out;
+  -moz-transition:all 0.15s ease-in-out;
+  -o-transition:all 0.15s ease-in-out;
+  transition:all 0.15s ease-in-out;
+}
+
+#comments dl:hover { 
+  background-color: rgb(250, 215, 215); 
+}
+
+
+
+
+
 
 
 
