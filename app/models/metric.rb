@@ -1,7 +1,10 @@
 class Metric < ActiveRecord::Base
   attr_accessible :active, :measure
 
+  has_many :answers
+
   before_update :ensure_measure_not_changed
+  before_destroy :ensure_no_answers_exist
 
   scope :active, where(active: true)
 
@@ -21,5 +24,12 @@ class Metric < ActiveRecord::Base
     errors.add :measure, "must not be changed on existing records" if measure_changed?
   end
 
+  private
+  def ensure_no_answers_exist
+    if answers.any?
+      errors.add :base, "cannot delete metric if it has answers associated"
+      return false
+    end
+  end
 
 end

@@ -78,7 +78,12 @@ class MetricsController < ApplicationController
     @metric.destroy
 
     respond_to do |format|
-      format.html { redirect_to metrics_url }
+      format.html do
+        options_hash = {}
+        options_hash[:alert] = @metric.errors.full_messages.join('. ') if @metric.errors.any?
+
+        redirect_to metrics_url, options_hash 
+      end
       format.json { head :no_content }
     end
   end
