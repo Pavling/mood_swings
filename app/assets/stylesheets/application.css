@@ -167,6 +167,19 @@ th {
   line-height: 1.4rem;
 }
 
+.splash {
+  text-align: center;
+  line-height: 1.4rem;
+  margin-top: 2rem;
+}
+
+.cta {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  font-family: sans-serif;
+}
+
 #answer_set_index {
   display: inline-block;
   font-size: 1.2rem;
