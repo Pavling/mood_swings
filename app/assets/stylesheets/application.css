@@ -180,6 +180,15 @@ th {
   font-family: sans-serif;
 }
 
+.footer-note {
+  padding-top: 4rem;
+  color: silver;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
+  letter-spacing: 0.08rem;
+}
+
 #answer_set_index {
   display: inline-block;
   font-size: 1.2rem;
