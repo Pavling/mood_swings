@@ -110,6 +110,7 @@ th {
   font-size:1.35rem;
   text-transform:uppercase;
   text-align:center;-webkit-font-smoothing:antialiased;-webkit-appearance:none;
+  text-decoration: none;
   cursor:pointer;
 
   -webkit-transition:all 0.15s ease-in-out;

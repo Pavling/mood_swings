@@ -23,6 +23,11 @@
         <li>
           <%= link_to 'historic moods', answer_sets_path %>
         </li>
+        <% if can? :read, Metric %>
+          <li>
+            <%= link_to 'metrics', metrics_path %>
+          </li>
+        <% end %>
         <li>
           <%= link_to 'sign out', destroy_user_session_path, method: :delete %>
         </li>
