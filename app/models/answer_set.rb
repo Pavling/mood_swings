@@ -1,6 +1,6 @@
 class AnswerSet < ActiveRecord::Base
   belongs_to :user
-  has_many :answers
+  has_many :answers, dependent: :destroy
 
   scope :with_comments, includes(:answers).where("answers.comments > ''")
 
