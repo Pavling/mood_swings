@@ -44,6 +44,13 @@
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
   </div>
+  
+  <% if 'HomeController' == controller.class.name %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
+    <header>
+      <h1>Welcome to the Mood&nbsp;Machine</h1>
+    </header>
+  <% end %>
+
   <%= yield %>
 </div>
 
