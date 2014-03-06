@@ -35,7 +35,7 @@
 
 %section#comments
   - answer_sets = @answer_sets.with_comments.group_by{|a|a.created_at.to_date}
-  - answer_sets.keys.each do |date|
+  - answer_sets.keys.sort{|x,y| y<=>x}.each do |date|
     %h2 Comments on #{date}
     - answer_sets[date].group_by(&:user_id).each do |_, answer_sets|
       %article
