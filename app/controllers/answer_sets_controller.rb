@@ -14,10 +14,10 @@ class AnswerSetsController < ApplicationController
     end
 
     if params[:from_date].present?
-      @answer_sets = @answer_sets.where("created_at >= ?", params[:from_date])
+      @answer_sets = @answer_sets.where("answer_sets.created_at >= ?", params[:from_date])
     end
     if params[:to_date].present?
-      @answer_sets = @answer_sets.where("created_at <= ?", params[:to_date])
+      @answer_sets = @answer_sets.where("answer_sets.created_at <= ?", params[:to_date])
     end
 
 
