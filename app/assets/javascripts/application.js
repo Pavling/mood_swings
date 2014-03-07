@@ -17,8 +17,20 @@
 
 $(function() {
   $(".knob").knob({
-
+    'draw': function(val) {
+      this.o['fgColor'] = colourForKnobVal(this.v);
+    }
   });
+
+  function colourForKnobVal(val) {
+    return {
+      1: '#f00',
+      2: '#f63',
+      3: '#ff0',
+      4: '#9f3',
+      5: '#0f0'
+    }[val] || '#000';
+  }
 
   $( ".datepicker" ).datepicker( {"dateFormat": 'yy-mm-dd'} );
 
