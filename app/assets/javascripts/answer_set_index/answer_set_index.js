@@ -10,13 +10,13 @@ $(function(){
       labels: $('#line-chart').data('labels'),
       xkey: 'timestamp',
       ykeys: $('#line-chart').data('keys'),
-      xLabels: $('#line-chart').data('x-labels')
+      xLabels: $('#line-chart').data('x-labels'),
+      moveHover: false,
+      hoverContainer: $('#hoverContainer')
     });
 
   };
 
-  $(function(){
-    setup_chart();
-  });
+  setup_chart();
 
 });

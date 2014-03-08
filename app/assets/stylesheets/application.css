@@ -9,6 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require reset
+ *= require morris-0.4.3.min
  *= require_self
  *= require_tree
  */
@@ -233,13 +234,20 @@ th {
   -moz-transition:all 0.15s ease-in-out;
   -o-transition:all 0.15s ease-in-out;
   transition:all 0.15s ease-in-out;
+  margin-right: 340px;
 }
 
 #comments dl:hover { 
   background-color: rgb(250, 215, 215); 
 }
 
-
+.morris-hover { 
+  position: relative;
+  display: inline;
+  float: right;
+  width: 300px;
+  margin-top: 25px; 
+}
 
 
 

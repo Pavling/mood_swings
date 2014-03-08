@@ -572,7 +572,8 @@
   Morris.Hover = (function() {
 
     Hover.defaults = {
-      "class": 'morris-hover morris-default-style'
+      "class": 'morris-hover morris-default-style',
+      moveHover: true,
     };
 
     function Hover(options) {
@@ -582,13 +583,21 @@
       this.options = $.extend({}, Morris.Hover.defaults, options);
       this.el = $("<div class='" + this.options["class"] + "'></div>");
       this.el.hide();
-      this.options.parent.append(this.el);
+      if (this.options.hoverContainer != undefined) {
+        this.options.hoverContainer.append(this.el);
+      } else {
+        this.options.parent.append(this.el);
+      }
     }
 
     Hover.prototype.update = function(html, x, y) {
       this.html(html);
       this.show();
-      return this.moveTo(x, y);
+      if(this.options.moveHover) {
+        return this.moveTo(x, y);
+      } else {
+        return this.el.css({});
+      }
     };
 
     Hover.prototype.html = function(content) {
@@ -658,7 +667,9 @@
       }, 25, 'linear');
       if (this.options.hideHover !== 'always') {
         this.hover = new Morris.Hover({
-          parent: this.el
+          parent: this.el,
+          moveHover: this.options.moveHover,
+          hoverContainer: this.options.hoverContainer
         });
         this.on('hovermove', this.onHoverMove);
         this.on('hoverout', this.onHoverOut);
@@ -678,7 +689,8 @@
       xLabelFormat: null,
       xLabelMargin: 24,
       continuousLine: true,
-      hideHover: false
+      hideHover: false,
+      moveHover: true
     };
 
     Line.prototype.calc = function() {
