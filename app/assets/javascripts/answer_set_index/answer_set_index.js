@@ -12,7 +12,8 @@ $(function(){
       ykeys: $('#line-chart').data('keys'),
       xLabels: $('#line-chart').data('x-labels'),
       moveHover: false,
-      hoverContainer: $('#hoverContainer')
+      hoverContainer: $('#hoverContainer'),
+      compactLegend: true
     });
 
   };
