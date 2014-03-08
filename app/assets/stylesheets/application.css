@@ -249,7 +249,9 @@ th {
   margin-top: 25px; 
 }
 
-
+.morris-hover.morris-default-style .morris-hover-point {
+  white-space: normal;
+}
 
 
 
