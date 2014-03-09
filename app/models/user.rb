@@ -10,7 +10,15 @@ class User < ActiveRecord::Base
 
   has_many :answer_sets
   has_many :answers, through: :answer_sets
-  
+
+  def self.needing_reminder_email
+    where("users.id not in (?)", mood_swung_today << 0)
+  end
+
+  def self.mood_swung_today
+    ids = joins(:answer_sets).where("answer_sets.created_at > ?", Time.now - 1.day).map(&:id)
+    where(id: ids)
+  end
 
   def admin?
     role == 'admin'
