@@ -253,7 +253,25 @@ th {
   white-space: normal;
 }
 
+form.edit_user label { 
+  width: 210px;
+}
 
+form.edit_user label.skip_email_reminders { 
+  width: auto; 
+  margin-right: 10px;
+}
 
+form.edit_user label { 
+  width: 210px;
+}
 
+form.edit_user .submit_button { 
+  margin-top: 15px;
+}
+
+form.new_user .submit_button { 
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
 
