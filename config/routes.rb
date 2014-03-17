@@ -5,5 +5,7 @@ MoodSwings::Application.routes.draw do
 
   devise_for :users
 
+  root to: 'answer_sets#index', constraints: lambda { |request| puts request.env['warden'] && request.env['warden'].user && request.env['warden'].user.admin? }
   root to: 'home#index'
+
 end
