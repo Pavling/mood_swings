@@ -1,0 +1,19 @@
+= form_for @cohort do |f|
+  - if @cohort.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@cohort.errors.count, "error")} prohibited this cohort from being saved:"
+      %ul
+        - @cohort.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :start_on
+    = f.text_field :start_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+  .field
+    = f.label :end_on
+    = f.text_field :end_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+  .actions
+    = f.submit 'Save', class: :submit_button

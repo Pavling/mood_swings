@@ -1,4 +1,5 @@
 class AnswerSet < ActiveRecord::Base
+  belongs_to :cohort
   belongs_to :user
   has_many :answers, dependent: :destroy
 
@@ -7,6 +8,9 @@ class AnswerSet < ActiveRecord::Base
   attr_accessible :answers_attributes
 
   accepts_nested_attributes_for :answers
+
+  validates :cohort_id, presence: true
+
 
   def self.populated_with_answers
     answer_set = new

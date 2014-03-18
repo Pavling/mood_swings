@@ -22,22 +22,22 @@ class AnswerSetsController < ApplicationController
 
 
     # setup the core query of the answer_set data
-    @chart_data = @answer_sets.select('avg(answers.value) as value').joins(:answers)
+    @chart_data = @answer_sets.select('avg(answers.value) as value').joins(:answers, :cohort)
 
 
     # set the granularity of the data as required
     @chart_data = case params[:granularity].to_s.downcase
       when 'person'
         # remove the granularity of seeing the individual metric - instead, show each user's average for the set
-        @chart_data.select('answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('answer_sets.user_id, users.email').joins(:user)
+        @chart_data.select('answer_sets.cohort_id as cohort_id, answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('answer_sets.cohort_id, answer_sets.user_id, users.email').joins(:user)
 
-      when 'class'
-        authorize! :granularity_by_class, AnswerSet
-        @chart_data.select("'class' as metric_id, 'class' as user_id, 'class' as label")
+      when 'cohort'
+        authorize! :granularity_by_cohort, AnswerSet
+        @chart_data.select("answer_sets.cohort_id as cohort_id, 'cohort' as metric_id, 'cohort' as user_id, cohorts.name as label").group('answer_sets.cohort_id, cohorts.name')
 
       else
         # default to grouping as finely-grained as possible - right down to the individual metric
-        @chart_data.select("answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
+        @chart_data.select("answer_sets.cohort_id as cohort_id, answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("answer_sets.cohort_id, answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
     end
 
 
@@ -103,6 +103,7 @@ class AnswerSetsController < ApplicationController
   def create
     @answer_set = AnswerSet.new(params[:answer_set])
     @answer_set.user = current_user
+    @answer_set.cohort = current_user.cohort
     
     respond_to do |format|
       if @answer_set.save
@@ -161,7 +162,7 @@ class AnswerSetsController < ApplicationController
       timestamp = datum.created_at.strftime(date_format)
 
       memo[timestamp] ||= {timestamp: timestamp}
-      memo[timestamp]["#{datum.user_id}##{datum.metric_id}"] = datum.value.to_f.round(1)
+      memo[timestamp]["#{datum.cohort_id}##{datum.user_id}##{datum.metric_id}"] = datum.value.to_f.round(1)
       memo
     end.values
   end
@@ -179,7 +180,7 @@ class AnswerSetsController < ApplicationController
   private
   def keys_and_data_for(data)
     data.map do |datum|
-      {datum.user_id.to_s + '#' + datum.metric_id.to_s => datum.label }
+      {datum.cohort_id.to_s + '#' + datum.user_id.to_s + '#' + datum.metric_id.to_s => datum.label }
     end.uniq
   end
 

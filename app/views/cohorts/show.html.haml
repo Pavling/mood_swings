@@ -1,0 +1,24 @@
+%p
+  %b Name:
+  = @cohort.name
+
+%p
+  %b Start:
+  = @cohort.start_on
+
+%p
+  %b End:
+  = @cohort.end_on
+
+-if @cohort.students.any?
+  %p
+    %b Students:
+    %ul
+      - @cohort.students.each do |student|
+        %li
+          = student.email
+
+
+= link_to 'Edit', edit_cohort_path(@cohort)
+\|
+= link_to 'Back', cohorts_path

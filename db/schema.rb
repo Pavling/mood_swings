@@ -11,12 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140317155855) do
+ActiveRecord::Schema.define(:version => 20140317233151) do
 
   create_table "answer_sets", :force => true do |t|
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "cohort_id"
   end
 
   add_index "answer_sets", ["user_id"], :name => "index_answer_sets_on_user_id"
@@ -32,6 +33,14 @@ ActiveRecord::Schema.define(:version => 20140317155855) do
 
   add_index "answers", ["answer_set_id"], :name => "index_answers_on_answer_set_id"
   add_index "answers", ["metric_id"], :name => "index_answers_on_metric_id"
+
+  create_table "cohorts", :force => true do |t|
+    t.string   "name"
+    t.date     "start_on"
+    t.date     "end_on"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "metrics", :force => true do |t|
     t.string   "measure"
@@ -56,6 +65,7 @@ ActiveRecord::Schema.define(:version => 20140317155855) do
     t.string   "role"
     t.datetime "reminder_email_sent_at"
     t.boolean  "skip_email_reminders",   :default => false
+    t.integer  "cohort_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

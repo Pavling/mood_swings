@@ -28,6 +28,11 @@
             <%= link_to 'metrics', metrics_path %>
           </li>
         <% end %>
+        <% if can? :read, Cohort %>
+          <li>
+            <%= link_to 'cohorts', cohorts_path %>
+          </li>
+        <% end %>
         <li>
           <%= link_to 'my profile', edit_user_registration_path %>
         </li>

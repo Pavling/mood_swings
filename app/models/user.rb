@@ -5,11 +5,12 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :skip_email_reminders
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
 
 
   has_many :answer_sets
   has_many :answers, through: :answer_sets
+  belongs_to :cohort
 
   def self.needing_reminder_email
     where("users.id not in (?)", mood_swung_today << 0)

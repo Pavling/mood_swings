@@ -1,5 +1,6 @@
 MoodSwings::Application.routes.draw do
   resources :answer_sets
+  resources :cohorts
   resources :metrics
 
 

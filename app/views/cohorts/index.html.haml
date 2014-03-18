@@ -1,0 +1,19 @@
+%h1 Listing cohorts
+
+%table
+  %tr
+    %th Name
+    %th
+    %th
+    %th
+
+  - @cohorts.each do |cohort|
+    %tr
+      %td= cohort.name
+      %td= link_to 'Show', cohort
+      %td= link_to 'Edit', edit_cohort_path(cohort)
+      %td= link_to 'Destroy', cohort, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Cohort', new_cohort_path, class: :submit_button
