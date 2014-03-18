@@ -4,9 +4,14 @@
   <%= devise_error_messages! %>
 
   <fieldset>
-    <div>
+    <div class='field'>
       <%= f.label :email %>
-      <%= f.email_field :email, :autofocus => true %>
+      <%= f.object.email %>
+    </div>
+
+    <div class='field'>
+      <%= f.label :cohort %>
+      <%= f.object.cohort.try(:name) %>
     </div>
 
     <div class='field'>

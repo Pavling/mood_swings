@@ -1,8 +1,10 @@
 class Cohort < ActiveRecord::Base
-  attr_accessible :name, :start_on, :end_on
+  attr_accessible :name, :start_on, :end_on, :student_ids
 
-  has_many :students, class_name: 'User'
+  has_many :students, class_name: 'User', order: :email
   has_many :answer_sets
+
+  default_scope order(:name)
 
   validates :name, presence: true
   validates :start_on, presence: true

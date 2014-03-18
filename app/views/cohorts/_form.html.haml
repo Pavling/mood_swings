@@ -15,5 +15,15 @@
   .field
     = f.label :end_on
     = f.text_field :end_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+  %h2 Students
+  - (@cohort.students + User.unenrolled).each do |student|
+    .field
+      = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
+      = label_tag student.email
+
+
+
+
+
   .actions
     = f.submit 'Save', class: :submit_button

@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_many :answers, through: :answer_sets
   belongs_to :cohort
 
+  scope :unenrolled, where(cohort_id: nil)
+
   def self.needing_reminder_email
     where("users.id not in (?)", mood_swung_today << 0)
   end
