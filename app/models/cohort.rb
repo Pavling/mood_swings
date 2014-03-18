@@ -5,6 +5,7 @@ class Cohort < ActiveRecord::Base
   has_many :answer_sets
 
   default_scope order(:name)
+  scope :currently_running, lambda { where("cohorts.start_on <= :today AND cohorts.end_on >= :today", today: Date.today) }
 
   validates :name, presence: true
   validates :start_on, presence: true

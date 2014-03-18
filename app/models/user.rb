@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   scope :unenrolled, where(cohort_id: nil)
 
   def self.needing_reminder_email
-    where("users.id not in (?)", mood_swung_today << 0)
+    where("users.id not in (?)", mood_swung_today << 0).joins(:cohort).merge(Cohort.currently_running)
   end
 
   def self.desiring_email_reminder
