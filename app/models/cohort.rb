@@ -17,4 +17,8 @@ class Cohort < ActiveRecord::Base
     errors.add(:end_on, "cannot be older than start date") if end_on && start_on && end_on < start_on
   end
 
+  def currently_running?
+    Cohort.currently_running.include?(self)
+  end
+
 end
