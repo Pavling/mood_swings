@@ -3,8 +3,7 @@ MoodSwings::Application.routes.draw do
   resources :cohorts
   resources :metrics
 
-
-  devise_for :users
+  devise_for :users, controllers: { registrations: "registrations" }
 
   root to: 'answer_sets#index', constraints: lambda { |request| request.env['warden'] && request.env['warden'].user && request.env['warden'].user.admin? }
   root to: 'home#index'

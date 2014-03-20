@@ -23,6 +23,11 @@
         <li>
           <%= link_to 'historic moods', answer_sets_path %>
         </li>
+        <% if can? :invite, User %>
+          <li>
+            <%= link_to 'invite', new_user_invitation_path %>
+          </li>
+        <% end %>
         <% if can? :read, Metric %>
           <li>
             <%= link_to 'metrics', metrics_path %>

@@ -275,3 +275,7 @@ form.new_user .submit_button {
   margin-bottom: 15px;
 }
 
+form.new_user label.remember_me { 
+  width: auto; 
+  /*margin-right: 10px;*/
+}
