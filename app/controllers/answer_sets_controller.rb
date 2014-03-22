@@ -15,7 +15,7 @@ class AnswerSetsController < ApplicationController
 
 
     # set default values into params
-    params[:granularity] ||= :cohort
+    params[:granularity] ||= (current_user.admin? ? :cohort : :person)
     params[:group] ||= :day
 
 
