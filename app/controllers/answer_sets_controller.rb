@@ -13,6 +13,12 @@ class AnswerSetsController < ApplicationController
       @answer_sets = current_user.answer_sets
     end
 
+
+    # set default values into params
+    params[:granularity] ||= :cohort
+    params[:group] ||= :day
+
+
     if params[:from_date].present?
       @answer_sets = @answer_sets.where("answer_sets.created_at >= ?", params[:from_date])
     end
