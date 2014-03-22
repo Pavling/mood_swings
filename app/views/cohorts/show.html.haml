@@ -1,24 +1,28 @@
-%p
-  %b Name:
-  = @cohort.name
+%h1 Show cohort
 
-%p
-  %b Start:
-  = @cohort.start_on
+%fieldset
+  .field
+    = label_tag :name
+    = @cohort.name
 
-%p
-  %b End:
-  = @cohort.end_on
+  .field
+    = label_tag :start
+    = @cohort.start_on
 
--if @cohort.students.any?
-  %p
-    %b Students:
-    %ul
-      - @cohort.students.each do |student|
-        %li
-          = student.email
+  .field
+    = label_tag :end_on
+    = @cohort.end_on
 
+  -if @cohort.students.any?
+    .field
+      = label_tag :students
+      %ul#cohort_students
+        - @cohort.students.each do |student|
+          %li
+            = student.email
 
-= link_to 'Edit', edit_cohort_path(@cohort)
-\|
-= link_to 'Back', cohorts_path
+%ul#actions
+  %li
+    = link_to 'Edit', edit_cohort_path(@cohort), class: :submit_button
+  %li
+    = link_to 'Back', cohorts_path, class: :submit_button
