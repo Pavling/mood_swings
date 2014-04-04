@@ -14,6 +14,10 @@
  *= require_tree
  */
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family:"News706BT-RomanC",Georgia;
   color:#222;
