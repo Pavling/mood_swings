@@ -292,3 +292,6 @@ ul#cohort_students {
   display: inline-block;
 }
 
+ul#cohort_administrators {
+  display: inline-block;
+}

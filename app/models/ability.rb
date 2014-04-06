@@ -3,13 +3,26 @@ class Ability
 
   def initialize(user)
     user ||= User.new # guest user (not logged in)
-    if user.admin?
-      can :manage, :all
-    else
-      can :create, AnswerSet
-      can :read, AnswerSet do |answer_set|
-        answer_set.user == user
-      end
+
+    can :create, AnswerSet
+
+    can :read, AnswerSet do |answer_set|
+      answer_set.user == user
+    end
+
+    case
+      when user.admin?
+        can :manage, :all
+
+      when user.cohort_admin?
+        can :invite, User
+
+        can :granularity_by_cohort, AnswerSet
+
+        can :view, Cohort do |cohort|
+          cohort.administrators.include?(user)
+        end
+
     end
   end
 end

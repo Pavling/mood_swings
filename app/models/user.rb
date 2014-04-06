@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
 
   has_many :answer_sets
   has_many :answers, through: :answer_sets
+  has_many :cohort_administrations, foreign_key: :administrator_id, class_name: 'CohortAdministrator'
   belongs_to :cohort
 
   scope :unenrolled, where(cohort_id: nil)
@@ -30,4 +31,9 @@ class User < ActiveRecord::Base
   def admin?
     role == 'admin'
   end
+
+  def cohort_admin?
+    cohort_administrations.any?
+  end
+
 end

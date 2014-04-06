@@ -20,6 +20,16 @@
         - @cohort.students.each do |student|
           %li
             = student.email
+  
+  -if @cohort.administrators.any?
+    %hr
+
+    .field
+      = label_tag :admins
+      %ul#cohort_administrators
+        - @cohort.administrators.each do |administrator|
+          %li
+            = administrator.email
 
 %ul#actions
   %li

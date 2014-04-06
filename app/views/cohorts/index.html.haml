@@ -3,6 +3,7 @@
 %table
   %tr
     %th Name
+    %th Admins
     %th
     %th
     %th
@@ -10,6 +11,7 @@
   - @cohorts.each do |cohort|
     %tr
       %td= cohort.name
+      %td= cohort.administrators.map(&:email).to_sentence
       %td= link_to 'Show', cohort
       %td= link_to 'Edit', edit_cohort_path(cohort)
       %td= link_to 'Destroy', cohort, :method => :delete, :data => { :confirm => 'Are you sure?' }

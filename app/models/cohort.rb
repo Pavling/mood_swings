@@ -1,8 +1,10 @@
 class Cohort < ActiveRecord::Base
-  attr_accessible :name, :start_on, :end_on, :student_ids
+  attr_accessible :name, :start_on, :end_on, :student_ids, :administrator_ids
 
   has_many :students, class_name: 'User', order: :email
   has_many :answer_sets
+  has_many :cohort_administrators
+  has_many :administrators, through: :cohort_administrators, order: :email
 
   default_scope order(:name)
   scope :currently_running, lambda { where("cohorts.start_on <= :today AND cohorts.end_on >= :today", today: Date.today) }
