@@ -7,15 +7,10 @@ class AnswerSetsController < ApplicationController
   def index
     # TODO: Gotta be able to replace all this imperative scoping with `Ransack` or summit...
 
-    if current_user.admin?
-      @answer_sets = AnswerSet.scoped
-    else
-      @answer_sets = current_user.answer_sets
-    end
-
+    @answer_sets = current_user.accessible_answer_sets
 
     # set default values into params
-    params[:granularity] ||= (current_user.admin? ? :cohort : :person)
+    params[:granularity] ||= current_user.default_cohort_granularity
     params[:group] ||= :day
 
 

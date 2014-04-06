@@ -12,7 +12,7 @@
 
   <div>
     <%= f.label :cohort_id, 'Cohort' %><br />
-    <%= f.collection_select :cohort_id, Cohort.current_and_future, :id, :name %>
+    <%= f.collection_select :cohort_id, current_user.accessible_cohorts.current_and_future, :id, :name %>
   </div>
 
   <p><%= f.submit t("devise.invitations.new.submit_button"), class: :submit_button %></p>
