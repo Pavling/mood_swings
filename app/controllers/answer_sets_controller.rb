@@ -72,17 +72,6 @@ class AnswerSetsController < ApplicationController
     end
   end
 
-  # GET /answer_sets/1
-  # GET /answer_sets/1.json
-  def show
-    @answer_set = AnswerSet.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @answer_set }
-    end
-  end
-
   # GET /answer_sets/new
   # GET /answer_sets/new.json
   def new
@@ -92,11 +81,6 @@ class AnswerSetsController < ApplicationController
       format.html # new.html.erb
       format.json { render json: @answer_set }
     end
-  end
-
-  # GET /answer_sets/1/edit
-  def edit
-    @answer_set = AnswerSet.find(params[:id])
   end
 
   # POST /answer_sets
@@ -116,35 +100,6 @@ class AnswerSetsController < ApplicationController
       end
     end
   end
-
-  # PUT /answer_sets/1
-  # PUT /answer_sets/1.json
-  def update
-    @answer_set = AnswerSet.find(params[:id])
-
-    respond_to do |format|
-      if @answer_set.update_attributes(params[:answer_set])
-        format.html { redirect_to @answer_set, notice: 'Answer set was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @answer_set.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /answer_sets/1
-  # DELETE /answer_sets/1.json
-  def destroy
-    @answer_set = AnswerSet.find(params[:id])
-    @answer_set.destroy
-
-    respond_to do |format|
-      format.html { redirect_to answer_sets_url }
-      format.json { head :no_content }
-    end
-  end
-
 
   private
   def chart_data(data)

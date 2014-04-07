@@ -1,5 +1,5 @@
 MoodSwings::Application.routes.draw do
-  resources :answer_sets
+  resources :answer_sets, only: [:index, :new, :create], path: :swingings
   resources :cohorts
   resources :metrics
 
