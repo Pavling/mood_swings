@@ -1,4 +1,6 @@
 class CohortsController < ApplicationController
+  load_and_authorize_resource
+
   # GET /cohorts
   # GET /cohorts.json
   def index
