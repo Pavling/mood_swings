@@ -1,0 +1,19 @@
+%h1 Listing users
+
+%table
+  %tr
+    %th Name
+    %th Cohort
+    %th Administering
+    %th
+
+  - @users.each do |user|
+    %tr
+      %td= user.email
+      %td= user.cohort.try(:name)
+      %td= user.administered_cohorts.map(&:name).to_sentence
+      %td= link_to 'Show', user
+
+%br
+
+= link_to 'Invite User', new_user_invitation_path, class: :submit_button

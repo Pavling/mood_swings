@@ -29,6 +29,10 @@ class User < ActiveRecord::Base
     where(id: ids)
   end
 
+  def last_answer_set
+    answer_sets.order(:created_at).reverse_order.first
+  end
+
   def default_cohort_granularity
     admin? || cohort_admin? ? :cohort : :person
   end

@@ -295,3 +295,7 @@ ul#cohort_students {
 ul#cohort_administrators {
   display: inline-block;
 }
+
+ul#administered_cohorts {
+  display: inline-block;
+}

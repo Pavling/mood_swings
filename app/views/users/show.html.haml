@@ -1,0 +1,32 @@
+%h1 Show user
+
+%fieldset
+  .field
+    = label_tag :email
+    = @user.email
+
+  .field
+    = label_tag :cohort
+    = @user.cohort.try(:name)
+
+  .field
+    = label_tag :last_sign_in
+    = @user.last_sign_in_at ? "#{time_ago_in_words(@user.last_sign_in_at)} ago" : 'never'
+
+  .field
+    = label_tag :last_swing
+    = @user.last_answer_set.try(:created_at) ? "#{time_ago_in_words(@user.last_answer_set.try(:created_at))} ago" : 'never'
+
+  -if @user.administered_cohorts.any?
+    %hr
+    .field
+      = label_tag :administered_cohorts
+      %ul#administered_cohorts
+        - @user.administered_cohorts.each do |cohort|
+          %li
+            = cohort.name
+  
+
+%ul#actions
+  %li
+    = link_to 'Back', cohorts_path, class: :submit_button
