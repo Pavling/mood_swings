@@ -36,13 +36,13 @@ class User < ActiveRecord::Base
   def accessible_cohorts
     case
       when admin?
-        Cohort.all
+        Cohort.scoped
 
       when cohort_admin?
         administered_cohorts
 
       else
-        cohort
+        Cohort.where(id: cohort.id)
     end
   end
 
