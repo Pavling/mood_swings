@@ -7,6 +7,7 @@ MoodSwings::Application.routes.draw do
   resources :users, only: [:index, :show]
 
   root to: 'answer_sets#index', constraints: lambda { |request| request.env['warden'] && request.env['warden'].user && request.env['warden'].user.admin? }
+  root to: 'answer_sets#index', constraints: lambda { |request| request.env['warden'] && request.env['warden'].user && request.env['warden'].user.cohort_admin? && request.env['warden'].user.cohort.blank? }
   root to: 'home#index'
 
 end
