@@ -4,7 +4,7 @@ class CohortsController < ApplicationController
   # GET /cohorts
   # GET /cohorts.json
   def index
-    @cohorts = Cohort.all
+    @cohorts = current_user.accessible_cohorts
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,7 +15,7 @@ class CohortsController < ApplicationController
   # GET /cohorts/1
   # GET /cohorts/1.json
   def show
-    @cohort = Cohort.find(params[:id])
+    @cohort = current_user.accessible_cohorts.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -36,13 +36,13 @@ class CohortsController < ApplicationController
 
   # GET /cohorts/1/edit
   def edit
-    @cohort = Cohort.find(params[:id])
+    @cohort = current_user.accessible_cohorts.find(params[:id])
   end
 
   # POST /cohorts
   # POST /cohorts.json
   def create
-    @cohort = Cohort.new(params[:cohort])
+    @cohort = current_user.accessible_cohorts.new(params[:cohort])
 
     respond_to do |format|
       if @cohort.save
@@ -58,7 +58,7 @@ class CohortsController < ApplicationController
   # PUT /cohorts/1
   # PUT /cohorts/1.json
   def update
-    @cohort = Cohort.find(params[:id])
+    @cohort = current_user.accessible_cohorts.find(params[:id])
 
     respond_to do |format|
       if @cohort.update_attributes(params[:cohort])
@@ -74,7 +74,7 @@ class CohortsController < ApplicationController
   # DELETE /cohorts/1
   # DELETE /cohorts/1.json
   def destroy
-    @cohort = Cohort.find(params[:id])
+    @cohort = current_user.accessible_cohorts.find(params[:id])
     @cohort.destroy
 
     respond_to do |format|

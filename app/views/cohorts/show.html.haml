@@ -32,7 +32,8 @@
             = administrator.email
 
 %ul#actions
-  %li
-    = link_to 'Edit', edit_cohort_path(@cohort), class: :submit_button
+  - if can? :update, @cohort
+    %li
+      = link_to 'Edit', edit_cohort_path(@cohort), class: :submit_button
   %li
     = link_to 'Back', cohorts_path, class: :submit_button
