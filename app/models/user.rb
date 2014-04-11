@@ -37,6 +37,10 @@ class User < ActiveRecord::Base
     admin? || cohort_admin? ? :cohort : :person
   end
 
+  def invitable_cohorts
+    accessible_cohorts.current_and_future
+  end
+
   def accessible_cohorts
     case
       when admin?

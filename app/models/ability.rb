@@ -15,7 +15,7 @@ class Ability
         can :manage, :all
 
       when user.cohort_admin?
-        can :invite, User
+        can :invite, User if user.invitable_cohorts.any?
 
         can :granularity_by_cohort, AnswerSet
 
