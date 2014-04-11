@@ -19,7 +19,7 @@ class Ability
 
         can :granularity_by_cohort, AnswerSet
 
-        can :view, Cohort do |cohort|
+        can :read, Cohort do |cohort|
           cohort.administrators.include?(user)
         end
 
