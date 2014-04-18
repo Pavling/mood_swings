@@ -7,12 +7,13 @@ class AnswerSetsController < ApplicationController
   def index
     # TODO: Gotta be able to replace all this imperative scoping with `Ransack` or summit...
 
-    @answer_sets = current_user.accessible_answer_sets
-
     # set default values into params
     params[:granularity] ||= current_user.default_cohort_granularity
     params[:group] ||= :day
+    params[:cohort_ids] ||= current_user.accessible_cohorts.pluck(:id).map(&:to_s)
 
+    # restrict the default list of answer_sets to be the accessible ones for the user, filtered by the select ones from the view
+    @answer_sets = current_user.accessible_answer_sets.where(cohort_id: params[:cohort_ids])
 
     if params[:from_date].present?
       @answer_sets = @answer_sets.where("answer_sets.created_at >= ?", params[:from_date])
