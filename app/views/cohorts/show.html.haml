@@ -1,9 +1,14 @@
 %h1 Show cohort
 
 %fieldset
+    
   .field
     = label_tag :name
     = @cohort.name
+
+  .field
+    = label_tag :campus
+    = @cohort.campus.try :name
 
   .field
     = label_tag :start

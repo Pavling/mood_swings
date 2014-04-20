@@ -1,6 +1,7 @@
 class Cohort < ActiveRecord::Base
-  attr_accessible :name, :start_on, :end_on, :student_ids, :administrator_ids
+  attr_accessible :name, :start_on, :end_on, :student_ids, :administrator_ids, :campus_id
 
+  belongs_to :campus
   has_many :students, class_name: 'User', order: :email
   has_many :answer_sets
   has_many :cohort_administrators

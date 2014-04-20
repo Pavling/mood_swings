@@ -3,6 +3,7 @@
 %table
   %tr
     %th Name
+    %th Campus
     %th Admins
     %th
     %th
@@ -11,6 +12,7 @@
   - @cohorts.each do |cohort|
     %tr
       %td= cohort.name
+      %td= cohort.campus.try :name
       %td= cohort.administrators.map(&:email).to_sentence
       %td= link_to 'Show', cohort if can? :read, cohort
       %td= link_to 'Edit', edit_cohort_path(cohort) if can? :update, cohort

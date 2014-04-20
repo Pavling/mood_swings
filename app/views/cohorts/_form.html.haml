@@ -6,9 +6,13 @@
         - @cohort.errors.full_messages.each do |msg|
           %li= msg
 
+      %td= cohort.campus.try :name
   .field
     = f.label :name
     = f.text_field :name
+  .field
+    = f.label :campus_id, 'Campus'
+    = f.collection_select :campus_id, @campuses, :id, :name, prompt: true
   .field
     = f.label :start_on
     = f.text_field :start_on, placeholder: 'yyyy-mm-dd', class: :datepicker

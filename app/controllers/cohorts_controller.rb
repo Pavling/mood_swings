@@ -1,6 +1,8 @@
 class CohortsController < ApplicationController
   load_and_authorize_resource
 
+  before_filter :load_campuses, only: [:new, :create, :edit, :update]
+
   # GET /cohorts
   # GET /cohorts.json
   def index
@@ -82,4 +84,10 @@ class CohortsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  private
+  def load_campuses
+    @campuses = Campus.order(:name)
+  end
+
 end
