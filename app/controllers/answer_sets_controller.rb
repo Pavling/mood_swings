@@ -24,22 +24,26 @@ class AnswerSetsController < ApplicationController
 
 
     # setup the core query of the answer_set data
-    @chart_data = @answer_sets.select('avg(answers.value) as value').joins(:answers, :cohort)
+    @chart_data = @answer_sets.select('avg(answers.value) as value').joins(:answers, cohort: :campus)
 
 
     # set the granularity of the data as required
     @chart_data = case params[:granularity].to_s.downcase
       when 'person'
         # remove the granularity of seeing the individual metric - instead, show each user's average for the set
-        @chart_data.select('answer_sets.cohort_id as cohort_id, answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('answer_sets.cohort_id, answer_sets.user_id, users.email').joins(:user)
+        @chart_data.select('cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.email as label').group('cohorts.campus_id, answer_sets.cohort_id, answer_sets.user_id, users.email').joins(:user)
 
       when 'cohort'
         authorize! :granularity_by_cohort, AnswerSet
-        @chart_data.select("answer_sets.cohort_id as cohort_id, 'cohort' as metric_id, 'cohort' as user_id, cohorts.name as label").group('answer_sets.cohort_id, cohorts.name')
+        @chart_data.select("cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, 'cohort' as metric_id, 'cohort' as user_id, cohorts.name as label").group('cohorts.campus_id, answer_sets.cohort_id, cohorts.name')
+
+      when 'campus'
+        authorize! :granularity_by_campus, AnswerSet
+        @chart_data.select("cohorts.campus_id as campus_id, 'campus' as cohort_id, 'campus' as metric_id, 'campus' as user_id, campuses.name as label").group('cohorts.campus_id, campuses.name')
 
       else
         # default to grouping as finely-grained as possible - right down to the individual metric
-        @chart_data.select("answer_sets.cohort_id as cohort_id, answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("answer_sets.cohort_id, answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
+        @chart_data.select("cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, answers.metric_id as metric_id, answer_sets.user_id as user_id, users.email || ': ' || metrics.measure as label").group("cohorts.campus_id, answer_sets.cohort_id, answers.metric_id, answer_sets.user_id, users.email || ': ' || metrics.measure").joins(:user, answers: :metric)
     end
 
 
