@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140418165404) do
+ActiveRecord::Schema.define(:version => 20140420195636) do
 
   create_table "answer_sets", :force => true do |t|
     t.integer  "user_id"
@@ -33,6 +33,16 @@ ActiveRecord::Schema.define(:version => 20140418165404) do
 
   add_index "answers", ["answer_set_id"], :name => "index_answers_on_answer_set_id"
   add_index "answers", ["metric_id"], :name => "index_answers_on_metric_id"
+
+  create_table "campus_administrators", :force => true do |t|
+    t.integer  "administrator_id"
+    t.integer  "campus_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "campus_administrators", ["administrator_id"], :name => "index_campus_administrators_on_administrator_id"
+  add_index "campus_administrators", ["campus_id"], :name => "index_campus_administrators_on_campus_id"
 
   create_table "campuses", :force => true do |t|
     t.string   "name"
