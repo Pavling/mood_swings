@@ -55,6 +55,11 @@ input, select {
 
 th {
   font-weight: bold;
+  padding-right: 10px
+}
+
+td {
+  padding-right: 10px
 }
 
 #header h1 {
