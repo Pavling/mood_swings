@@ -24,7 +24,7 @@
       %ul#cohort_students
         - @cohort.students.each do |student|
           %li
-            = student.email
+            = student.name
   
   -if @cohort.administrators.any?
     %hr
@@ -34,7 +34,7 @@
       %ul#cohort_administrators
         - @cohort.administrators.each do |administrator|
           %li
-            = administrator.email
+            = administrator.name
 
 %ul#actions
   - if can? :update, @cohort

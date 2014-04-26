@@ -26,7 +26,7 @@
       - (@cohort.students + User.unenrolled).each do |student|
         %li
           = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
-          = label_tag student.email
+          = label_tag student.name
   %hr
   .field
     = label_tag :administrators, 'Admins'
@@ -35,7 +35,7 @@
       - (@cohort.administrators + User.unenrolled).uniq.each do |administrator|
         %li
           = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
-          = label_tag administrator.email
+          = label_tag administrator.name
 
 
 

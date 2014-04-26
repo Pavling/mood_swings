@@ -4,7 +4,7 @@ MoodSwings::Application.routes.draw do
   resources :answer_sets, only: [:index, :new, :create], path: :swingings
   resources :cohorts
   resources :metrics
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :edit, :update]
 
   root to: 'answer_sets#index', constraints: lambda { |request| request.env['warden'] && request.env['warden'].user && request.env['warden'].user.admin? }
   root to: 'answer_sets#index', constraints: lambda { |request| request.env['warden'] && request.env['warden'].user && request.env['warden'].user.cohort_admin? && request.env['warden'].user.cohort.blank? }

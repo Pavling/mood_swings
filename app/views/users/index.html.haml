@@ -3,16 +3,22 @@
 %table
   %tr
     %th Name
+    %th Email
+    %th Skip Reminders?
     %th Cohort
     %th Administering
+    %th
     %th
 
   - @users.each do |user|
     %tr
+      %td= user.name
       %td= user.email
+      %td= user.skip_email_reminders
       %td= user.cohort.try(:name)
       %td= user.administered_cohorts.map(&:name).to_sentence
       %td= link_to 'Show', user
+      %td= link_to 'Edit', edit_user_path(user) if can? :update, user
 
 %br
 

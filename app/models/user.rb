@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   devise :invitable, :database_authenticatable, :registerable, :invitable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
+  attr_accessible :email, :name, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
 
   has_many :answer_sets
   has_many :answers, through: :answer_sets
@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   belongs_to :cohort
 
   scope :unenrolled, where(cohort_id: nil)
+
+  validates :name, presence: true
 
   def self.needing_reminder_email
     where("users.id not in (?)", mood_swung_today << 0).joins(:cohort).merge(Cohort.currently_running)

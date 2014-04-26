@@ -11,6 +11,11 @@
   <% end -%>
 
   <div>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
     <%= f.label :cohort_id, 'Cohort' %><br />
     <%= f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose, or leave blank for cohort admin' %>
   </div>
