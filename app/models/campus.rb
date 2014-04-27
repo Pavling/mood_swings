@@ -3,7 +3,7 @@ class Campus < ActiveRecord::Base
 
   has_many :cohorts
   has_many :campus_administrators
-  has_many :administrators, through: :capus_administrators, order: :name
+  has_many :administrators, through: :campus_administrators, order: :name
 
   validates :name, uniqueness: true
 
