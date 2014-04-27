@@ -28,8 +28,6 @@ class CohortsController < ApplicationController
   # GET /cohorts/new
   # GET /cohorts/new.json
   def new
-    @cohort = Cohort.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @cohort }
@@ -44,8 +42,6 @@ class CohortsController < ApplicationController
   # POST /cohorts
   # POST /cohorts.json
   def create
-    @cohort = current_user.accessible_cohorts.new(params[:cohort])
-
     respond_to do |format|
       if @cohort.save
         format.html { redirect_to @cohort, notice: 'Cohort was successfully created.' }
