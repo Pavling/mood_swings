@@ -14,6 +14,10 @@ class Ability
       when user.admin?
         can :manage, :all
 
+        cannot :destroy, Campus do |campus|
+          campus.cohorts.any?
+        end 
+
       when user.cohort_admin?
         can :invite, User if user.invitable_cohorts.any?
 

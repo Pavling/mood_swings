@@ -2,6 +2,7 @@ MoodSwings::Application.routes.draw do
   devise_for :users, controllers: { registrations: "registrations", invitations: "invitations" }
 
   resources :answer_sets, only: [:index, :new, :create], path: :swingings
+  resources :campuses
   resources :cohorts
   resources :metrics
   resources :users, only: [:index, :show, :edit, :update]

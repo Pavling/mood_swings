@@ -1,0 +1,27 @@
+= form_for @campus do |f|
+  - if @campus.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@campus.errors.count, "error")} prohibited this campus from being saved:"
+      %ul
+        - @campus.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  %hr
+  .field
+    = label_tag :administrators, 'Admins'
+    = hidden_field_tag 'campus[administrator_ids][]'
+    %ul#campus_administrators
+      - (@campus.administrators + User.unenrolled).uniq.each do |administrator|
+        %li
+          = check_box_tag :administrator_ids, administrator.id, @campus.administrators.include?(administrator), name: 'campus[administrator_ids][]'
+          = label_tag administrator.name
+
+
+
+
+
+  .actions
+    = f.submit 'Save', class: :submit_button

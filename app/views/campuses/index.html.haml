@@ -1,0 +1,21 @@
+%h1 Listing campuses
+
+%table
+  %tr
+    %th Name
+    %th Admins
+    %th
+    %th
+    %th
+
+  - @campuses.each do |campus|
+    %tr
+      %td= campus.name
+      %td= campus.administrators.map(&:name).to_sentence
+      %td= link_to 'Show', campus if can? :read, campus
+      %td= link_to 'Edit', edit_campus_path(campus) if can? :update, campus
+      %td= link_to 'Destroy', campus, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, campus
+
+%br
+
+= link_to 'New Campus', new_campus_path, class: :submit_button if can? :create, Campus

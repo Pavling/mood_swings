@@ -38,6 +38,11 @@
             <%= link_to 'cohorts', cohorts_path %>
           </li>
         <% end %>
+        <% if can? :read, Campus %>
+          <li>
+            <%= link_to 'campuses', campuses_path %>
+          </li>
+        <% end %>
         <% if can? :read, User %>
           <li>
             <%= link_to 'users', users_path %>
