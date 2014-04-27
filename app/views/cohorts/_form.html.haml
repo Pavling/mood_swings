@@ -6,7 +6,6 @@
         - @cohort.errors.full_messages.each do |msg|
           %li= msg
 
-      %td= cohort.campus.try :name
   .field
     = f.label :name
     = f.text_field :name
