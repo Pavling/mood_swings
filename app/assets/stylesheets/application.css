@@ -312,3 +312,15 @@ ul#cohort_administrators {
 ul#administered_cohorts {
   display: inline-block;
 }
+
+#answer_set_index {
+  width: 100%
+}
+
+#cohorts_container .cohorts {
+  display: inline-block;
+}
+
+#cohorts_container .cohort {
+    display: inline-block;
+}

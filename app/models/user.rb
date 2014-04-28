@@ -54,6 +54,10 @@ class User < ActiveRecord::Base
    @accessible_cohorts = Cohort.where(id: cohort_ids)
   end
 
+  def accessible_cohorts_by_campus
+    @accessible_cohorts_by_campus ||= accessible_cohorts.includes(:campus).group_by(&:campus)
+  end
+
   def accessible_campuses
     return @accessible_campuses if @accessible_campuses
     campus_ids = [
