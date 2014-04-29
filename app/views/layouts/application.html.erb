@@ -19,7 +19,9 @@
   <div id='nav_container'>
     <% if signed_in? %>
       <ul>
-        <li>Hey, <%= current_user.email %></li>
+        <li>
+          <%= link_to "Welcome, #{current_user.first_name}", edit_user_registration_path %>
+        </li>
         <li>
           <%= link_to 'historic moods', answer_sets_path %>
         </li>
@@ -48,9 +50,6 @@
             <%= link_to 'users', users_path %>
           </li>
         <% end %>
-        <li>
-          <%= link_to 'my profile', edit_user_registration_path %>
-        </li>
         <li>
           <%= link_to 'sign out', destroy_user_session_path, method: :delete %>
         </li>

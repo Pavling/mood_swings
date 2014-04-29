@@ -172,6 +172,14 @@ td {
   margin-left: 1em;
 }
 
+.banner #nav_container a {
+  text-decoration: none;
+}
+
+.banner #nav_container a:hover {
+  text-decoration: underline;
+}
+
 .login-notice {
   text-align: center;
   font-size: 1.35rem;

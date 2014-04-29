@@ -31,6 +31,10 @@ class User < ActiveRecord::Base
     where(id: ids)
   end
 
+  def first_name
+    name.to_s.split.first
+  end
+
   def last_answer_set
     answer_sets.order(:created_at).reverse_order.first
   end
