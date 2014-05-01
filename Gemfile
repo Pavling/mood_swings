@@ -14,12 +14,15 @@ gem 'high_voltage'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 
+gem 'newrelic_rpm', group: :production
+
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
   gem 'binding_of_caller'
   gem 'better_errors'
+  gem 'dotenv-rails'
 end
 
 gem 'letter_opener', group: :development
