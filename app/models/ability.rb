@@ -18,13 +18,18 @@ class Ability
           campus.cohorts.any?
         end 
 
-      when user.cohort_admin?
+      when user.cohort_admin? || user.campus_admin?
+        if user.campus_admin?
+          can :granularity_by_campus, AnswerSet
+          can :manage, :cohort if user.administered_cohorts.include?(cohort)
+        end
+
         can :invite, User if user.invitable_cohorts.any?
 
         can :granularity_by_cohort, AnswerSet
 
         can :read, Cohort do |cohort|
-          cohort.administrators.include?(user)
+          user.accessible_cohorts.include?(cohort)
         end
 
     end
