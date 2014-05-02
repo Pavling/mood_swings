@@ -5,67 +5,21 @@ class AnswerSetsController < ApplicationController
   # GET /answer_sets
   # GET /answer_sets.json
   def index
-    # TODO: Gotta be able to replace all this imperative scoping with `Ransack` or summit...
+    case params[:granularity].to_s.downcase
+      when 'cohort'
+        authorize! :granularity_by_cohort, AnswerSet
+      when 'campus'
+        authorize! :granularity_by_campus, AnswerSet
+    end
 
     # set default values into params
     params[:granularity] ||= current_user.default_cohort_granularity
     params[:group] ||= :day
     params[:cohort_ids] ||= current_user.accessible_cohorts.currently_running.pluck(:id).map(&:to_s)
 
-    # restrict the default list of answer_sets to be the accessible ones for the user, filtered by the select ones from the view
-    @answer_sets = current_user.accessible_answer_sets.where(cohort_id: params[:cohort_ids])
+    @answer_sets = current_user.accessible_answer_sets.for_index(params)
 
-    if params[:from_date].present?
-      @answer_sets = @answer_sets.where("answer_sets.created_at >= ?", params[:from_date])
-    end
-    if params[:to_date].present?
-      @answer_sets = @answer_sets.where("answer_sets.created_at <= ?", params[:to_date])
-    end
-
-
-    # setup the core query of the answer_set data
-    @chart_data = @answer_sets.select('avg(answers.value) as value').joins(:answers, cohort: :campus)
-
-
-    # set the granularity of the data as required
-    @chart_data = case params[:granularity].to_s.downcase
-      when 'person'
-        # remove the granularity of seeing the individual metric - instead, show each user's average for the set
-        @chart_data.select('cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, answer_sets.user_id as metric_id, answer_sets.user_id as user_id, users.name as label').group('cohorts.campus_id, answer_sets.cohort_id, answer_sets.user_id, users.name').joins(:user)
-
-      when 'cohort'
-        authorize! :granularity_by_cohort, AnswerSet
-        @chart_data.select("cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, 'cohort' as metric_id, 'cohort' as user_id, cohorts.name as label").group('cohorts.campus_id, answer_sets.cohort_id, cohorts.name')
-
-      when 'campus'
-        authorize! :granularity_by_campus, AnswerSet
-        @chart_data.select("cohorts.campus_id as campus_id, 'campus' as cohort_id, 'campus' as metric_id, 'campus' as user_id, campuses.name as label").group('cohorts.campus_id, campuses.name')
-
-      else
-        # default to grouping as finely-grained as possible - right down to the individual metric
-        @chart_data.select("cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, answers.metric_id as metric_id, answer_sets.user_id as user_id, users.name || ': ' || metrics.measure as label").group("cohorts.campus_id, answer_sets.cohort_id, answers.metric_id, answer_sets.user_id, users.name || ': ' || metrics.measure").joins(:user, answers: :metric)
-    end
-
-
-    # group the data into days/weeks if required
-    @chart_data = case params[:group].to_s.downcase
-      when 'hour'
-        @x_labels = 'hour'
-        @chart_data.select("date_trunc('hour', answer_sets.created_at) as created_at").group("date_trunc('hour', answer_sets.created_at)")
-
-      when 'day'
-        @x_labels = 'day'
-        @chart_data.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
-
-      when 'week'
-        # TODO: the week-grouping chart labels get fubard... try to sort them
-        @x_labels = 'month'
-        @chart_data.select("EXTRACT(YEAR FROM answer_sets.created_at)::text as created_at_year, EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at_week").group("EXTRACT(YEAR FROM answer_sets.created_at)::text, EXTRACT(WEEK FROM answer_sets.created_at)::text")
-
-      else
-        @chart_data.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
-    end
-
+    @chart_data = @answer_sets.for_chart(params)
 
     @data = chart_data(@chart_data)
     @keys = chart_data_keys(@chart_data)
