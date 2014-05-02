@@ -43,6 +43,13 @@ class User < ActiveRecord::Base
     admin? || cohort_admin? ? :cohort : :person
   end
 
+  def default_cohort_ids_for_filter
+    # return the ids of the currently running, accessible cohorts - but if there's none running, return the ids of all accessible cohorts
+    ids = accessible_cohorts.currently_running.pluck(:id)
+    ids = ids.any? ? ids : accessible_cohorts.pluck(:id)
+    ids.map(&:to_s)
+  end
+
   def invitable_cohorts
     accessible_cohorts.current_and_future
   end
