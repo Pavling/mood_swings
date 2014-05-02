@@ -21,7 +21,9 @@ class Ability
       when user.cohort_admin? || user.campus_admin?
         if user.campus_admin?
           can :granularity_by_campus, AnswerSet
-          can :manage, :cohort if user.administered_cohorts.include?(cohort)
+          can :manage, :cohort do |cohort|
+            user.administered_cohorts.include?(cohort)
+          end
         end
 
         can :invite, User if user.invitable_cohorts.any?

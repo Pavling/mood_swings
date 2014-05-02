@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
     return @accessible_cohorts if @accessible_cohorts
     cohort_ids = [
       (Cohort.scoped.pluck(:id) if admin?),
-      (campus.cohorts.pluck(:id) if campus_admin?),
+      (administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) } if campus_admin?),
       (administered_cohorts.pluck(:id) if cohort_admin?),
       cohort_id
     ].flatten.delete_if(&:blank?)
@@ -80,21 +80,11 @@ class User < ActiveRecord::Base
   end
 
   def accessible_answer_sets
-    # TODO: Once some tests are in place, these four lines might replace what's below (but without tests it's hard to be sure I'm not breaking it :-/
-    # administered_cohort_answer_sets_sql = AnswerSet.where(cohort_id: accessible_cohorts.map(&:id)).to_sql
-    # own_answer_sets_sql = answer_sets.to_sql
-    # answer_set_ids = AnswerSet.find_by_sql("#{administered_cohort_answer_sets_sql} UNION #{own_answer_sets_sql}").map(&:id)
-    # AnswerSet.where(id: answer_set_ids)
-
-    if admin?
-      AnswerSet.scoped
-    else
-      administered_cohort_answer_sets_sql = AnswerSet.select('answer_sets.id').joins(cohort: :administrators).where(cohort_administrators: {administrator_id: id}).to_sql
-      own_answer_sets_sql = answer_sets.select(:id).to_sql
-
-      answer_set_ids = AnswerSet.find_by_sql("#{administered_cohort_answer_sets_sql} UNION #{own_answer_sets_sql}").map(&:id)
-      AnswerSet.where(id: answer_set_ids)
-    end
+    return @accessible_answer_sets if @accessible_answer_sets
+    administered_cohort_answer_sets_sql = AnswerSet.where(cohort_id: accessible_cohorts.map(&:id)).to_sql
+    own_answer_sets_sql = answer_sets.to_sql
+    answer_set_ids = AnswerSet.find_by_sql("#{administered_cohort_answer_sets_sql} UNION #{own_answer_sets_sql}").map(&:id)
+    @accessible_answer_sets = AnswerSet.where(id: answer_set_ids)
   end
 
   def admin?
