@@ -7,6 +7,8 @@ class Cohort < ActiveRecord::Base
   has_many :cohort_administrators
   has_many :administrators, through: :cohort_administrators, order: :name
 
+  before_destroy :ensure_no_answer_sets_exist
+
   default_scope order(:name)
   scope :currently_running, lambda { where("cohorts.start_on <= :today AND cohorts.end_on >= :today", today: Date.today) }
   scope :future, lambda { where("cohorts.start_on > :today", today: Date.today) }
@@ -28,4 +30,11 @@ class Cohort < ActiveRecord::Base
     Cohort.currently_running.include?(self)
   end
 
+  private
+  def ensure_no_answer_sets_exist
+    if answer_sets.any?
+      errors.add :base, "you cannot delete this cohort as users have given mood swings for it"
+      return false
+    end
+  end
 end

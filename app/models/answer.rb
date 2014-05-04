@@ -3,11 +3,12 @@ class Answer < ActiveRecord::Base
   belongs_to :metric
   attr_accessible :comments, :value, :metric_id
 
+  after_save :nullify_comments_if_necessary
+  before_destroy :prevent_destroy
+  
   validates :value, inclusion: (1..5)
   validates :metric_id, uniqueness: {scope: :answer_set_id}
   validates :metric_id, presence: true
-
-  after_save :nullify_comments_if_necessary
 
   def knob_data
     {
@@ -21,6 +22,12 @@ class Answer < ActiveRecord::Base
       cursor: true,
       linecap: :round,
     }
+  end
+
+  private
+  def prevent_destroy
+    errors.add :base, "you cannot delete answers"
+    return false
   end
 
   private

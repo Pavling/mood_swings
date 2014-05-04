@@ -3,6 +3,8 @@ class AnswerSet < ActiveRecord::Base
   belongs_to :user
   has_many :answers, dependent: :destroy
 
+  before_destroy :prevent_destroy
+  
   scope :with_comments, includes(:answers).where("answers.comments > ''")
 
   attr_accessible :answers_attributes
@@ -79,6 +81,11 @@ class AnswerSet < ActiveRecord::Base
     chart_data
   end
 
+  private
+  def prevent_destroy
+    errors.add :base, "you cannot delete answer sets"
+    return false
+  end
 
   private
   def chart_color

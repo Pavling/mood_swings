@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
 
+  before_destroy :ensure_no_answer_sets_exist
+
   has_many :answer_sets
   has_many :answers, through: :answer_sets
   has_many :cohort_administrations, foreign_key: :administrator_id, class_name: 'CohortAdministrator'
@@ -110,6 +112,14 @@ class User < ActiveRecord::Base
   def campus_admin?
     return @campus_admin if [false, true].include?(@campus_admin)
     @campus_admin = campus_administrations.any?
+  end
+
+  private
+  def ensure_no_answer_sets_exist
+    if answer_sets.any?
+      errors.add :base, "cannot delete user if they have swung their mood"
+      return false
+    end
   end
 
 end
