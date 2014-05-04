@@ -94,9 +94,11 @@ class User < ActiveRecord::Base
 
   def accessible_answer_sets
     return @accessible_answer_sets if @accessible_answer_sets
-    administered_cohort_answer_sets_sql = AnswerSet.where(cohort_id: administered_cohorts.map(&:id)).to_sql
-    own_answer_sets_sql = answer_sets.to_sql
-    answer_set_ids = AnswerSet.find_by_sql("#{administered_cohort_answer_sets_sql} UNION #{own_answer_sets_sql}").map(&:id)
+     answer_set_ids = [
+       (AnswerSet.scoped.pluck(:id) if admin?),
+       administered_cohorts.flat_map(&:answer_sets).map(&:id),
+       answer_set_ids
+     ].flatten.delete_if(&:blank?)
     @accessible_answer_sets = AnswerSet.where(id: answer_set_ids)
   end
 
