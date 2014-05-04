@@ -35,6 +35,6 @@ class Answer < ActiveRecord::Base
     return if comments.blank?
     null_comments = '\A\s*n\/a\s*\Z' # any amount of whitespace at the start and end of the comments with 'n/a' in the middle
 
-    update_attributes(comments: nil) if comments.match(Regexp.new(null_comments))
+    update_attributes(comments: nil) if comments.match(Regexp.new(null_comments, Regexp::IGNORECASE))
   end
 end
