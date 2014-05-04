@@ -17,7 +17,7 @@
       %td= user.skip_email_reminders
       %td= user.cohort.try(:name)
       %td= user.administered_cohorts.map(&:name).to_sentence
-      %td= link_to 'Show', user
+      %td= link_to 'Show', user if can? :show, user
       %td= link_to 'Edit', edit_user_path(user) if can? :update, user
 
 %br
