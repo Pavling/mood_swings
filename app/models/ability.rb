@@ -25,6 +25,8 @@ class Ability
         user.administered_cohorts.include?(cohort)
       end
 
+      can :create, Cohort if user.campus_admin?
+
       can :read, Cohort do |cohort|
         user.accessible_cohorts.include?(cohort)
       end

@@ -83,7 +83,7 @@ class CohortsController < ApplicationController
 
   private
   def load_campuses
-    @campuses = Campus.order(:name)
+    @campuses = current_user.administered_campuses.order(:name)
   end
 
 end
