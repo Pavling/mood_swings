@@ -54,12 +54,23 @@ class User < ActiveRecord::Base
     accessible_cohorts.current_and_future
   end
 
+  def accessible_users
+    @accessible_users ||= User.scoped if admin?
+    return @accessible_users if @accessible_users
+
+    cohort_ids = [
+      administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
+      administered_cohorts.pluck(:cohort_id)
+    ]
+    @accessible_users = User.where(cohort_id: cohort_ids)
+  end
+
   def accessible_cohorts
     return @accessible_cohorts if @accessible_cohorts
     cohort_ids = [
       (Cohort.scoped.pluck(:id) if admin?),
-      (administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) } if campus_admin?),
-      (administered_cohorts.pluck(:id) if cohort_admin?),
+      administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
+      administered_cohorts.pluck(:id),
       cohort_id
     ].flatten.delete_if(&:blank?)
    @accessible_cohorts = Cohort.where(id: cohort_ids)
@@ -73,8 +84,8 @@ class User < ActiveRecord::Base
     return @accessible_campuses if @accessible_campuses
     campus_ids = [
       (Campus.scoped.pluck(:id) if admin?),
-      (administered_campuses.pluck(:id) if campus_admin?),
-      (administered_cohorts.pluck(:campus_id) if cohort_admin?)
+      administered_campuses.pluck(:id),
+      administered_cohorts.pluck(:campus_id)
     ].flatten.delete_if(&:blank?)
    @accessible_campuses = Campus.where(id: campus_ids)
   end
