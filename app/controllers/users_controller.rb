@@ -22,6 +22,9 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user.attributes = params[:user]
+    authorize! :alter_email, @user if @user.email_changed?
+
     @cohorts = current_user.invitable_cohorts
     respond_to do |format|
       if @user.update_attributes(params[:user])

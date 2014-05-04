@@ -8,7 +8,10 @@
 
   .field
     = f.label :email
-    = f.text_field :email
+    - if can? :alter_email, @user
+      = f.text_field :email
+    - else
+      = @user.email
 
   .field
     = f.label :name
