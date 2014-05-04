@@ -60,22 +60,23 @@ class User < ActiveRecord::Base
     @accessible_users ||= User.scoped if admin?
     return @accessible_users if @accessible_users
 
-    cohort_ids = [
+    accessible_cohort_ids = [
       administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
       administered_cohorts.pluck(:cohort_id)
     ]
-    @accessible_users = User.where(cohort_id: cohort_ids)
+    @accessible_users = User.where(cohort_id: accessible_cohort_ids)
   end
 
   def accessible_cohorts
+    @accessible_cohorts ||= Cohort.scoped if admin?
     return @accessible_cohorts if @accessible_cohorts
-    cohort_ids = [
-      (Cohort.scoped.pluck(:id) if admin?),
+
+    accessible_cohort_ids = [
       administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
       administered_cohorts.pluck(:id),
       cohort_id
     ].flatten.delete_if(&:blank?)
-   @accessible_cohorts = Cohort.where(id: cohort_ids)
+   @accessible_cohorts = Cohort.where(id: accessible_cohort_ids)
   end
 
   def accessible_cohorts_by_campus
@@ -83,23 +84,25 @@ class User < ActiveRecord::Base
   end
 
   def accessible_campuses
+    @accessible_campuses ||= Campus.scoped if admin?
     return @accessible_campuses if @accessible_campuses
-    campus_ids = [
-      (Campus.scoped.pluck(:id) if admin?),
+
+    accessible_campus_ids = [
       administered_campuses.pluck(:id),
       administered_cohorts.pluck(:campus_id)
     ].flatten.delete_if(&:blank?)
-   @accessible_campuses = Campus.where(id: campus_ids)
+   @accessible_campuses = Campus.where(id: accessible_campus_ids)
   end
 
   def accessible_answer_sets
+    @accessible_answer_sets ||= AnswerSet.scoped if admin?
     return @accessible_answer_sets if @accessible_answer_sets
-     answer_set_ids = [
-       (AnswerSet.scoped.pluck(:id) if admin?),
+
+     accessible_answer_sets_ids = [
        administered_cohorts.flat_map(&:answer_sets).map(&:id),
        answer_set_ids
      ].flatten.delete_if(&:blank?)
-    @accessible_answer_sets = AnswerSet.where(id: answer_set_ids)
+    @accessible_answer_sets = AnswerSet.where(id: accessible_answer_set_ids)
   end
 
   def admin?
