@@ -54,7 +54,7 @@ class AnswerSetsController < ApplicationController
         format.html { redirect_to root_path, notice: 'Your current mood has been recorded. Thank you.' }
         format.json { render json: @answer_set, status: :created, location: @answer_set }
       else
-        format.html { render "pages/home" }
+        format.html { redirect_to root_path, alert: @answer_set.errors.full_messages.join(' ') }
         format.json { render json: @answer_set.errors, status: :unprocessable_entity }
       end
     end

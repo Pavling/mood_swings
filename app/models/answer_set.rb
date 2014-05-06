@@ -6,12 +6,14 @@ class AnswerSet < ActiveRecord::Base
   before_destroy :prevent_destroy
   
   scope :with_comments, includes(:answers).where("answers.comments > ''")
+  scope :last_five_minutes, lambda { where('created_at > ?', 5.minutes.ago)}
 
   attr_accessible :answers_attributes
 
   accepts_nested_attributes_for :answers
 
   validates :cohort_id, presence: true
+  validate :not_swung_in_the_last_five_minutes
 
 
   def self.populated_with_answers
@@ -90,6 +92,11 @@ class AnswerSet < ActiveRecord::Base
   private
   def chart_color
     @chart_colour ||= "%06x" % (rand * 0xffffff)
+  end
+
+  private
+  def not_swung_in_the_last_five_minutes
+    errors.add :base, "Whoa! You must be very moody! You need to leave at least 5mins between swings." if user && user.answer_sets.last_five_minutes.any?
   end
 
   private
