@@ -24,6 +24,20 @@ class AnswerSet < ActiveRecord::Base
     answer_set
   end
 
+  def self.from_last_set_for(user)
+    answer_set = populated_with_answers
+
+    return answer_set unless user && last_set = user.answer_sets.last
+
+    answer_set.answers.each do |answer|
+      if previous_answer = last_set.answers.detect{|a|a.metric_id==answer.metric_id}
+        answer.value = previous_answer.value
+      end
+    end
+
+    answer_set
+  end
+
   def self.for_index(params)
     # restrict the default list of answer_sets to be the accessible ones for the user, filtered by the select ones from the view
     answer_sets = scoped.where(cohort_id: params[:cohort_ids])
@@ -99,18 +113,4 @@ class AnswerSet < ActiveRecord::Base
     errors.add :base, "Whoa! You must be very moody! You need to leave at least 5mins between swings." if user && user.answer_sets.last_five_minutes.any?
   end
 
-  private
-  def self.from_last_set_for(user)
-    answer_set = populated_with_answers
-
-    return answer_set unless user && last_set = user.answer_sets.last
-
-    answer_set.answers.each do |answer|
-      if previous_answer = last_set.answers.detect{|a|a.metric_id==answer.metric_id}
-        answer.value = previous_answer.value
-      end
-    end
-
-    answer_set
-  end
 end
