@@ -13,6 +13,7 @@ class AnswerSet < ActiveRecord::Base
   accepts_nested_attributes_for :answers
 
   validates :cohort_id, presence: true
+  validates :user_id, presence: true
   validate :not_swung_in_the_last_five_minutes
 
 
