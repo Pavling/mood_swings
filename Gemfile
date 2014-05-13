@@ -23,6 +23,16 @@ group :development, :test do
   gem 'binding_of_caller'
   gem 'better_errors'
   gem 'dotenv-rails'
+
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+end
+
+group :test do
+  gem 'faker'
+  gem 'capybara'
+  gem 'guard-rspec'
+  gem 'launchy'
 end
 
 gem 'letter_opener', group: :development
