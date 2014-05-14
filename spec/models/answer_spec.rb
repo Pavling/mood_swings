@@ -40,36 +40,39 @@ describe Answer do
     expect(answer.destroy).to be false
   end
   
-  it "removes comments that are placeholders for 'no answer'" do
-    non_comments = ['n/a', 'N/A', '  n/A   ']
+  describe '#comments' do
+    it "removes comments that are placeholders for 'no answer'" do
+      non_comments = ['n/a', 'N/A', '  n/A   ']
 
-    non_comments.each do |non_comment|
-      answer = FactoryGirl.create(:answer, comments: non_comment)
-      expect(answer.comments).to be_nil
+      non_comments.each do |non_comment|
+        answer = FactoryGirl.create(:answer, comments: non_comment)
+        expect(answer.comments).to be_nil
+      end
+    end
+
+    it "leave comments in place if they're genuine comments" do
+      comments = Faker::Lorem.sentence
+      answer = FactoryGirl.create(:answer, comments: comments)
+      expect(answer.comments).to eq comments
     end
   end
 
-  it "leave comments in place they're genuine comments" do
-    comments = Faker::Lorem.sentence
-    answer = FactoryGirl.create(:answer, comments: comments)
-    expect(answer.comments).to eq comments
+  describe '#knob_data' do
+    it "sets up default values for the knob-data" do
+      answer = FactoryGirl.create(:answer)
+      default_knob_data = {
+        fgColor: "#66CC66",
+        angleOffset: -125,
+        angleArc: 250,
+        width: 75,
+        height: 75,
+        min: 1,
+        max: 5,
+        cursor: true,
+        linecap: :round,
+      }
+      expect(answer.knob_data).to eq default_knob_data
+    end
   end
-
-  it "sets up default values for the knob-data" do
-    answer = FactoryGirl.create(:answer)
-    default_knob_data = {
-      fgColor: "#66CC66",
-      angleOffset: -125,
-      angleArc: 250,
-      width: 75,
-      height: 75,
-      min: 1,
-      max: 5,
-      cursor: true,
-      linecap: :round,
-    }
-    expect(answer.knob_data).to eq default_knob_data
-  end
-
 
 end
