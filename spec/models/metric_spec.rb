@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Metric do
   it "has a valid factory" do
-    expect(FactoryGirl.create(:metric)).to be_valid
+    expect(FactoryGirl.build(:metric)).to be_valid
   end
 
   it "is invalid without a measure" do

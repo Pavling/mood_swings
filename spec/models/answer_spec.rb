@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Answer do
   it "has a valid factory" do
-    expect(FactoryGirl.create(:answer)).to be_valid
+    expect(FactoryGirl.build(:answer)).to be_valid
   end
 
   it "is invalid without a value" do
