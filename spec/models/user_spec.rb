@@ -155,6 +155,7 @@ describe User do
     end
   end
 
+
   describe 'accessibility' do
     before :each do
       @campus1 = FactoryGirl.create(:campus)
@@ -181,6 +182,52 @@ describe User do
       @user4.administered_cohorts << @cohort3
     end
 
+
+    describe '#accessible_campuses' do
+      describe 'admin' do
+        it 'returns all campuses' do
+          ids = [@campus1, @campus2].map(&:id)
+          expect(@admin.accessible_campuses.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'campus_admin' do
+        it 'returns all current and future cohorts accessible to the campus_admin' do
+          ids = [@campus1.id]
+          expect(@campus_admin.accessible_campuses.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'cohort_admin' do
+        it 'returns all current and future cohorts accessible to the cohort_admin' do
+          ids = [@campus1, @campus2].map(&:id).sort
+          expect(@cohort_admin.accessible_campuses.map(&:id).sort).to eq ids
+        end
+
+        it 'returns all accessible current and future cohorts even if user is on cohort themselves' do
+          ids = [@campus2.id]
+          expect(@user4.accessible_campuses.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'user' do
+        describe 'for users on current and future cohorts' do
+          it 'returns no campuses' do
+            [@user1, @user3].each do |user|
+              expect(user.accessible_campuses.map(&:id)).to be_empty
+            end
+          end
+
+          describe 'for users on past cohorts' do
+            it 'returns no campuses' do
+              expect(@user2.accessible_campuses).to be_empty
+            end
+          end
+        end
+      end
+    end
+
+
     describe '#invitable_cohorts' do
       describe 'admin' do
         it 'returns all current and future cohorts' do
@@ -204,7 +251,7 @@ describe User do
 
         it 'returns all accessible current and future cohorts even if user is on cohort themselves' do
           ids = [@cohort1, @cohort3].map(&:id).sort
-          expect(@user4.accessible_cohorts.map(&:id).sort).to eq ids
+          expect(@user4.invitable_cohorts.map(&:id).sort).to eq ids
         end
       end
 
@@ -224,6 +271,44 @@ describe User do
         end
       end
     end
+
+
+    describe '#accessible_answer_sets' do
+      describe 'admin' do
+        it 'returns all answer_sets' do
+          ids = AnswerSet.all.map(&:id).sort
+          expect(@admin.accessible_answer_sets.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'campus_admin' do
+        it 'returns all answer_sets for the campus' do
+          ids = [@user1, @user2, @user4].flat_map(&:answer_sets).map(&:id).sort
+          expect(@campus_admin.accessible_answer_sets.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'cohort_admin' do
+        it 'returns all answer_sets for the administered cohorts' do
+          ids = [@user1, @user3, @user4].flat_map(&:answer_sets).map(&:id).sort
+          expect(@cohort_admin.accessible_answer_sets.map(&:id).sort).to eq ids
+        end
+
+        it 'returns all answer_sets for the administered cohorts and own if user is on cohort themselves' do
+          ids = [@user3, @user4].flat_map(&:answer_sets).map(&:id).sort
+          expect(@user4.accessible_answer_sets.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'user' do
+        it 'returns own answer_sets' do
+          [@user1, @user2, @user3].each do |user|
+            expect(user.accessible_answer_sets.map(&:id).sort).to eq user.answer_sets.map(&:id).sort
+          end
+        end
+      end
+    end
+
 
     describe '#accessible_users' do
       describe 'admin' do
@@ -261,6 +346,7 @@ describe User do
       end
     end
 
+
     describe '#accessible_cohorts' do
       describe 'admin' do
         it 'returns all cohorts' do
@@ -297,6 +383,7 @@ describe User do
       end
     end
 
+
     describe '#accessible_cohorts_by_campus' do
       describe 'admin' do
         it 'returns all cohorts grouped by campus' do
@@ -332,6 +419,7 @@ describe User do
         end
       end
     end
+
 
     describe '#default_cohort_ids_for_filter' do
       describe 'with running cohorts' do
@@ -414,20 +502,8 @@ describe User do
     end
   end
 
-
-
-  it '#accessible_campuses'
-
-  it '#accessible_answer_sets'
-
   private
   def flatten_hash_to_ids(hash)
-    return_hash = {}
-    hash.each do |k, v|
-      return_hash[k.id] = v.map(&:id).sort
-    end
-    return_hash
+    hash.reduce({}) { |m, (k, v)| m[k.id] = v.map(&:id).sort; m }
   end
-
-
 end
