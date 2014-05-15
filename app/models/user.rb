@@ -98,10 +98,11 @@ class User < ActiveRecord::Base
     @accessible_answer_sets ||= AnswerSet.scoped if admin?
     return @accessible_answer_sets if @accessible_answer_sets
 
-     accessible_answer_set_ids = [
-       administered_cohorts.flat_map(&:answer_sets).map(&:id),
-       answer_set_ids
-     ].flatten.delete_if(&:blank?)
+    accessible_answer_set_ids = [
+      administered_campuses.flat_map(&:cohorts).flat_map(&:answer_sets).map(&:id),
+      administered_cohorts.flat_map(&:answer_sets).map(&:id),
+      answer_set_ids
+    ].flatten.delete_if(&:blank?)
     @accessible_answer_sets = AnswerSet.where(id: accessible_answer_set_ids)
   end
 
