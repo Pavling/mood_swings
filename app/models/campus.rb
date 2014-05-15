@@ -7,6 +7,7 @@ class Campus < ActiveRecord::Base
 
   before_destroy :ensure_no_cohorts_exist
 
+  validates :name, presence: true
   validates :name, uniqueness: true
 
   private
