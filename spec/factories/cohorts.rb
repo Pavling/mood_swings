@@ -12,6 +12,11 @@ FactoryGirl.define do
       end_on Date.yesterday
     end
 
+    factory :cohort_with_answer_sets do
+      after(:create) do |cohort, evaluator|
+        create(:answer_set, cohort: cohort)
+      end
+    end
 
   end
 end
