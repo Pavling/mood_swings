@@ -33,6 +33,8 @@ group :test do
   gem 'capybara'
   gem 'guard-rspec'
   gem 'launchy'
+  gem 'simplecov', '~> 0.7.1', :require => false
+
 end
 
 gem 'letter_opener', group: :development
