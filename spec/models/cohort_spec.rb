@@ -23,7 +23,7 @@ describe Cohort do
   end
 
   it "must end after it starts" do
-    expect(FactoryGirl.build(:cohort, start_on: Date.tomorrow, end_on: Date.today)).to_not be_valid
+    expect(FactoryGirl.build(:cohort, start_on: Date.today.tomorrow, end_on: Date.today)).to_not be_valid
   end
 
   it "can destroy if there are no answer_sets" do
