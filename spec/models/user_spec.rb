@@ -140,7 +140,20 @@ describe User do
 
   it '.needing_reminder_email'
 
-  it '.mood_swung_today'
+  describe '.mood_swung_today' do
+    it 'returns only users who have swung their mood today' do
+      FactoryGirl.create(:user)
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.create(:user)
+
+      FactoryGirl.create(:answer_set, user: user1)
+
+      answer_set = FactoryGirl.create(:answer_set, user: user2)
+      answer_set.update_attribute(:created_at, 2.days.ago)
+
+      expect(User.mood_swung_today).to eq [user1]
+    end
+  end
 
   describe 'accessibility' do
     before :each do
@@ -210,125 +223,198 @@ describe User do
           end
         end
       end
+    end
 
-      describe '#accessible_users' do
-        describe 'admin' do
-          it 'returns all users' do
-            ids = [@admin, @campus_admin, @cohort_admin, @user1, @user2, @user3, @user4].map(&:id).sort
-            expect(@admin.accessible_users.map(&:id).sort).to eq ids
-          end
-        end
-
-        describe 'campus_admin' do
-          it 'returns all users for the campus' do
-            ids = [@user1, @user2, @user4].map(&:id).sort
-            expect(@campus_admin.accessible_users.map(&:id).sort).to eq ids
-          end
-        end
-
-        describe 'cohort_admin' do
-          it 'returns all users for the administered cohorts' do
-            ids = [@user1, @user3, @user4].map(&:id).sort
-            expect(@cohort_admin.accessible_users.map(&:id).sort).to eq ids
-          end
-
-          it 'returns all users for the cohort even if user is on cohort themselves' do
-            ids = [@user3.id]
-            expect(@user4.accessible_users.map(&:id).sort).to eq ids
-          end
-        end
-
-        describe 'user' do
-          it 'returns no users' do
-            [@user1, @user2, @user3].each do |user|
-              expect(user.accessible_users).to be_empty
-            end
-          end
+    describe '#accessible_users' do
+      describe 'admin' do
+        it 'returns all users' do
+          ids = [@admin, @campus_admin, @cohort_admin, @user1, @user2, @user3, @user4].map(&:id).sort
+          expect(@admin.accessible_users.map(&:id).sort).to eq ids
         end
       end
 
-      describe '#accessible_cohorts' do
+      describe 'campus_admin' do
+        it 'returns all users for the campus' do
+          ids = [@user1, @user2, @user4].map(&:id).sort
+          expect(@campus_admin.accessible_users.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'cohort_admin' do
+        it 'returns all users for the administered cohorts' do
+          ids = [@user1, @user3, @user4].map(&:id).sort
+          expect(@cohort_admin.accessible_users.map(&:id).sort).to eq ids
+        end
+
+        it 'returns all users for the cohort even if user is on cohort themselves' do
+          ids = [@user3.id]
+          expect(@user4.accessible_users.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'user' do
+        it 'returns no users' do
+          [@user1, @user2, @user3].each do |user|
+            expect(user.accessible_users).to be_empty
+          end
+        end
+      end
+    end
+
+    describe '#accessible_cohorts' do
+      describe 'admin' do
+        it 'returns all cohorts' do
+          ids = [@cohort1, @cohort2, @cohort3].map(&:id).sort
+          expect(@admin.accessible_cohorts.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'campus_admin' do
+        it 'returns all accessible cohorts for the campus' do
+          ids = [@cohort1, @cohort2].map(&:id).sort
+          expect(@campus_admin.accessible_cohorts.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'cohort_admin' do
+        it 'returns all the administered cohorts' do
+          ids = [@cohort1, @cohort3].map(&:id).sort
+          expect(@cohort_admin.accessible_cohorts.map(&:id).sort).to eq ids
+        end
+
+        it 'returns all the administered cohorts and own cohort if user is on cohort themselves' do
+          ids = [@cohort1, @cohort3].map(&:id).sort
+          expect(@user4.accessible_cohorts.map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'user' do
+        it 'returns own cohort' do
+          [@user1, @user2, @user3].each do |user|
+            expect(user.accessible_cohorts.map(&:id)).to eq [user.cohort.id]
+          end
+        end
+      end
+    end
+
+    describe '#accessible_cohorts_by_campus' do
+      describe 'admin' do
+        it 'returns all cohorts grouped by campus' do
+          hash = flatten_hash_to_ids({ @campus1 => [@cohort1, @cohort2], @campus2 => [@cohort3] })
+          expect(flatten_hash_to_ids(@admin.accessible_cohorts_by_campus)).to eq hash
+        end
+      end
+
+      describe 'campus_admin' do
+        it 'returns all accessible cohorts for the campus grouped by campus' do
+          hash = flatten_hash_to_ids({ @campus1 => [@cohort1, @cohort2] })
+          expect(flatten_hash_to_ids(@campus_admin.accessible_cohorts_by_campus)).to eq hash
+        end
+      end
+
+      describe 'cohort_admin' do
+        it 'returns all the administered cohorts grouped by campus' do
+          hash = flatten_hash_to_ids({ @campus1 => [@cohort1], @campus2 => [@cohort3] })
+          expect(flatten_hash_to_ids(@cohort_admin.accessible_cohorts_by_campus)).to eq hash
+        end
+
+        it 'returns all the administered cohorts and own cohort if user is on cohort themselves' do
+          hash = flatten_hash_to_ids({ @campus1 => [@cohort1], @campus2 => [@cohort3] })
+          expect(flatten_hash_to_ids(@user4.accessible_cohorts_by_campus)).to eq hash
+        end
+      end
+
+      describe 'user' do
+        it 'returns own cohort' do
+          [@user1, @user2, @user3].each do |user|
+            expect(flatten_hash_to_ids(user.accessible_cohorts_by_campus)).to eq({ user.cohort.campus.id => [user.cohort.id] })
+          end
+        end
+      end
+    end
+
+    describe '#default_cohort_ids_for_filter' do
+      describe 'with running cohorts' do
+        before :each do
+          @cohort4 = FactoryGirl.create(:cohort, campus: @campus1)
+        end
+
         describe 'admin' do
-          it 'returns all cohorts' do
-            ids = [@cohort1, @cohort2, @cohort3].map(&:id).sort
-            expect(@admin.accessible_cohorts.map(&:id).sort).to eq ids
+          it 'returns ids for all currently running cohorts' do
+            ids = [@cohort1, @cohort4].map { |c| c.id.to_s }.sort
+            expect(@admin.default_cohort_ids_for_filter.sort).to eq ids
           end
         end
 
         describe 'campus_admin' do
-          it 'returns all accessible cohorts for the campus' do
-            ids = [@cohort1, @cohort2].map(&:id).sort
-            expect(@campus_admin.accessible_cohorts.map(&:id).sort).to eq ids
+          it 'returns ids for all currently running accessible cohorts for the campus' do
+            ids = [@cohort1, @cohort4].map { |c| c.id.to_s }.sort
+            expect(@campus_admin.default_cohort_ids_for_filter.sort).to eq ids
           end
         end
 
         describe 'cohort_admin' do
-          it 'returns all the administered cohorts' do
-            ids = [@cohort1, @cohort3].map(&:id).sort
-            expect(@cohort_admin.accessible_cohorts.map(&:id).sort).to eq ids
+          it 'returns ids for all currently running administered cohorts' do
+            ids = [@cohort1.id.to_s]
+            expect(@cohort_admin.default_cohort_ids_for_filter).to eq ids
           end
 
-          it 'returns all the administered cohorts and own cohort if user is on cohort themselves' do
-            ids = [@cohort1, @cohort3].map(&:id).sort
-            expect(@user4.accessible_cohorts.map(&:id).sort).to eq ids
+          it 'returns ids for all currently running administered cohorts and own cohort if user is on cohort themselves' do
+            ids = [@cohort1.id.to_s]
+            expect(@user4.default_cohort_ids_for_filter).to eq ids
           end
         end
 
         describe 'user' do
           it 'returns own cohort' do
-            [@user1, @user2, @user3].each do |user|
+            expect(@user1.accessible_cohorts.map(&:id)).to eq [@user1.cohort.id]
+          end
+        end
+      end
+
+      describe 'with no running cohorts' do
+        before :each do
+          @cohort1.delete
+        end
+
+        describe 'admin' do
+          it 'returns ids for all cohorts' do
+            ids = [@cohort2, @cohort3].map { |c| c.id.to_s }.sort
+            expect(@admin.default_cohort_ids_for_filter.sort).to eq ids
+          end
+        end
+
+        describe 'campus_admin' do
+          it 'returns ids for all accessible cohorts for the campus' do
+            ids = [@cohort2.id.to_s]
+            expect(@campus_admin.default_cohort_ids_for_filter.sort).to eq ids
+          end
+        end
+
+        describe 'cohort_admin' do
+          it 'returns ids for all administered cohorts' do
+            ids = [@cohort3.id.to_s]
+            expect(@cohort_admin.default_cohort_ids_for_filter).to eq ids
+          end
+
+          it 'returns ids for all administered cohorts and own cohort if user is on cohort themselves' do
+            ids = [@cohort3.id.to_s]
+            expect(@user4.default_cohort_ids_for_filter).to eq ids
+          end
+        end
+
+        describe 'user' do
+          it 'returns own cohort' do
+            [@user2, @user3].each do |user|
               expect(user.accessible_cohorts.map(&:id)).to eq [user.cohort.id]
             end
           end
         end
       end
-
-
-
-      describe '#accessible_cohorts_by_campus' do
-        describe 'admin' do
-          it 'returns all cohorts grouped by campus' do
-            hash = flatten_hash_to_ids({ @campus1 => [@cohort1, @cohort2], @campus2 => [@cohort3] })
-            expect(flatten_hash_to_ids(@admin.accessible_cohorts_by_campus)).to eq hash
-          end
-        end
-
-        describe 'campus_admin' do
-          it 'returns all accessible cohorts for the campus grouped by campus' do
-            hash = flatten_hash_to_ids({ @campus1 => [@cohort1, @cohort2] })
-            expect(flatten_hash_to_ids(@campus_admin.accessible_cohorts_by_campus)).to eq hash
-          end
-        end
-
-        describe 'cohort_admin' do
-          it 'returns all the administered cohorts grouped by campus' do
-            hash = flatten_hash_to_ids({ @campus1 => [@cohort1], @campus2 => [@cohort3] })
-            expect(flatten_hash_to_ids(@cohort_admin.accessible_cohorts_by_campus)).to eq hash
-          end
-
-          it 'returns all the administered cohorts and own cohort if user is on cohort themselves' do
-            hash = flatten_hash_to_ids({ @campus1 => [@cohort1], @campus2 => [@cohort3] })
-            expect(flatten_hash_to_ids(@user4.accessible_cohorts_by_campus)).to eq hash
-          end
-        end
-
-        describe 'user' do
-          it 'returns own cohort' do
-            [@user1, @user2, @user3].each do |user|
-              expect(flatten_hash_to_ids(user.accessible_cohorts_by_campus)).to eq({ user.cohort.campus.id => [user.cohort.id] })
-            end
-          end
-        end
-      end
-
-
     end
-
-
   end
 
 
-  it '#default_cohort_ids_for_filter'
 
   it '#accessible_campuses'
 
