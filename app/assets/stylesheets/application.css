@@ -235,6 +235,11 @@ td {
   color: silver;
 }
 
+#comments .score {
+  color: silver;
+  margin-left: 5px;
+}
+
 #comments dt {
   font-family: sans-serif;
   display: inline-block;
