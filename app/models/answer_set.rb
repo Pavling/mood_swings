@@ -25,7 +25,7 @@ class AnswerSet < ActiveRecord::Base
     answer_set
   end
 
-  def self.from_last_set_for(user)
+  def self.from_last_set_for_user(user)
     answer_set = populated_with_answers
 
     return answer_set unless user && last_set = user.answer_sets.last

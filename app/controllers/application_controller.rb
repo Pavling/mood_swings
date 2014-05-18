@@ -10,6 +10,6 @@ class ApplicationController < ActionController::Base
 
   private
   def setup_answer_set
-    @answer_set = AnswerSet.from_last_set_for(current_user)
+    @answer_set = AnswerSet.from_last_set_for_user(current_user)
   end
 end
