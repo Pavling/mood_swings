@@ -138,7 +138,39 @@ describe User do
   end
 
 
-  it '.needing_reminder_email'
+  describe '.needing_reminder_email' do#
+    before :each do
+      @cohort = FactoryGirl.create(:cohort, campus: FactoryGirl.create(:campus))
+      @user1 = FactoryGirl.create(:user, cohort: @cohort)
+      @user2 = FactoryGirl.create(:user_with_answer_sets, cohort: @cohort)
+      @user3 = FactoryGirl.create(:user_with_answer_sets, cohort: @cohort)
+      @user3.answer_sets.map do |as|
+        as.update_attribute(:created_at, Time.zone.now.ago(1.day).ago(10.minutes))
+      end
+      @user4 = FactoryGirl.create(:user_with_answer_sets, cohort: @cohort)
+      @user4.answer_sets.map do |as|
+        as.update_attribute(:created_at, Time.zone.now.ago(1.day).since(10.minutes))
+      end
+
+    end
+
+    it 'includes a user with no answer_sets' do
+      expect(User.needing_reminder_email).to include @user1
+    end
+
+    it 'includes a user with answer_sets over 24hours old' do
+      expect(User.needing_reminder_email).to include @user3
+    end
+
+    it "doesn't include a user who has recent answer_sets" do
+      expect(User.needing_reminder_email).to_not include @user2
+    end
+
+    it "doesn't include a user who has answer_sets just under 24hours old" do
+      expect(User.needing_reminder_email).to_not include @user4
+    end
+  end
+
 
   describe '.mood_swung_today' do
     it 'returns only users who have swung their mood today' do
