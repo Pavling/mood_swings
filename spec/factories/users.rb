@@ -7,8 +7,10 @@ FactoryGirl.define do
     password_confirmation 'password'
 
     factory :user_with_answer_sets do
+      cohort FactoryGirl.build(:cohort)
+
       after(:create) do |user, evaluator|
-        create(:answer_set_with_answers, user: user, cohort: user.cohort || FactoryGirl.create(:cohort))
+        create(:answer_set_with_answers, user: user, cohort: user.cohort)
       end
     end
 

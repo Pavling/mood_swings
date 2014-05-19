@@ -73,7 +73,39 @@ describe AnswerSet do
   end
 
 
-  it '.from_last_set_for'
+  describe '.from_last_set_for_user' do
+    before :each do
+      @metrics = 5.times.map { FactoryGirl.create(:metric) }
+
+      @user = FactoryGirl.create(:user, cohort: FactoryGirl.create(:cohort))
+    end
+
+    it "returns a new answer_set populated with answers of the same values as the user's last swing" do
+      answer_set = FactoryGirl.create(:answer_set, user: @user, cohort: @user.cohort)
+      @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m) }
+      answer_set.update_attribute(:created_at, 20.minutes.ago)
+
+      last_answer_set = FactoryGirl.create(:answer_set, user: @user, cohort: @user.cohort)
+      @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: last_answer_set, metric: m) }
+      last_answer_set.update_attribute(:created_at, 10.minutes.ago)
+
+      new_answer_set = AnswerSet.from_last_set_for_user(@user)
+
+      new_answer_set.answers.each do |answer|
+        last_answer = last_answer_set.answers.detect { |a| a.metric_id == answer.metric_id }
+        expect([answer.value, answer.comments]).to eq [last_answer.value, nil]
+      end
+
+    end
+
+    it "returns a new answer_set populated with default answers if the user has never swung" do
+      new_answer_set = AnswerSet.from_last_set_for_user(@user)
+
+      new_answer_set.answers.each do |answer|
+        expect([answer.value, answer.comments]).to eq [nil, nil]
+      end
+    end
+  end
 
   it '.for_index'
 
