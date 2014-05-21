@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
     accessible_cohort_ids = [
       administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
       administered_cohorts.pluck(:cohort_id)
-    ]
+    ].flatten.delete_if(&:blank?)
     @accessible_users = User.where(cohort_id: accessible_cohort_ids)
   end
 
