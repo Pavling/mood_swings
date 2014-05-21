@@ -107,7 +107,120 @@ describe AnswerSet do
     end
   end
 
-  it '.for_index'
+
+  describe '.for_index' do
+    before :each do
+      @metrics = 5.times.map { FactoryGirl.create(:metric) }
+
+      @campus1 = FactoryGirl.create(:campus)
+      @campus2 = FactoryGirl.create(:campus)
+
+      @cohort1 = FactoryGirl.create(:cohort, campus: @campus1, start_on: 60.days.ago.to_date, name: :cohort1)
+      @cohort2 = FactoryGirl.create(:past_cohort, campus: @campus1, start_on: 60.days.ago.to_date, name: :cohort2)
+      @cohort3 = FactoryGirl.create(:cohort, campus: @campus2, start_on: 60.days.ago.to_date, name: :cohort3)
+      @cohort4 = FactoryGirl.create(:past_cohort, campus: @campus2, start_on: 60.days.ago.to_date, name: :cohort4)
+
+      @admin_user = FactoryGirl.create(:admin_user)
+
+      @campus_admin = FactoryGirl.create(:user, cohort: nil)
+      @campus_admin.administered_campuses << @campus1
+
+      @user1 = FactoryGirl.create(:user, cohort: @cohort1, name: :user1)
+      @user2 = FactoryGirl.create(:user, cohort: @cohort2, name: :user2)
+      @user3 = FactoryGirl.create(:user, cohort: @cohort3, name: :user3)
+      @user4 = FactoryGirl.create(:user, cohort: @cohort1, name: :user4)
+      @user5 = FactoryGirl.create(:user, cohort: @cohort4, name: :user5)
+
+      @cohort_admin = FactoryGirl.create(:user, cohort: nil)
+      @cohort_admin.administered_cohorts << @cohort1
+      @cohort_admin.administered_cohorts << @cohort3
+      @user4.administered_cohorts << @cohort3
+
+      @answer_sets = []
+
+      (2..20).to_a.reverse.each do |day|
+        user = [@user1, @user2, @user3, @user4, @user5].sample
+        answer_set = FactoryGirl.create(:answer_set, user: user, cohort: user.cohort)
+        @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m) }
+        answer_set.update_attribute(:created_at, day.days.ago.to_date)
+        @answer_sets << answer_set
+      end
+    end
+
+    describe 'for all cohorts' do
+      before :each do
+        @params = { cohort_ids: Cohort.all.map(&:id) }
+      end
+
+      it 'returns all the answer sets for all cohorts' do
+        ids = @answer_sets.map(&:id).sort
+        expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+      end
+
+      describe 'with a from_date' do
+        it 'returns only the answer sets since the from_date' do
+          @params[:from_date] = 10.days.ago
+          ids = @answer_sets.select{|as| as.created_at >= @params[:from_date]}.map(&:id).sort
+          expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'with a to_date' do
+        it 'returns only the answer sets until the to_date' do
+          @params[:to_date] = 5.days.ago
+          ids = @answer_sets.select{|as| as.created_at <= @params[:to_date]}.map(&:id).sort
+          expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'with a from_date and to_date' do
+        it 'returns only the answer sets between the from_date and the to_date' do
+          @params[:from_date] = 10.days.ago
+          @params[:to_date] = 5.days.ago
+          ids = @answer_sets.select{|as| as.created_at >= @params[:from_date] && as.created_at <= @params[:to_date]}.map(&:id).sort
+          expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+        end
+      end
+    end
+
+    describe 'for a subset of cohorts' do
+      before :each do
+        @params = { cohort_ids: [@cohort1, @cohort4].map(&:id) }
+        @answer_sets = @answer_sets.select{|as| [@cohort1, @cohort4].include?(as.cohort)}
+      end
+
+      it 'returns all the answer sets for the subset of cohorts' do
+        ids =  @answer_sets.map(&:id).sort
+        expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+      end
+
+      describe 'with a from_date' do
+        it 'returns only the answer sets since the from_date' do
+          @params[:from_date] = 10.days.ago
+          ids = @answer_sets.select{|as| as.created_at >= @params[:from_date]}.map(&:id).sort
+          expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'with a to_date' do
+        it 'returns only the answer sets until the to_date' do
+          @params[:to_date] = 5.days.ago
+          ids = @answer_sets.select{|as| as.created_at <= @params[:to_date]}.map(&:id).sort
+          expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+        end
+      end
+
+      describe 'with a from_date and to_date' do
+        it 'returns only the answer sets between the from_date and the to_date' do
+          @params[:from_date] = 10.days.ago
+          @params[:to_date] = 5.days.ago
+          ids = @answer_sets.select{|as| as.created_at >= @params[:from_date] && as.created_at <= @params[:to_date]}.map(&:id).sort
+          expect(AnswerSet.for_index(@params).map(&:id).sort).to eq ids
+        end
+      end
+    end
+
+  end
 
   it '.for_chart'
 
