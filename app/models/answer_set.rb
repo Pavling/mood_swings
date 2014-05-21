@@ -47,7 +47,7 @@ class AnswerSet < ActiveRecord::Base
       answer_sets = answer_sets.where("answer_sets.created_at >= ?", params[:from_date])
     end
     if params[:to_date].present?
-      aanswer_sets = answer_sets.where("answer_sets.created_at <= ?", params[:to_date])
+      answer_sets = answer_sets.where("answer_sets.created_at <= ?", params[:to_date])
     end
 
     answer_sets
