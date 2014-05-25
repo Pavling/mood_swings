@@ -110,41 +110,7 @@ describe AnswerSet do
 
   describe '.for_index' do
     before :each do
-      @metrics = 5.times.map { FactoryGirl.create(:metric) }
-
-      @campus1 = FactoryGirl.create(:campus)
-      @campus2 = FactoryGirl.create(:campus)
-
-      @cohort1 = FactoryGirl.create(:cohort, campus: @campus1, start_on: 60.days.ago.to_date, name: :cohort1)
-      @cohort2 = FactoryGirl.create(:past_cohort, campus: @campus1, start_on: 60.days.ago.to_date, name: :cohort2)
-      @cohort3 = FactoryGirl.create(:cohort, campus: @campus2, start_on: 60.days.ago.to_date, name: :cohort3)
-      @cohort4 = FactoryGirl.create(:past_cohort, campus: @campus2, start_on: 60.days.ago.to_date, name: :cohort4)
-
-      @admin_user = FactoryGirl.create(:admin_user)
-
-      @campus_admin = FactoryGirl.create(:user, cohort: nil)
-      @campus_admin.administered_campuses << @campus1
-
-      @user1 = FactoryGirl.create(:user, cohort: @cohort1, name: :user1)
-      @user2 = FactoryGirl.create(:user, cohort: @cohort2, name: :user2)
-      @user3 = FactoryGirl.create(:user, cohort: @cohort3, name: :user3)
-      @user4 = FactoryGirl.create(:user, cohort: @cohort1, name: :user4)
-      @user5 = FactoryGirl.create(:user, cohort: @cohort4, name: :user5)
-
-      @cohort_admin = FactoryGirl.create(:user, cohort: nil)
-      @cohort_admin.administered_cohorts << @cohort1
-      @cohort_admin.administered_cohorts << @cohort3
-      @user4.administered_cohorts << @cohort3
-
-      @answer_sets = []
-
-      (2..20).to_a.reverse.each do |day|
-        user = [@user1, @user2, @user3, @user4, @user5].sample
-        answer_set = FactoryGirl.create(:answer_set, user: user, cohort: user.cohort)
-        @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m) }
-        answer_set.update_attribute(:created_at, day.days.ago.to_date)
-        @answer_sets << answer_set
-      end
+      setup_dummy_data 
     end
 
     describe 'for all cohorts' do
@@ -222,22 +188,904 @@ describe AnswerSet do
 
   end
 
-  it '.for_chart'
+
+  describe '.for_chart' do
+    before :each do
+      setup_dummy_data
+      AnswerSet.order(:created_at)[0..9].each(&:delete)
+      @params = {}
+    end
+
+    describe 'invalid options' do
+      describe 'granularity options' do
+        it 'raises an exception for an invalid granularity' do
+          @params[:granularity] = 'invalid'
+          expect { AnswerSet.for_chart(@params) }.to raise_error
+        end
+      end
+
+      describe 'group options' do
+        it 'raises an exception for an invalid group' do
+          @params[:group] = 'invalid'
+          expect { AnswerSet.for_chart(@params) }.to raise_error
+        end
+      end
+    end
+
+    describe 'granularity options' do
+      describe 'person' do
+        before :each do
+          @params[:granularity] = 'person'
+        end
+
+        describe 'group options' do
+          describe 'hour' do
+            before :each do
+              @params[:group] = 'hour'
+            end
+
+            it 'gets the right data' do 
+              data = [{"value"=>"2.2000000000000000",
+                    "label"=>"user1",
+                    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user2",
+                    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user3",
+                    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user4",
+                    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user5",
+                    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user1",
+                    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user2",
+                    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user3",
+                    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user4",
+                    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+                   {"value"=>"2.2000000000000000",
+                    "label"=>"user5",
+                    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone}]
+
+              expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+           end
+
+         end
+
+         describe 'day' do
+           before :each do
+             @params[:group] = 'day'
+           end
+
+           it 'gets the right data' do
+             data =  [{"value"=>"2.2000000000000000",
+      "label"=>"user1",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user2",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user3",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user4",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user5",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user1",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user2",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user3",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user4",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"user5",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone}]
+
+             expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'week' do
+          before :each do
+            @params[:group] = 'week'
+          end
+
+         it 'gets the right data' do
+           data = [{"label"=>"user1", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+   {"label"=>"user2", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+   {"label"=>"user3", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+   {"label"=>"user4", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+   {"label"=>"user5", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+   {"label"=>"user1", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+   {"label"=>"user2", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+   {"label"=>"user3", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+   {"label"=>"user4", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+   {"label"=>"user5", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')}]
+
+           expect(chart_data_to_hash(AnswerSet.order(:created_at_year, :created_at_week, :label).for_chart(@params), %w(label created_at_year created_at_week))).to eq data
+        end
+        end
+
+        describe 'moment' do
+          before :each do
+            @params[:group] = 'moment'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"2.2000000000000000",
+  "label"=>"user1",
+  "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user2",
+  "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user3",
+  "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user4",
+  "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user5",
+  "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user1",
+  "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user2",
+  "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user3",
+  "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user4",
+  "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+ {"value"=>"2.2000000000000000",
+  "label"=>"user5",
+  "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+        
+      end
+    end
+
+    describe 'cohort' do
+      before :each do
+        @params[:granularity] = 'cohort'
+      end
+
+      describe 'group options' do
+        describe 'hour' do
+          before :each do
+            @params[:group] = 'hour'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"2.2000000000000000",
+    "label"=>"cohort1",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort2",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort3",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort4",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort1",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort2",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort3",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort4",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'day' do
+          before :each do
+            @params[:group] = 'day'
+          end
+
+                  it 'gets the right data' do
+                    data = [{"value"=>"2.2000000000000000",
+      "label"=>"cohort1",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort2",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort3",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort4",
+      "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort1",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort2",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort3",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+     {"value"=>"2.2000000000000000",
+      "label"=>"cohort4",
+      "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone}]
+
+                    expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+                 end
+               end
+
+        describe 'week' do
+          before :each do
+            @params[:group] = 'week'
+          end
+
+          it 'gets the right data' do
+            data = [{"label"=>"cohort1", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+  {"label"=>"cohort2", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+  {"label"=>"cohort3", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+  {"label"=>"cohort4", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+  {"label"=>"cohort1", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+  {"label"=>"cohort2", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+  {"label"=>"cohort3", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+  {"label"=>"cohort4", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at_year, :created_at_week, :label).for_chart(@params), %w(label created_at_year created_at_week))).to eq data
+          end
+        end
+
+        describe 'moment' do
+          before :each do
+            @params[:group] = 'moment'
+          end
+
+                 it 'gets the right data' do
+                   data = [{"value"=>"2.2000000000000000",
+    "label"=>"cohort1",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort2",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort3",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort4",
+    "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort1",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort2",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort3",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"cohort4",
+    "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone}]
+
+                   expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+                 end
+        end
+      end
+    end
+
+    describe 'campus' do
+      before :each do
+        @params[:granularity] = 'campus'
+      end
+
+      describe 'group options' do
+        describe 'hour' do
+          before :each do
+            @params[:group] = 'hour'
+          end
+
+                it 'gets the right data' do
+               data = [{"value"=>"2.2000000000000000",
+           "label"=>"campus1",
+           "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+          {"value"=>"2.2000000000000000",
+           "label"=>"campus2",
+           "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+          {"value"=>"2.2000000000000000",
+           "label"=>"campus1",
+           "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+          {"value"=>"2.2000000000000000",
+           "label"=>"campus2",
+           "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone}]
+
+               expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+               end
+               end
+
+        describe 'day' do
+          before :each do
+            @params[:group] = 'day'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"2.2000000000000000",
+    "label"=>"campus1",
+    "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"campus2",
+    "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"campus1",
+    "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+   {"value"=>"2.2000000000000000",
+    "label"=>"campus2",
+    "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'week' do
+          before :each do
+            @params[:group] = 'week'
+          end
+
+          it 'gets the right data' do
+            data = [{"label"=>"campus1", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+  {"label"=>"campus2", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+  {"label"=>"campus1", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+  {"label"=>"campus2", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at_year, :created_at_week, :label).for_chart(@params), %w(label created_at_year created_at_week))).to eq data
+          end
+        end
+
+        describe 'moment' do
+          before :each do
+            @params[:group] = 'moment'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"2.2000000000000000",
+           "label"=>"campus1",
+           "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+          {"value"=>"2.2000000000000000",
+           "label"=>"campus2",
+           "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+          {"value"=>"2.2000000000000000",
+           "label"=>"campus1",
+           "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+          {"value"=>"2.2000000000000000",
+           "label"=>"campus2",
+           "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+      end
+    end
 
 
+    describe 'metric' do
+      before :each do
+        @params[:granularity] = 'metric'
+        AnswerSet.where(user_id: [@user1.id, @user2.id, @user3.id]).each do |as|
+          as.answers.each(&:delete)
+          as.delete
+        end
+      end
+
+      describe 'group options' do
+        describe 'hour' do
+          before :each do
+            @params[:group] = 'hour'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"1.00000000000000000000",
+         "label"=>"metric1",
+         "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+        {"value"=>"2.0000000000000000",
+         "label"=>"metric2",
+         "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+        {"value"=>"3.0000000000000000",
+         "label"=>"metric3",
+         "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+        {"value"=>"4.0000000000000000",
+         "label"=>"metric4",
+         "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+        {"value"=>"1.00000000000000000000",
+         "label"=>"metric5",
+         "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+        {"value"=>"1.00000000000000000000",
+         "label"=>"metric1",
+         "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+        {"value"=>"2.0000000000000000",
+         "label"=>"metric2",
+         "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+        {"value"=>"3.0000000000000000",
+         "label"=>"metric3",
+         "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+        {"value"=>"4.0000000000000000",
+         "label"=>"metric4",
+         "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+        {"value"=>"1.00000000000000000000",
+         "label"=>"metric5",
+         "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'day' do
+          before :each do
+            @params[:group] = 'day'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"1.00000000000000000000",
+               "label"=>"metric1",
+               "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"2.0000000000000000",
+               "label"=>"metric2",
+               "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"3.0000000000000000",
+               "label"=>"metric3",
+               "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"4.0000000000000000",
+               "label"=>"metric4",
+               "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"1.00000000000000000000",
+               "label"=>"metric5",
+               "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"1.00000000000000000000",
+               "label"=>"metric1",
+               "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"2.0000000000000000",
+               "label"=>"metric2",
+               "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"3.0000000000000000",
+               "label"=>"metric3",
+               "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"4.0000000000000000",
+               "label"=>"metric4",
+               "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+              {"value"=>"1.00000000000000000000",
+               "label"=>"metric5",
+               "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'week' do
+          before :each do
+            @params[:group] = 'week'
+          end
+
+          it 'gets the right data' do
+            data = [{"label"=>"metric1", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+             {"label"=>"metric2", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+             {"label"=>"metric3", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+             {"label"=>"metric4", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+             {"label"=>"metric5", "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+             {"label"=>"metric1", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+             {"label"=>"metric2", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+             {"label"=>"metric3", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+             {"label"=>"metric4", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+             {"label"=>"metric5", "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at_year, :created_at_week, :label).for_chart(@params), %w(label created_at_year created_at_week))).to eq data
+          end
+        end
+
+        describe 'moment' do
+          before :each do
+            @params[:group] = 'moment'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"1.00000000000000000000",
+               "label"=>"metric1",
+               "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+              {"value"=>"2.0000000000000000",
+               "label"=>"metric2",
+               "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+              {"value"=>"3.0000000000000000",
+               "label"=>"metric3",
+               "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+              {"value"=>"4.0000000000000000",
+               "label"=>"metric4",
+               "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+              {"value"=>"1.00000000000000000000",
+               "label"=>"metric5",
+               "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+              {"value"=>"1.00000000000000000000",
+               "label"=>"metric1",
+               "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+              {"value"=>"2.0000000000000000",
+               "label"=>"metric2",
+               "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+              {"value"=>"3.0000000000000000",
+               "label"=>"metric3",
+               "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+              {"value"=>"4.0000000000000000",
+               "label"=>"metric4",
+               "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+              {"value"=>"1.00000000000000000000",
+               "label"=>"metric5",
+               "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone}]
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+      end
+    end
+
+
+    describe 'person_metric' do
+      before :each do
+        @params[:granularity] = 'person_metric'
+        AnswerSet.where(user_id: [@user1.id, @user2.id, @user3.id]).each do |as|
+          as.answers.each(&:delete)
+          as.delete
+        end
+      end
+
+      describe 'group options' do
+        describe 'hour' do
+          before :each do
+            @params[:group] = 'hour'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"1.00000000000000000000",
+       "label"=>"user4: metric1",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"2.0000000000000000",
+       "label"=>"user4: metric2",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"3.0000000000000000",
+       "label"=>"user4: metric3",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"4.0000000000000000",
+       "label"=>"user4: metric4",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user4: metric5",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user5: metric1",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"2.0000000000000000",
+       "label"=>"user5: metric2",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"3.0000000000000000",
+       "label"=>"user5: metric3",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"4.0000000000000000",
+       "label"=>"user5: metric4",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user5: metric5",
+       "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user4: metric1",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"2.0000000000000000",
+       "label"=>"user4: metric2",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"3.0000000000000000",
+       "label"=>"user4: metric3",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"4.0000000000000000",
+       "label"=>"user4: metric4",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user4: metric5",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user5: metric1",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"2.0000000000000000",
+       "label"=>"user5: metric2",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"3.0000000000000000",
+       "label"=>"user5: metric3",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"4.0000000000000000",
+       "label"=>"user5: metric4",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone},
+      {"value"=>"1.00000000000000000000",
+       "label"=>"user5: metric5",
+       "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.to_s).in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'day' do
+          before :each do
+            @params[:group] = 'day'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric1",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user4: metric2",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user4: metric3",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user4: metric4",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric5",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric1",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user5: metric2",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user5: metric3",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user5: metric4",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric5",
+             "created_at"=>@start_of_week.ago(8.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric1",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user4: metric2",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user4: metric3",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user4: metric4",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric5",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric1",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user5: metric2",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user5: metric3",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user5: metric4",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric5",
+             "created_at"=>@start_of_week.ago(1.days).utc.beginning_of_day.in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+
+        describe 'week' do
+          before :each do
+            @params[:group] = 'week'
+          end
+
+          it 'gets the right data' do
+            data = [{"label"=>"user4: metric1",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user4: metric2",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user4: metric3",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user4: metric4",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user4: metric5",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user5: metric1",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user5: metric2",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user5: metric3",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user5: metric4",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user5: metric5",
+            "created_at_year"=>@start_of_week.ago(7.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(7.days).strftime('%W')},
+           {"label"=>"user4: metric1",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user4: metric2",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user4: metric3",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user4: metric4",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user4: metric5",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user5: metric1",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user5: metric2",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user5: metric3",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user5: metric4",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')},
+           {"label"=>"user5: metric5",
+            "created_at_year"=>@start_of_week.ago(0.days).to_date.year.to_s, "created_at_week"=>@start_of_week.ago(0.days).strftime('%W')}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at_year, :created_at_week, :label).for_chart(@params), %w(label created_at_year created_at_week))).to eq data
+          end
+        end
+
+        describe 'moment' do
+          before :each do
+            @params[:group] = 'moment'
+          end
+
+          it 'gets the right data' do
+            data = [{"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric1",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user4: metric2",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user4: metric3",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user4: metric4",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric5",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric1",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user5: metric2",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user5: metric3",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user5: metric4",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric5",
+             "created_at"=>Time.parse(@start_of_week.ago(7.days).to_date.ago(58.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric1",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user4: metric2",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user4: metric3",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user4: metric4",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user4: metric5",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric1",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"2.0000000000000000",
+             "label"=>"user5: metric2",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"3.0000000000000000",
+             "label"=>"user5: metric3",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"4.0000000000000000",
+             "label"=>"user5: metric4",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone},
+            {"value"=>"1.00000000000000000000",
+             "label"=>"user5: metric5",
+             "created_at"=>Time.parse(@start_of_week.ago(0.days).to_date.ago(59.seconds).to_s).in_time_zone}]
+
+            expect(chart_data_to_hash(AnswerSet.order(:created_at, :label).for_chart(@params), %w(value label created_at))).to eq data
+          end
+        end
+      end
+    end
+
+  end
+
+  def chart_data_to_hash(data, keys=nil)
+      keys ||= data.first.attributes.keys
+      data.map do |datum|
+        Hash[keys.map{|key| [key, datum[key]]}]
+      end.sort_by {|e| e['created_at']}
+    end
+
+  end
+
+
+  def setup_dummy_data
+    @start_of_week = Time.zone.now.beginning_of_week
+
+    @metrics = 5.times.map { |i| FactoryGirl.create(:metric, measure: "metric#{i+1}") }
+
+    @campus1 = FactoryGirl.create(:campus, name: :campus1)
+    @campus2 = FactoryGirl.create(:campus, name: :campus2)
+
+    @cohort1 = FactoryGirl.create(:cohort, campus: @campus1, start_on: 60.days.ago.to_date, name: :cohort1)
+    @cohort2 = FactoryGirl.create(:past_cohort, campus: @campus1, start_on: 60.days.ago.to_date, name: :cohort2)
+    @cohort3 = FactoryGirl.create(:cohort, campus: @campus2, start_on: 60.days.ago.to_date, name: :cohort3)
+    @cohort4 = FactoryGirl.create(:past_cohort, campus: @campus2, start_on: 60.days.ago.to_date, name: :cohort4)
+
+    @admin_user = FactoryGirl.create(:admin_user)
+
+    @campus_admin = FactoryGirl.create(:user, cohort: nil)
+    @campus_admin.administered_campuses << @campus1
+
+    @user1 = FactoryGirl.create(:user, cohort: @cohort1, name: :user1, email: 'user1@test.com')
+    @user2 = FactoryGirl.create(:user, cohort: @cohort2, name: :user2, email: 'user2@test.com')
+    @user3 = FactoryGirl.create(:user, cohort: @cohort3, name: :user3, email: 'user3@test.com')
+    @user4 = FactoryGirl.create(:user, cohort: @cohort1, name: :user4, email: 'user4@test.com')
+    @user5 = FactoryGirl.create(:user, cohort: @cohort4, name: :user5, email: 'user5@test.com')
+
+    @cohort_admin = FactoryGirl.create(:user, cohort: nil)
+    @cohort_admin.administered_cohorts << @cohort1
+    @cohort_admin.administered_cohorts << @cohort3
+    @user4.administered_cohorts << @cohort3
+
+    @answer_sets = []
+    second_count = 60
+
+    @date1, @date2, @date3, @date4 = [0,7,14,21]
+    [@date1, @date2, @date3, @date4].each_with_index do |day, i|
+      second_count -= 1
+
+      [@user1, @user2, @user3, @user4, @user5].each do |user|
+        answer_set = FactoryGirl.create(:answer_set, user: user, cohort: user.cohort)
+        @metrics.each_with_index do |m, j|
+          value = [1,2,3,4][j%4]
+          answer = FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m, value: value)
+          answer.update_attribute(:created_at, @start_of_week.ago(day.days).to_date.ago(second_count.seconds))
+        end
+        answer_set.update_attribute(:created_at, @start_of_week.ago(day.days).to_date.ago(second_count.seconds))
+
+        @answer_sets << answer_set
+      end
+    end
+  end
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
 
 
