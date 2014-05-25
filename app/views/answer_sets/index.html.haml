@@ -15,10 +15,11 @@
 
     .field
       - granularity_options = %w(metric person)
+      - granularity_options << 'person_metric' if can?(:granularity_by_person_metric, AnswerSet)
       - granularity_options << 'cohort' if can?(:granularity_by_cohort, AnswerSet)
       - granularity_options << 'campus' if can?(:granularity_by_campus, AnswerSet)
       = label_tag :granularity
-      = select_tag :granularity, options_for_select(granularity_options, params[:granularity])
+      = select_tag :granularity, options_for_select(granularity_options.map{|o| [o.humanize, o]}, params[:granularity])
 
     .field
       - group_options = %w(moment hour day week)

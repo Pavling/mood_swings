@@ -70,29 +70,35 @@ class AnswerSet < ActiveRecord::Base
       when 'campus'
         chart_data.select("cohorts.campus_id as campus_id, 'campus' as cohort_id, 'campus' as metric_id, 'campus' as user_id, campuses.name as label").group('cohorts.campus_id, campuses.name')
 
-      else
+      when 'metric'
+        chart_data.select("'metric' as campus_id, 'metric' as cohort_id, answers.metric_id as metric_id, 'metric' as user_id, metrics.measure as label").group("answers.metric_id, metrics.measure").joins(answers: :metric)
+
+      when 'person_metric'
         # default to grouping as finely-grained as possible - right down to the individual metric
         chart_data.select("cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, answers.metric_id as metric_id, answer_sets.user_id as user_id, users.name || ': ' || metrics.measure as label").group("cohorts.campus_id, answer_sets.cohort_id, answers.metric_id, answer_sets.user_id, users.name || ': ' || metrics.measure").joins(:user, answers: :metric)
+
+      else
+        raise 'invalid granularity'
     end
     
 
     # group the data into days/weeks if required
     chart_data = case params[:group].to_s.downcase
       when 'hour'
-        @x_labels = 'hour'
         chart_data.select("date_trunc('hour', answer_sets.created_at) as created_at").group("date_trunc('hour', answer_sets.created_at)")
 
       when 'day'
-        @x_labels = 'day'
         chart_data.select('DATE(answer_sets.created_at) as created_at').group('DATE(answer_sets.created_at)')
 
       when 'week'
         # TODO: the week-grouping chart labels get fubard... try to sort them
-        @x_labels = 'month'
         chart_data.select("EXTRACT(YEAR FROM answer_sets.created_at)::text as created_at_year, EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at_week").group("EXTRACT(YEAR FROM answer_sets.created_at)::text, EXTRACT(WEEK FROM answer_sets.created_at)::text")
 
-      else
+      when 'moment'
         chart_data.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
+
+      else
+        raise 'invalid grouping'
     end
 
     chart_data

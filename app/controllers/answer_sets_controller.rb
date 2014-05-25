@@ -24,6 +24,14 @@ class AnswerSetsController < ApplicationController
     @data = chart_data(@chart_data)
     @keys = chart_data_keys(@chart_data)
     @labels = chart_data_labels(@chart_data)
+    @x_labels = case params[:group].to_s.downcase
+      when 'hour'
+        'hour'
+      when 'day'
+        'day'
+      when 'week'
+        'month'
+      end
 
     respond_to do |format|
       format.html # index.html.erb

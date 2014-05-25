@@ -16,6 +16,7 @@ class Ability
 
       can :granularity_by_campus, AnswerSet if user.campus_admin?
       can :granularity_by_cohort, AnswerSet if user.cohort_admin? || user.campus_admin?
+      can :granularity_by_person_metric, AnswerSet if user.cohort_admin? || user.campus_admin?
 
       can :manage, :campus do |campus|
         user.administered_campuses.include?(campus)
