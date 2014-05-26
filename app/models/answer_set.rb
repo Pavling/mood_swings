@@ -111,11 +111,6 @@ class AnswerSet < ActiveRecord::Base
   end
 
   private
-  def chart_color
-    @chart_colour ||= "%06x" % (rand * 0xffffff)
-  end
-
-  private
   def not_swung_in_the_last_five_minutes
     errors.add :base, "Whoa! You must be very moody! You need to leave at least 5mins between swings." if user && user.answer_sets.last_five_minutes.any?
   end
