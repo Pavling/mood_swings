@@ -29,10 +29,16 @@ describe Answer do
     expect(FactoryGirl.build(:answer, metric: nil)).to_not be_valid
   end
 
-  it "must have a unique metric within the scope of its AnswerSet" do
-    metric = FactoryGirl.create(:metric)
-    FactoryGirl.create(:answer, metric: metric)
-    expect(FactoryGirl.build(:answer, metric: metric)).to_not be_valid
+  describe "must have a unique metric withing the scope of its AnswerSet" do
+    it 'is valid with duplicate metrics across answer_sets' do
+      answer = FactoryGirl.create(:answer)
+      expect(FactoryGirl.build(:answer, metric: answer.metric)).to be_valid
+    end
+
+    it 'is invalid with duplicate metric in the same answer_set' do
+      answer = FactoryGirl.create(:answer)
+      expect(FactoryGirl.build(:answer, metric: answer.metric, answer_set: answer.answer_set)).to_not be_valid
+    end
   end
   
   it "cannot be destroyed" do

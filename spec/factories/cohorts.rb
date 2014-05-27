@@ -3,6 +3,7 @@ FactoryGirl.define do
     name { Faker::Team.name }
     start_on { (3.months.ago.to_date..Date.today.yesterday).to_a.sample }
     end_on { (Date.today.tomorrow..3.months.since.to_date).to_a.sample }
+    association :campus, factory: :campus
 
     factory :future_cohort do
       start_on Date.today.tomorrow

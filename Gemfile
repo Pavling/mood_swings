@@ -34,7 +34,7 @@ group :test do
   gem 'guard-rspec'
   gem 'launchy'
   gem 'simplecov', '~> 0.7.1', :require => false
-
+  gem 'database_cleaner'
 end
 
 gem 'letter_opener', group: :development

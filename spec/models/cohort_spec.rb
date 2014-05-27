@@ -9,9 +9,20 @@ describe Cohort do
     expect(FactoryGirl.build(:cohort, name: nil)).to_not be_valid
   end
 
-  it "must have a unique name" do
-    cohort = FactoryGirl.create(:cohort)
-    expect(FactoryGirl.build(:cohort, name: cohort.name)).to_not be_valid
+  it "is invalid without a campus" do
+    expect(FactoryGirl.build(:cohort, campus: nil)).to_not be_valid
+  end
+
+  describe "must have a unique name withing the scope of its campus" do
+    it 'is valid with duplicate names across campuses' do
+      cohort = FactoryGirl.create(:cohort)
+      expect(FactoryGirl.build(:cohort, name: cohort.name)).to be_valid
+    end
+
+    it 'is invalid with duplicate names in the same campus' do
+      cohort = FactoryGirl.create(:cohort)
+      expect(FactoryGirl.build(:cohort, name: cohort.name, campus: cohort.campus)).to_not be_valid
+    end
   end
 
   it "is invalid without a start_on date" do

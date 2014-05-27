@@ -58,6 +58,7 @@ GEM
       execjs
     coffee-script-source (1.7.0)
     columnize (0.8.9)
+    database_cleaner (1.2.0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     devise (3.2.4)
@@ -233,6 +234,7 @@ DEPENDENCIES
   cancan
   capybara
   coffee-rails (~> 3.2.1)
+  database_cleaner
   devise
   devise_invitable
   dotenv-rails

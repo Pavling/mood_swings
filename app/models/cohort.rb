@@ -14,9 +14,10 @@ class Cohort < ActiveRecord::Base
   scope :future, lambda { where("cohorts.start_on > :today", today: Date.today) }
 
   validates :name, presence: true
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { scope: :campus_id }
   validates :start_on, presence: true
   validates :end_on, presence: true
+  validates :campus_id, presence: true
   validate :validate_end_on_after_start_on
 
   def self.current_and_future
