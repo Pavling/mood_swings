@@ -337,3 +337,7 @@ ul#administered_cohorts {
 #cohorts_container .cohort {
     display: inline-block;
 }
+
+tr:hover { 
+  background-color: rgb(250, 215, 215); 
+}
