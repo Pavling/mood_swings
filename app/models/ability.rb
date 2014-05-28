@@ -18,12 +18,14 @@ class Ability
       can :granularity_by_cohort, AnswerSet if user.cohort_admin? || user.campus_admin?
       can :granularity_by_person_metric, AnswerSet if user.cohort_admin? || user.campus_admin?
 
-      can :manage, :campus do |campus|
+      can :manage, Campus do |campus|
         user.administered_campuses.include?(campus)
       end
 
-      can :manage, :cohort do |cohort|
-        user.administered_cohorts.include?(cohort)
+      cannot :create, Campus
+
+      can :manage, Cohort do |cohort|
+        (user.administered_cohorts + user.administered_campuses.flat_map(&:cohorts)).include?(cohort)
       end
 
       can :create, Cohort if user.campus_admin?
