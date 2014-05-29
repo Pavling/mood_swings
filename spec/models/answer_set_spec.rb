@@ -196,22 +196,6 @@ describe AnswerSet do
       @params = {}
     end
 
-    describe 'invalid options' do
-      describe 'granularity options' do
-        it 'raises an exception for an invalid granularity' do
-          @params[:granularity] = 'invalid'
-          expect { AnswerSet.for_chart(@params) }.to raise_error
-        end
-      end
-
-      describe 'group options' do
-        it 'raises an exception for an invalid group' do
-          @params[:group] = 'invalid'
-          expect { AnswerSet.for_chart(@params) }.to raise_error
-        end
-      end
-    end
-
     describe 'granularity options' do
       describe 'person' do
         before :each do

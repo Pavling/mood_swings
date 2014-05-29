@@ -73,12 +73,9 @@ class AnswerSet < ActiveRecord::Base
       when 'metric'
         chart_data.select("'metric' as campus_id, 'metric' as cohort_id, answers.metric_id as metric_id, 'metric' as user_id, metrics.measure as label").group("answers.metric_id, metrics.measure").joins(answers: :metric)
 
-      when 'person_metric'
+      else # default to grouping by 'person_metric'
         # default to grouping as finely-grained as possible - right down to the individual metric
         chart_data.select("cohorts.campus_id as campus_id, answer_sets.cohort_id as cohort_id, answers.metric_id as metric_id, answer_sets.user_id as user_id, users.name || ': ' || metrics.measure as label").group("cohorts.campus_id, answer_sets.cohort_id, answers.metric_id, answer_sets.user_id, users.name || ': ' || metrics.measure").joins(:user, answers: :metric)
-
-      else
-        raise 'invalid granularity'
     end
     
 
@@ -94,11 +91,8 @@ class AnswerSet < ActiveRecord::Base
         # TODO: the week-grouping chart labels get fubard... try to sort them
         chart_data.select("EXTRACT(YEAR FROM answer_sets.created_at)::text as created_at_year, EXTRACT(WEEK FROM answer_sets.created_at)::text as created_at_week").group("EXTRACT(YEAR FROM answer_sets.created_at)::text, EXTRACT(WEEK FROM answer_sets.created_at)::text")
 
-      when 'moment'
+      else # default to grouping by 'moment'
         chart_data.select('answer_sets.created_at as created_at').group('answer_sets.created_at')
-
-      else
-        raise 'invalid grouping'
     end
 
     chart_data
