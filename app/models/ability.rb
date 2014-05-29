@@ -28,7 +28,7 @@ class Ability
         (user.administered_cohorts + user.administered_campuses.flat_map(&:cohorts)).include?(cohort)
       end
 
-      can :create, Cohort if user.campus_admin?
+      cannot :create, Cohort unless user.campus_admin?
 
       can :read, Cohort do |cohort|
         user.accessible_cohorts.include?(cohort)

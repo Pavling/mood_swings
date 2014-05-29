@@ -561,6 +561,853 @@ describe User do
         end
       end
     end
+
+
+
+    context "when is a cohort_admin" do
+      let(:user) { @cohort_admin }
+
+      context 'Answer' do
+        describe 'read' do
+          it "should not be able to read any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:read, answer)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create answer" do
+            expect(ability).to_not be_able_to(:create, Answer)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:update, answer)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:destroy, answer)
+            end
+          end
+        end
+      end
+
+      context 'AnswerSet' do
+        describe 'read' do
+          it "should not be able to read any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:read, answer_set)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should be able to create answer_set" do
+            expect(ability).to be_able_to(:create, AnswerSet)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:update, answer_set)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:destroy, answer_set)
+            end
+          end
+        end
+
+        describe 'granularity' do
+          it 'should not have granularity by campus' do
+            expect(ability).to_not be_able_to(:granularity_by_campus, AnswerSet)
+          end
+
+          it 'should have granularity by cohort' do
+            expect(ability).to be_able_to(:granularity_by_cohort, AnswerSet)
+          end
+
+          it 'should have granularity by campus' do
+            expect(ability).to be_able_to(:granularity_by_person_metric, AnswerSet)
+          end
+        end
+      end
+
+      context 'Campus' do
+        describe 'read' do
+          it "should not be able to read any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:read, campus)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create campus" do
+            expect(ability).to_not be_able_to(:create, Campus)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:update, campus)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:destroy, campus)
+            end
+          end
+        end
+      end
+
+      context 'Cohort' do
+        let(:administered_cohorts) { [@cohort1, @cohort3] }
+        let(:non_administered_cohorts) { [@cohort2, @cohort4, @cohort5, @cohort6] }
+
+        describe 'read' do
+          it "should be able to read any administered cohort" do
+            administered_cohorts.each do |cohort|
+              expect(ability).to be_able_to(:read, cohort)
+            end
+          end
+
+          it "should not be able to read any non-administered cohort" do
+            non_administered_cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:read, cohort)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create cohort" do
+            expect(ability).to_not be_able_to(:create, Cohort)
+          end
+        end
+
+        describe 'update' do
+          it "should be able to update any administered cohort" do
+            administered_cohorts.each do |cohort|
+              expect(ability).to be_able_to(:update, cohort)
+            end
+          end
+
+          it "should not be able to update any non-administered cohort" do
+            non_administered_cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:update, cohort)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any cohort with answer_sets" do
+            cohorts = (administered_cohorts + non_administered_cohorts).select{|c|c.answer_sets.any?}
+
+            cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:destroy, cohort)
+            end
+          end
+
+          it "should be able to destroy any administered cohort without answer_sets" do
+            administered_cohorts.select{|c|c.answer_sets.blank?}.each do |cohort|
+              expect(ability).to be_able_to(:destroy, cohort)
+            end
+          end
+
+          it "should not be able to destroy any non-administered cohort without answer_sets" do
+            non_administered_cohorts.select{|c|c.answer_sets.blank?}.each do |cohort|
+              expect(ability).to_not be_able_to(:destroy, cohort)
+            end
+          end
+
+        end
+      end
+
+      context 'Metric' do
+        describe 'destroy' do
+          it "should not be able to read any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:read, metric)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create metric" do
+            expect(ability).to_not be_able_to(:create, Metric)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:update, metric)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:destroy, metric)
+            end
+          end
+        end
+      end
+
+      context 'User' do
+        let(:users_in_accessible_cohorts) { [@user1, @user3, @user4] }
+        let(:users_not_in_accessible_cohorts) { [@user2, @user5, @user6, @user7, @admin_user, @campus_admin, @cohort_admin] }
+
+        describe 'alter_email' do
+          it "should not be able to alter_email of any user" do
+            User.all.each do |user|
+              expect(ability).to_not be_able_to(:alter_email, user)
+            end
+          end
+        end
+
+        describe 'read' do
+          it "should be able to read any user in accessible cohorts" do
+            users_in_accessible_cohorts.each do |user|
+              expect(ability).to be_able_to(:read, user)
+            end
+          end
+
+          it "should not be able to read any user in non-accessible cohorts" do
+            users_not_in_accessible_cohorts.each do |user|
+              expect(ability).to_not be_able_to(:read, user)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should be able to create user" do
+            expect(ability).to be_able_to(:create, User)
+          end
+        end
+
+        describe 'update' do
+          it "should be able to update any user in accessible cohorts" do
+            users_in_accessible_cohorts.each do |user|
+              expect(ability).to be_able_to(:update, user)
+            end
+          end
+
+          it "should not be able to update any user in non-accessible users" do
+            users_not_in_accessible_cohorts.each do |user|
+              expect(ability).to_not be_able_to(:update, user)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any accessible user with answer_sets" do
+            users = users_in_accessible_cohorts.select{|u|u.answer_sets.any?}
+            users.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+
+          it "should not be able to destroy any non-accessible user with answer_sets" do
+            users = users_not_in_accessible_cohorts.select{|u|u.answer_sets.any?}
+            users.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+
+          it "should be able to destroy any accessible user without answer_sets" do
+            users = users_in_accessible_cohorts.select{|u|u.answer_sets.blank?}
+            users.each do |user|
+              expect(ability).to be_able_to(:destroy, user)
+            end
+          end
+
+          it "should not be able to destroy any non-accessible user without answer_sets" do
+            users = users_not_in_accessible_cohorts.select{|u|u.answer_sets.blank?}
+            users.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+        end
+      end
+    end
+
+
+
+
+    context "when is a user who is a cohort_admin" do
+      let(:user) { @user4 }
+
+      context 'Answer' do
+        describe 'read' do
+          it "should not be able to read any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:read, answer)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create answer" do
+            expect(ability).to_not be_able_to(:create, Answer)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:update, answer)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:destroy, answer)
+            end
+          end
+        end
+      end
+
+      context 'AnswerSet' do
+        describe 'read' do
+          it "should not be able to read any answer_set created by other users" do
+            answer_sets = AnswerSet.all.reject { |as| as.user == user }
+
+            answer_sets.each do |answer_set|
+              expect(ability).to_not be_able_to(:read, answer_set)
+            end
+          end
+
+          it "should be able to read any answer_set created by self" do
+            answer_sets = AnswerSet.all.select { |as| as.user == user }
+
+            answer_sets.each do |answer_set|
+              expect(ability).to be_able_to(:read, answer_set)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should be able to create answer_set" do
+            expect(ability).to be_able_to(:create, AnswerSet)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:update, answer_set)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:destroy, answer_set)
+            end
+          end
+        end
+
+        describe 'granularity' do
+          it 'should not have granularity by campus' do
+            expect(ability).to_not be_able_to(:granularity_by_campus, AnswerSet)
+          end
+
+          it 'should have granularity by cohort' do
+            expect(ability).to be_able_to(:granularity_by_cohort, AnswerSet)
+          end
+
+          it 'should have granularity by campus' do
+            expect(ability).to be_able_to(:granularity_by_person_metric, AnswerSet)
+          end
+        end
+      end
+
+      context 'Campus' do
+        describe 'read' do
+          it "should not be able to read any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:read, campus)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create campus" do
+            expect(ability).to_not be_able_to(:create, Campus)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:update, campus)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:destroy, campus)
+            end
+          end
+        end
+      end
+
+      context 'Cohort' do
+        let(:administered_cohorts) { [@cohort3] }
+        let(:non_administered_cohorts) { [@cohort1, @cohort2, @cohort4, @cohort5, @cohort6] }
+
+        describe 'read' do
+          it "should be able to read any administered cohort" do
+            administered_cohorts.each do |cohort|
+              expect(ability).to be_able_to(:read, cohort)
+            end
+          end
+
+          it "should not be able to read any non-administered cohort" do
+            (non_administered_cohorts - [@cohort1]).each do |cohort|
+              expect(ability).to_not be_able_to(:read, cohort)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create cohort" do
+            expect(ability).to_not be_able_to(:create, Cohort)
+          end
+        end
+
+        describe 'update' do
+          it "should be able to update any administered cohort" do
+            administered_cohorts.each do |cohort|
+              expect(ability).to be_able_to(:update, cohort)
+            end
+          end
+
+          it "should not be able to update any non-administered cohort" do
+            non_administered_cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:update, cohort)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any cohort with answer_sets" do
+            cohorts = (administered_cohorts + non_administered_cohorts).select{|c|c.answer_sets.any?}
+
+            cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:destroy, cohort)
+            end
+          end
+
+          it "should be able to destroy any administered cohort without answer_sets" do
+            administered_cohorts.select{|c|c.answer_sets.blank?}.each do |cohort|
+              expect(ability).to be_able_to(:destroy, cohort)
+            end
+          end
+
+          it "should not be able to destroy any non-administered cohort without answer_sets" do
+            non_administered_cohorts.select{|c|c.answer_sets.blank?}.each do |cohort|
+              expect(ability).to_not be_able_to(:destroy, cohort)
+            end
+          end
+
+        end
+      end
+
+      context 'Metric' do
+        describe 'destroy' do
+          it "should not be able to read any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:read, metric)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create metric" do
+            expect(ability).to_not be_able_to(:create, Metric)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:update, metric)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:destroy, metric)
+            end
+          end
+        end
+      end
+
+      context 'User' do
+        let(:users_in_accessible_cohorts) { [@user3] }
+        let(:users_not_in_accessible_cohorts) { [@user1, @user2, @user4, @user5, @user6, @user7, @admin_user, @campus_admin, @cohort_admin] }
+
+        describe 'alter_email' do
+          it "should not be able to alter_email of any user" do
+            User.all.each do |user|
+              expect(ability).to_not be_able_to(:alter_email, user)
+            end
+          end
+        end
+
+        describe 'read' do
+          it "should be able to read any user in accessible cohorts" do
+            users_in_accessible_cohorts.each do |user|
+              expect(ability).to be_able_to(:read, user)
+            end
+          end
+
+          it "should not be able to read any user in non-accessible cohorts" do
+            users_not_in_accessible_cohorts.each do |user|
+              expect(ability).to_not be_able_to(:read, user)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should be able to create user" do
+            expect(ability).to be_able_to(:create, User)
+          end
+        end
+
+        describe 'update' do
+          it "should be able to update any user in accessible cohorts" do
+            users_in_accessible_cohorts.each do |user|
+              expect(ability).to be_able_to(:update, user)
+            end
+          end
+
+          it "should not be able to update any user in non-accessible users" do
+            users_not_in_accessible_cohorts.each do |user|
+              expect(ability).to_not be_able_to(:update, user)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any accessible user with answer_sets" do
+            users = users_in_accessible_cohorts.select{|u|u.answer_sets.any?}
+            users.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+
+          it "should not be able to destroy any non-accessible user with answer_sets" do
+            users = users_not_in_accessible_cohorts.select{|u|u.answer_sets.any?}
+            users.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+
+          it "should be able to destroy any accessible user without answer_sets" do
+            users = users_in_accessible_cohorts.select{|u|u.answer_sets.blank?}
+            users.each do |user|
+              expect(ability).to be_able_to(:destroy, user)
+            end
+          end
+
+          it "should not be able to destroy any non-accessible user without answer_sets" do
+            users = users_not_in_accessible_cohorts.select{|u|u.answer_sets.blank?}
+            users.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+        end
+      end
+    end
+
+
+
+    context "when is a user" do
+      let(:user) { @user1 }
+
+      context 'Answer' do
+        describe 'read' do
+          it "should not be able to read any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:read, answer)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create answer" do
+            expect(ability).to_not be_able_to(:create, Answer)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:update, answer)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any answer" do
+            Answer.all.each do |answer|
+              expect(ability).to_not be_able_to(:destroy, answer)
+            end
+          end
+        end
+      end
+
+      context 'AnswerSet' do
+        describe 'read' do
+          it "should not be able to read any answer_set created by other users" do
+            answer_sets = AnswerSet.all.reject { |as| as.user == user }
+
+            answer_sets.each do |answer_set|
+              expect(ability).to_not be_able_to(:read, answer_set)
+            end
+          end
+
+          it "should be able to read any answer_set created by self" do
+            answer_sets = AnswerSet.all.select { |as| as.user == user }
+
+            answer_sets.each do |answer_set|
+              expect(ability).to be_able_to(:read, answer_set)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should be able to create answer_set" do
+            expect(ability).to be_able_to(:create, AnswerSet)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:update, answer_set)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any answer_set" do
+            AnswerSet.all.each do |answer_set|
+              expect(ability).to_not be_able_to(:destroy, answer_set)
+            end
+          end
+        end
+
+        describe 'granularity' do
+          it 'should not have granularity by campus' do
+            expect(ability).to_not be_able_to(:granularity_by_campus, AnswerSet)
+          end
+
+          it 'should not have granularity by cohort' do
+            expect(ability).to_not be_able_to(:granularity_by_cohort, AnswerSet)
+          end
+
+          it 'should not have granularity by campus' do
+            expect(ability).to_not be_able_to(:granularity_by_person_metric, AnswerSet)
+          end
+        end
+      end
+
+      context 'Campus' do
+        describe 'read' do
+          it "should not be able to read any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:read, campus)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create campus" do
+            expect(ability).to_not be_able_to(:create, Campus)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:update, campus)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any campus" do
+            Campus.all.each do |campus|
+              expect(ability).to_not be_able_to(:destroy, campus)
+            end
+          end
+        end
+      end
+
+      context 'Cohort' do
+        let(:enrolled_cohorts) { [@cohort1] }
+        let(:non_enrolled_cohorts) { [@cohort2, @cohort3, @cohort4, @cohort5, @cohort6] }
+
+        describe 'read' do
+          it "should be able to read any enrolled cohort" do
+            enrolled_cohorts.each do |cohort|
+              expect(ability).to be_able_to(:read, cohort)
+            end
+          end
+
+          it "should not be able to read any non-enrolled cohort" do
+            (non_enrolled_cohorts - [@cohort1]).each do |cohort|
+              expect(ability).to_not be_able_to(:read, cohort)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create cohort" do
+            expect(ability).to_not be_able_to(:create, Cohort)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any enrolled cohort" do
+            enrolled_cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:update, cohort)
+            end
+          end
+
+          it "should not be able to update any non-enrolled cohort" do
+            non_enrolled_cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:update, cohort)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any cohort with answer_sets" do
+            cohorts = (enrolled_cohorts + non_enrolled_cohorts).select{|c|c.answer_sets.any?}
+
+            cohorts.each do |cohort|
+              expect(ability).to_not be_able_to(:destroy, cohort)
+            end
+          end
+
+          it "should be able to destroy any enrolled cohort without answer_sets" do
+            enrolled_cohorts.select{|c|c.answer_sets.blank?}.each do |cohort|
+              expect(ability).to be_able_to(:destroy, cohort)
+            end
+          end
+
+          it "should not be able to destroy any non-enrolled cohort without answer_sets" do
+            non_enrolled_cohorts.select{|c|c.answer_sets.blank?}.each do |cohort|
+              expect(ability).to_not be_able_to(:destroy, cohort)
+            end
+          end
+
+        end
+      end
+
+      context 'Metric' do
+        describe 'destroy' do
+          it "should not be able to read any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:read, metric)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should not be able to create metric" do
+            expect(ability).to_not be_able_to(:create, Metric)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:update, metric)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any metric" do
+            Metric.all.each do |metric|
+              expect(ability).to_not be_able_to(:destroy, metric)
+            end
+          end
+        end
+      end
+
+      context 'User' do
+        describe 'alter_email' do
+          it "should not be able to alter_email of any user" do
+            User.all.each do |user|
+              expect(ability).to_not be_able_to(:alter_email, user)
+            end
+          end
+        end
+
+        describe 'read' do
+          it "should not be able to read any user" do
+            User.all.each do |user|
+              expect(ability).to_not be_able_to(:read, user)
+            end
+          end
+        end
+
+        describe 'create' do
+          it "should be able to create user" do
+            expect(ability).to be_able_to(:create, User)
+          end
+        end
+
+        describe 'update' do
+          it "should not be able to update any user" do
+            User.all.each do |user|
+              expect(ability).to_not be_able_to(:update, user)
+            end
+          end
+        end
+
+        describe 'destroy' do
+          it "should not be able to destroy any user" do
+            User.all.each do |user|
+              expect(ability).to_not be_able_to(:destroy, user)
+            end
+          end
+        end
+      end
+    end
+
+
   end
 
 
