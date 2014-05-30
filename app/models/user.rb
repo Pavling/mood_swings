@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   has_many :administered_campuses, through: :campus_administrations, source: :campus
   belongs_to :cohort
 
+  default_scope order('LOWER(users.name)')
   scope :unenrolled, where(cohort_id: nil)
 
   validates :name, presence: true
