@@ -37,6 +37,16 @@ describe User do
     end
   end
 
+  describe 'default scope' do
+    it 'orders by user name' do
+      names = (?a..?z).to_a
+      names.shuffle.each do |name|
+        FactoryGirl.create(:user, name: name)
+      end
+      expect(User.all.map(&:name)).to eq names
+    end
+  end
+
   describe '#first_name' do
     it 'return the first part of the name (up until the first space)' do
       first_name = Faker::Name.first_name
