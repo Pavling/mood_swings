@@ -34,6 +34,20 @@ describe AnswerSet do
     expect(FactoryGirl.build(:answer_set, user: user)).to be_valid
   end
 
+  it "rejects answers set to be `not_applicable`" do
+    5.times { FactoryGirl.create(:metric)}
+
+    as = AnswerSet.populated_with_answers
+    as.cohort = FactoryGirl.create(:cohort)
+    as.user = FactoryGirl.create(:user, cohort: as.cohort)
+    as.answers.each { |a| a.value = 5 }
+    as.answers.first.not_applicable = true
+    as.answers.last.not_applicable = true
+    as.save
+ 
+    expect(as.answers.size).to eq 3
+  end
+
   describe '.with_comments' do
     it 'returns all the answer_sets which have answers with commments' do
       no_comment_answer_set = FactoryGirl.create(:answer_set)
@@ -88,7 +102,8 @@ describe AnswerSet do
       last_answer_set = FactoryGirl.create(:answer_set, user: @user, cohort: @user.cohort)
       @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: last_answer_set, metric: m) }
       last_answer_set.update_attribute(:created_at, 10.minutes.ago)
-
+      last_answer_set.reload
+      
       new_answer_set = AnswerSet.from_last_set_for_user(@user)
 
       new_answer_set.answers.each do |answer|

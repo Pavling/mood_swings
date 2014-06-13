@@ -29,6 +29,12 @@ describe Answer do
     expect(FactoryGirl.build(:answer, metric: nil)).to_not be_valid
   end
 
+  it "has an accessor for `not_applicable`" do
+    answer = FactoryGirl.create(:answer)
+    answer.not_applicable = true
+    expect(answer.not_applicable).to be true
+  end
+
   describe "must have a unique metric withing the scope of its AnswerSet" do
     it 'is valid with duplicate metrics across answer_sets' do
       answer = FactoryGirl.create(:answer)

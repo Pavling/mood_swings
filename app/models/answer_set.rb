@@ -4,6 +4,7 @@ class AnswerSet < ActiveRecord::Base
   has_many :answers, dependent: :destroy
 
   before_destroy :prevent_destroy
+  before_save :reject_not_applicable_answers
   
   scope :with_comments, includes(:answers).where("answers.comments > ''")
   scope :last_five_minutes, lambda { where('created_at > ?', 5.minutes.ago)}
@@ -107,6 +108,11 @@ class AnswerSet < ActiveRecord::Base
   private
   def not_swung_in_the_last_five_minutes
     errors.add :base, "Whoa! You must be very moody! You need to leave at least 5mins between swings." if user && user.answer_sets.last_five_minutes.any?
+  end
+
+  private
+  def reject_not_applicable_answers
+    answers.delete_if(&:not_applicable)
   end
 
 end

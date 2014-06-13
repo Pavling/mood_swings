@@ -1,7 +1,7 @@
 class Answer < ActiveRecord::Base
   belongs_to :answer_set
   belongs_to :metric
-  attr_accessible :comments, :value, :metric_id
+  attr_accessible :comments, :value, :metric_id, :not_applicable
 
   after_save :nullify_comments_if_necessary
   before_destroy :prevent_destroy
@@ -9,6 +9,12 @@ class Answer < ActiveRecord::Base
   validates :value, inclusion: (1..5)
   validates :metric_id, uniqueness: {scope: :answer_set_id}
   validates :metric_id, presence: true
+
+  attr_reader :not_applicable
+
+  def not_applicable=(value)
+    @not_applicable = [true, 1, "1"].include?(value)
+  end
 
   def knob_data
     {
