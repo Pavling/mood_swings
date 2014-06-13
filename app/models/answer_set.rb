@@ -15,7 +15,7 @@ class AnswerSet < ActiveRecord::Base
 
   validates :cohort_id, presence: true
   validates :user_id, presence: true
-  validate :not_swung_in_the_last_five_minutes
+  validate :not_swung_in_the_last_five_minutes, on: :create
 
 
   def self.populated_with_answers
