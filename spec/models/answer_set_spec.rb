@@ -2,36 +2,47 @@ require 'spec_helper'
 
 describe AnswerSet do
   it "has a valid factory" do
-    expect(FactoryGirl.build(:answer_set)).to be_valid
+    expect(FactoryGirl.build(:answer_set, :with_answers)).to be_valid
   end
 
   it "cannot be destroyed" do
-    answer_set = FactoryGirl.create(:answer_set)
+    answer_set = FactoryGirl.create(:answer_set, :with_answers)
     expect(answer_set.destroy).to be false
   end
   
   it "is invalid without a cohort" do
-    expect(FactoryGirl.build(:answer_set, cohort: nil)).to_not be_valid
+    expect(FactoryGirl.build(:answer_set, :with_answers, cohort: nil)).to_not be_valid
   end
 
   it "is invalid without a user" do
-    expect(FactoryGirl.build(:answer_set, user: nil)).to_not be_valid
+    expect(FactoryGirl.build(:answer_set, :with_answers, user: nil)).to_not be_valid
   end
 
-  it "must not have another by the same user in the last five minutes" do
-    user = FactoryGirl.create(:user)
-    answer_set = FactoryGirl.create(:answer_set, user: user)
-    answer_set.update_attribute(:created_at, 4.minutes.ago)
+  describe "limit answer sets to have at least five minutes between them" do
+    it "must not have another by the same user in the last five minutes" do
+      user = FactoryGirl.create(:user)
+      answer_set = FactoryGirl.create(:answer_set, :with_answers, user: user)
+      answer_set.update_attribute(:created_at, 4.minutes.ago)
 
-    expect(FactoryGirl.build(:answer_set, user: user)).to_not be_valid
+      expect(FactoryGirl.build(:answer_set, :with_answers, user: user)).to_not be_valid
+    end
+
+    it "can have another by the same user after five minutes" do
+      user = FactoryGirl.create(:user)
+      old_answer_set = FactoryGirl.create(:answer_set, :with_answers, user: user)
+      old_answer_set.update_attribute(:created_at, 5.minutes.ago)
+
+      expect(FactoryGirl.build(:answer_set, :with_answers, user: user)).to be_valid
+    end
   end
 
-  it "can have another by the same user after five minutes" do
-    user = FactoryGirl.create(:user)
-    old_answer_set = FactoryGirl.create(:answer_set, user: user)
-    old_answer_set.update_attribute(:created_at, 5.minutes.ago)
+  describe "ensure there's always at least one answer" do
+    it "is invalid with no answers" do
 
-    expect(FactoryGirl.build(:answer_set, user: user)).to be_valid
+    end
+
+
+
   end
 
   it "rejects answers set to be `not_applicable`" do
@@ -50,16 +61,19 @@ describe AnswerSet do
 
   describe '.with_comments' do
     it 'returns all the answer_sets which have answers with commments' do
-      no_comment_answer_set = FactoryGirl.create(:answer_set)
-      no_comment_answer_set.answers << FactoryGirl.create(:answer)
+      no_comment_answer_set = FactoryGirl.build(:answer_set)
+      no_comment_answer_set.answers << FactoryGirl.build(:answer, answer_set: no_comment_answer_set)
+      no_comment_answer_set.save
 
-      comment_answer_set_1 = FactoryGirl.create(:answer_set)
-      comment_answer_set_1.answers << FactoryGirl.create(:answer_with_comments)
-      comment_answer_set_1.answers << FactoryGirl.create(:answer)
+      comment_answer_set_1 = FactoryGirl.build(:answer_set)
+      comment_answer_set_1.answers << FactoryGirl.build(:answer_with_comments, answer_set: comment_answer_set_1)
+      comment_answer_set_1.answers << FactoryGirl.build(:answer, answer_set: comment_answer_set_1)
+      comment_answer_set_1.save
 
-      comment_answer_set_2 = FactoryGirl.create(:answer_set)
-      comment_answer_set_2.answers << FactoryGirl.create(:answer_with_comments)
-      comment_answer_set_2.answers << FactoryGirl.create(:answer_with_comments)
+      comment_answer_set_2 = FactoryGirl.build(:answer_set)
+      comment_answer_set_2.answers << FactoryGirl.build(:answer_with_comments, answer_set: comment_answer_set_2)
+      comment_answer_set_2.answers << FactoryGirl.build(:answer_with_comments, answer_set: comment_answer_set_2)
+      comment_answer_set_2.save
 
       expect(AnswerSet.with_comments.sort).to eq [comment_answer_set_1, comment_answer_set_2].sort
     end
@@ -67,10 +81,10 @@ describe AnswerSet do
 
   describe '.last_five_minutes' do
     it 'returns all the answer_sets created in the last five minutes' do
-      old_answer_set = FactoryGirl.create(:answer_set)
+      old_answer_set = FactoryGirl.create(:answer_set, :with_answers)
       old_answer_set.update_attribute(:created_at, 5.minutes.ago)
 
-      answer_set = FactoryGirl.create(:answer_set)
+      answer_set = FactoryGirl.create(:answer_set, :with_answers)
 
       expect(AnswerSet.last_five_minutes).to eq [answer_set]
     end
@@ -95,14 +109,13 @@ describe AnswerSet do
     end
 
     it "returns a new answer_set populated with answers of the same values as the user's last swing" do
-      answer_set = FactoryGirl.create(:answer_set, user: @user, cohort: @user.cohort)
-      @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m) }
+      answer_set = FactoryGirl.build(:answer_set, user: @user, cohort: @user.cohort)
+      answer_set.answers = @metrics.map { |m| FactoryGirl.build(:answer_with_comments, answer_set: answer_set, metric: m) }
       answer_set.update_attribute(:created_at, 20.minutes.ago)
 
-      last_answer_set = FactoryGirl.create(:answer_set, user: @user, cohort: @user.cohort)
-      @metrics.each { |m| FactoryGirl.create(:answer_with_comments, answer_set: last_answer_set, metric: m) }
+      last_answer_set = FactoryGirl.build(:answer_set, user: @user, cohort: @user.cohort)
+      last_answer_set.answers = @metrics.map { |m| FactoryGirl.build(:answer_with_comments, answer_set: last_answer_set, metric: m) }
       last_answer_set.update_attribute(:created_at, 10.minutes.ago)
-      last_answer_set.reload
       
       new_answer_set = AnswerSet.from_last_set_for_user(@user)
 
@@ -1072,10 +1085,10 @@ describe AnswerSet do
       second_count -= 1
 
       [@user1, @user2, @user3, @user4, @user5].each do |user|
-        answer_set = FactoryGirl.create(:answer_set, user: user, cohort: user.cohort)
+        answer_set = FactoryGirl.build(:answer_set, user: user, cohort: user.cohort)
         @metrics.each_with_index do |m, j|
           value = [1,2,3,4][j%4]
-          answer = FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m, value: value)
+          answer_set.answers << (answer = FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m, value: value))
           answer.update_attribute(:created_at, @start_of_week.ago(day.days).to_date.ago(second_count.seconds))
         end
         answer_set.update_attribute(:created_at, @start_of_week.ago(day.days).to_date.ago(second_count.seconds))

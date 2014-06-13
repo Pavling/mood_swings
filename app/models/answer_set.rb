@@ -4,7 +4,7 @@ class AnswerSet < ActiveRecord::Base
   has_many :answers, dependent: :destroy
 
   before_destroy :prevent_destroy
-  before_save :reject_not_applicable_answers
+  before_validation :reject_not_applicable_answers
   
   scope :with_comments, includes(:answers).where("answers.comments > ''")
   scope :last_five_minutes, lambda { where('created_at > ?', 5.minutes.ago)}
@@ -15,6 +15,7 @@ class AnswerSet < ActiveRecord::Base
 
   validates :cohort_id, presence: true
   validates :user_id, presence: true
+  validate :at_least_one_answer_given
   validate :not_swung_in_the_last_five_minutes, on: :create
 
 
@@ -108,6 +109,10 @@ class AnswerSet < ActiveRecord::Base
   private
   def not_swung_in_the_last_five_minutes
     errors.add :base, "Whoa! You must be very moody! You need to leave at least 5mins between swings." if user && user.answer_sets.last_five_minutes.any?
+  end
+
+  def at_least_one_answer_given
+    errors.add(:base, "At least one answer has to be given") if answers.empty?
   end
 
   private

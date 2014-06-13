@@ -109,6 +109,12 @@ td {
   height: 3rem;
 }
 
+#new_answer_set .not-applicable-answer input, #new_answer_set .not-applicable-answer label {
+  width: inherit;
+  font-size: 10px;
+  vertical-align: middle;
+}
+
 .submit_button { 
   min-width:8rem;
   padding:0.5rem;

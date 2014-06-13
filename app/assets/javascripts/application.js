@@ -34,6 +34,30 @@ $(function() {
 
   $( ".datepicker" ).datepicker( {"dateFormat": 'yy-mm-dd'} );
 
+  $('.not-applicable-answer :checkbox').click(function() {
+    makeNotApplicable = $(this).is(':checked');
+    $parent = $(this).parent().parent();
+    inputs = $parent.find(':input:not(:checkbox)');
+    inputs.prop('disabled', makeNotApplicable);
+
+    if (makeNotApplicable) {
+      $('<div>', {
+                  class: 'overlay',
+                  css: {
+                      position: 'absolute',
+                      width: $parent.outerWidth(),
+                      height: $parent.outerHeight() - 25,
+                      top: $parent.position().top,
+                      left: $parent.position().left,
+                      backgroundColor: 'rgba(255,255,255,0.7)',
+                      zIndex: 10
+                  }
+      }).appendTo( $parent );
+    } else {
+      $parent.find('.overlay').remove();
+    }
+  });
+
 });
 
 
