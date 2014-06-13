@@ -1,7 +1,7 @@
 MoodSwings::Application.routes.draw do
   devise_for :users, controllers: { registrations: "registrations", invitations: "invitations" }
 
-  resources :answer_sets, only: [:index, :new, :create], path: :swingings
+  resources :answer_sets, only: [:index, :create], path: :swingings
   resources :campuses
   resources :cohorts
   resources :metrics

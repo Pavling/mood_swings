@@ -39,17 +39,6 @@ class AnswerSetsController < ApplicationController
     end
   end
 
-  # GET /answer_sets/new
-  # GET /answer_sets/new.json
-  def new
-    @answer_set = AnswerSet.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @answer_set }
-    end
-  end
-
   # POST /answer_sets
   # POST /answer_sets.json
   def create
