@@ -37,8 +37,8 @@ describe Answer do
 
   describe "must have a unique metric withing the scope of its AnswerSet" do
     it 'is valid with duplicate metrics across answer_sets' do
-      answer = FactoryGirl.create(:answer)
-      expect(FactoryGirl.build(:answer, metric: answer.metric)).to be_valid
+      answer = FactoryGirl.create(:answer, answer_set: FactoryGirl.build(:answer_set, :with_answers))
+      expect(FactoryGirl.build(:answer, metric: answer.metric, answer_set: FactoryGirl.build(:answer_set, :with_answers))).to be_valid
     end
 
     it 'is invalid with duplicate metric in the same answer_set' do

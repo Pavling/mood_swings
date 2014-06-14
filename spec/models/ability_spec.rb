@@ -1457,10 +1457,10 @@ describe User do
       second_count -= 1
 
       [@user1, @user2, @user3, @user4, @user5].each do |user|
-        answer_set = FactoryGirl.create(:answer_set, user: user, cohort: user.cohort)
+        answer_set = FactoryGirl.build(:answer_set, user: user, cohort: user.cohort)
         @metrics.each_with_index do |m, j|
           value = [1,2,3,4][j%4]
-          answer = FactoryGirl.create(:answer_with_comments, answer_set: answer_set, metric: m, value: value)
+          answer_set.answers << (answer = FactoryGirl.build(:answer_with_comments, answer_set: answer_set, metric: m, value: value))
           answer.update_attribute(:created_at, @start_of_week.ago(day.days).to_date.ago(second_count.seconds))
         end
         answer_set.update_attribute(:created_at, @start_of_week.ago(day.days).to_date.ago(second_count.seconds))

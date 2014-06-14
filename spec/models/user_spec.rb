@@ -60,10 +60,10 @@ describe User do
     before :each do
       @user = FactoryGirl.create(:user)
       3.times do |i| 
-        as = FactoryGirl.create(:answer_set, user: @user) 
+        as = FactoryGirl.create(:answer_set, :with_answers, user: @user) 
         as.update_attribute(:created_at, ((i+1)*5).minutes.ago)
       end
-      @answer_set = FactoryGirl.create(:answer_set, user: @user)
+      @answer_set = FactoryGirl.create(:answer_set, :with_answers, user: @user)
     end
 
     it 'returns the most recently created answer set for the user' do
@@ -72,7 +72,7 @@ describe User do
 
     it 'returns the most recently created answer set for the user, even if other users have more recent answer sets' do
       user = FactoryGirl.create(:user)
-      FactoryGirl.create(:answer_set, user: user)
+      FactoryGirl.create(:answer_set, :with_answers, user: user)
 
       expect(@user.last_answer_set).to eq @answer_set
     end
@@ -188,9 +188,9 @@ describe User do
       user1 = FactoryGirl.create(:user)
       user2 = FactoryGirl.create(:user)
 
-      FactoryGirl.create(:answer_set, user: user1)
+      FactoryGirl.create(:answer_set, :with_answers, user: user1)
 
-      answer_set = FactoryGirl.create(:answer_set, user: user2)
+      answer_set = FactoryGirl.create(:answer_set, :with_answers, user: user2)
       answer_set.update_attribute(:created_at, 2.days.ago)
 
       expect(User.mood_swung_today).to eq [user1]

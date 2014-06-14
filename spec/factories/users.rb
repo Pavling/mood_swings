@@ -10,7 +10,7 @@ FactoryGirl.define do
       cohort FactoryGirl.build(:cohort)
 
       after(:create) do |user, evaluator|
-        create(:answer_set_with_answers, user: user, cohort: user.cohort)
+        user.answer_sets << create(:answer_set, :with_answers, user: user, cohort: user.cohort)
       end
     end
 

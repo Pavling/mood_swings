@@ -38,11 +38,18 @@ describe AnswerSet do
 
   describe "ensure there's always at least one answer" do
     it "is invalid with no answers" do
-
+      answer_set = FactoryGirl.build(:answer_set)
+      answer_set.answers = []
+   
+      expect(answer_set).to_not be_valid
     end
 
+    it "is invalid with all answers marked as not_applicable" do
+      answer_set = FactoryGirl.build(:answer_set)
+      answer_set.answers.each { |a| a.not_applicable = true }
 
-
+      expect(answer_set).to_not be_valid
+    end
   end
 
   it "rejects answers set to be `not_applicable`" do
