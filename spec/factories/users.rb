@@ -6,6 +6,10 @@ FactoryGirl.define do
     password 'password'
     password_confirmation 'password'
 
+    trait :with_cohort do
+      cohort FactoryGirl.build(:cohort)
+    end
+
     factory :user_with_answer_sets do
       cohort FactoryGirl.build(:cohort)
 

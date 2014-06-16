@@ -1,5 +1,5 @@
 class Cohort < ActiveRecord::Base
-  attr_accessible :name, :start_on, :end_on, :student_ids, :administrator_ids, :campus_id
+  attr_accessible :name, :start_on, :end_on, :student_ids, :administrator_ids, :campus_id, :skip_email_reminders, :allow_users_to_manage_email_reminders
 
   belongs_to :campus
   has_many :students, class_name: 'User', order: :name

@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
 
+  before_validation :syncronise_email_reminder_with_cohort, on: :create
   before_destroy :ensure_no_answer_sets_exist
 
   has_many :answer_sets
@@ -26,7 +27,7 @@ class User < ActiveRecord::Base
   end
 
   def self.desiring_email_reminder
-    where(skip_email_reminders: false)
+    joins(:cohort).where(users: { skip_email_reminders: false }, cohorts: { skip_email_reminders: false })
   end
 
   def self.mood_swung_today
@@ -128,5 +129,13 @@ class User < ActiveRecord::Base
       return false
     end
   end
+
+  private
+  def syncronise_email_reminder_with_cohort
+    if cohort
+      self.skip_email_reminders = cohort.skip_email_reminders unless cohort.allow_users_to_manage_email_reminders
+    end
+  end
+
 
 end

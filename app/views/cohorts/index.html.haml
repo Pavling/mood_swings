@@ -3,6 +3,8 @@
 %table
   %tr
     %th Name
+    %th Skip email reminders
+    %th Users can manage email reminders
     %th Campus
     %th Admins
     %th
@@ -12,6 +14,8 @@
   - @cohorts.each do |cohort|
     %tr
       %td= cohort.name
+      %td= cohort.skip_email_reminders
+      %td= cohort.allow_users_to_manage_email_reminders
       %td= cohort.campus.try :name
       %td= cohort.administrators.map(&:name).to_sentence
       %td= link_to 'Show', cohort if can? :read, cohort

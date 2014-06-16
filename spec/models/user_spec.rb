@@ -30,11 +30,18 @@ describe User do
 
   describe '.desiring_email_reminder' do
     it "returns all students who are configured to receive email reminders" do
-      user = FactoryGirl.create(:user)
-      2.times { FactoryGirl.create(:user, skip_email_reminders: true) }
+      user = FactoryGirl.create(:user, :with_cohort)
+      2.times { FactoryGirl.create(:user, :with_cohort, skip_email_reminders: true) }
 
       expect(User.desiring_email_reminder).to eq [user]
     end
+
+    it "doesn't return users who have their cohort set to not receive email reminders"
+
+    it "doesn't allow users to change their skip_email_reminders setting if the cohort prohibits it"
+
+    it "sets the user's skip_email_reminders value to the same as the user's cohort if the cohort doesn't allow users to manage their own"
+
   end
 
   describe 'default scope' do

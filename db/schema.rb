@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140425181145) do
+ActiveRecord::Schema.define(:version => 20140616103400) do
 
   create_table "answer_sets", :force => true do |t|
     t.integer  "user_id"
@@ -64,9 +64,11 @@ ActiveRecord::Schema.define(:version => 20140425181145) do
     t.string   "name"
     t.date     "start_on"
     t.date     "end_on"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                                               :null => false
+    t.datetime "updated_at",                                               :null => false
     t.integer  "campus_id"
+    t.boolean  "skip_email_reminders",                  :default => false
+    t.boolean  "allow_users_to_manage_email_reminders", :default => true
   end
 
   create_table "metrics", :force => true do |t|

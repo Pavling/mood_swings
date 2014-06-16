@@ -9,15 +9,27 @@
   .field
     = f.label :name
     = f.text_field :name
+
+  .field
+    = f.label :skip_email_reminders, 'Do not send email reminders', class: :skip_email_reminders
+    = f.check_box :skip_email_reminders
+
+  .field
+    = f.label :allow_users_to_manage_email_reminders, 'Allow users to manage email reminders', class: :skip_email_reminders
+    = f.check_box :allow_users_to_manage_email_reminders
+
   .field
     = f.label :campus_id, 'Campus'
     = f.collection_select :campus_id, @campuses, :id, :name, prompt: true
+
   .field
     = f.label :start_on
     = f.text_field :start_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+
   .field
     = f.label :end_on
     = f.text_field :end_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+
   .field
     = label_tag :students
     = hidden_field_tag 'cohort[student_ids][]'
@@ -26,7 +38,9 @@
         %li
           = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
           = label_tag student.name
+
   %hr
+
   .field
     = label_tag :administrators, 'Admins'
     = hidden_field_tag 'cohort[administrator_ids][]'
@@ -35,10 +49,6 @@
         %li
           = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
           = label_tag administrator.name
-
-
-
-
 
   .actions
     = f.submit 'Save', class: :submit_button
