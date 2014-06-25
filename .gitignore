@@ -19,3 +19,6 @@
 coverage
 
 .idea
+
+# for now, ignore ruby version and gemset
+.ruby*
