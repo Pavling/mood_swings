@@ -14,10 +14,12 @@
       <%= f.object.cohort.try(:name) %>
     </div>
 
-    <div class='field'>
-      <%= f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders %>
-      <%= f.check_box :skip_email_reminders %>
-    </div>
+    <% if @user.can_manage_email_reminders? %>
+      <div class='field'>
+        <%= f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders %>
+        <%= f.check_box :skip_email_reminders %>
+      </div>
+    <% end %>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
       <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>

@@ -122,6 +122,10 @@ class User < ActiveRecord::Base
     @campus_admin = campus_administrations.any?
   end
 
+  def can_manage_email_reminders?
+    cohort.blank? || cohort.allow_users_to_manage_email_reminders?
+  end
+
   private
   def ensure_no_answer_sets_exist
     if answer_sets.any?

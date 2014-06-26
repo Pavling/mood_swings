@@ -154,6 +154,18 @@ describe User do
     end
   end
 
+  describe '#can_manage_email_reminders' do
+    it 'can manage email reminders when cohort allows it' do
+      cohort = FactoryGirl.build(:cohort, allow_users_to_manage_email_reminders: true)
+      expect(FactoryGirl.build(:user, cohort: cohort).can_manage_email_reminders?).to be_true
+    end
+
+    it 'cannot manage email reminders when cohort prevents it' do
+      cohort = FactoryGirl.build(:cohort, allow_users_to_manage_email_reminders: false)
+      expect(FactoryGirl.build(:user, cohort: cohort).can_manage_email_reminders?).to be_false
+    end
+  end
+
 
   describe '.needing_reminder_email' do#
     before :each do
