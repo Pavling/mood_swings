@@ -23,11 +23,16 @@ class User < ActiveRecord::Base
   validates :name, presence: true
 
   def self.needing_reminder_email
-    where("users.id not in (?)", mood_swung_today << 0).joins(:cohort).merge(Cohort.currently_running)
+    where("users.id not in (?)", mood_swung_today << 0).
+    joins(:cohort).
+    merge(Cohort.currently_running.
+      where("(cohorts.allow_users_to_manage_email_reminders = :true AND users.skip_email_reminders = false) OR
+        (cohorts.allow_users_to_manage_email_reminders = :false AND cohorts.skip_email_reminders = :false)", true: true, false: false)
+      )
   end
 
   def self.desiring_email_reminder
-    joins(:cohort).where(users: { skip_email_reminders: false }, cohorts: { skip_email_reminders: false })
+    joins(:cohort).where("(cohorts.allow_users_to_manage_email_reminders = :true AND users.skip_email_reminders = :false) OR (cohorts.allow_users_to_manage_email_reminders = :false AND cohorts.skip_email_reminders = :false)", true: true, false: false)
   end
 
   def self.mood_swung_today
@@ -139,6 +144,7 @@ class User < ActiveRecord::Base
     if cohort
       self.skip_email_reminders = cohort.skip_email_reminders unless cohort.allow_users_to_manage_email_reminders
     end
+    return true # unless this method returns truthy, it can halt the validation chain
   end
 
 
