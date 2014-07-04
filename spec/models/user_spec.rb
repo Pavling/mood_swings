@@ -28,7 +28,7 @@ describe User do
     end
   end
 
-  describe '.desiring_email_reminder' do
+  describe '.configured_to_receive_email_reminders' do
     describe "cohort allows students to manage email reminders" do
       before :each do
         @cohort = FactoryGirl.create(:cohort, allow_users_to_manage_email_reminders: true)
@@ -37,11 +37,11 @@ describe User do
       end
 
       it "returns all students who are configured to receive email reminders" do
-        expect(User.desiring_email_reminder).to include @user
+        expect(User.configured_to_receive_email_reminders).to include @user
       end
 
       it "doesn't return students who are configured to skip email reminders" do
-        expect(User.desiring_email_reminder).to_not include @skip_email_users.sample
+        expect(User.configured_to_receive_email_reminders).to_not include @skip_email_users.sample
       end
     end
 
@@ -54,11 +54,11 @@ describe User do
         end
 
         it "doesn't return students who are configured to receive email reminders" do
-          expect(User.desiring_email_reminder).to_not include @user
+          expect(User.configured_to_receive_email_reminders).to_not include @user
         end
 
         it "doesn't return students who are configured to skip email reminders" do
-          expect(User.desiring_email_reminder).to_not include @skip_email_users.sample
+          expect(User.configured_to_receive_email_reminders).to_not include @skip_email_users.sample
         end
       end
 
@@ -70,11 +70,11 @@ describe User do
         end
 
         it "returns students who are configured to receive email reminders" do
-          expect(User.desiring_email_reminder).to include @user
+          expect(User.configured_to_receive_email_reminders).to include @user
         end
 
         it "returns students who are configured to skip email reminders" do
-          expect(User.desiring_email_reminder).to include @skip_email_users.sample
+          expect(User.configured_to_receive_email_reminders).to include @skip_email_users.sample
         end
       end
     end
