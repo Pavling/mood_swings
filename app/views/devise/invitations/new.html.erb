@@ -17,7 +17,7 @@
 
   <div>
     <%= f.label :cohort_id, 'Cohort' %><br />
-    <%= f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose, or leave blank for admin' %>
+    <%= f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose' %>
   </div>
 
   <p><%= f.submit t("devise.invitations.new.submit_button"), class: :submit_button %></p>
