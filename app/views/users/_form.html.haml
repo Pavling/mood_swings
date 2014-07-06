@@ -19,7 +19,7 @@
 
   .field
     = f.label :cohort_id, 'Cohort'
-    = f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose, or leave blank for admin'
+    = f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose, or leave blank for admin', include_blank: !!f.object.cohort
 
   .field
     = f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders
