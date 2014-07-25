@@ -1,6 +1,7 @@
 class AnswerSetsController < ApplicationController
   load_and_authorize_resource
   before_filter :authenticate_user!
+  before_filter :check_for_currently_running!, only: :create
 
   # GET /answer_sets
   # GET /answer_sets.json
