@@ -131,6 +131,14 @@ class User < ActiveRecord::Base
     cohort.blank? || cohort.allow_users_to_manage_email_reminders?
   end
 
+  def send_reminder_email!
+    if reminder_email_sent_at.nil? || reminder_email_sent_at < Time.now - 20.hours
+      Rails.logger.info "REMINDER EMAIL: emailing #{email}"
+      UserMailer.reminder(self).deliver
+      update_attribute :reminder_email_sent_at, Time.now
+    end
+  end
+
   private
   def ensure_no_answer_sets_exist
     if answer_sets.any?

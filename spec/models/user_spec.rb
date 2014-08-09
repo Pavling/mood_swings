@@ -28,6 +28,34 @@ describe User do
     end
   end
 
+  describe '#send_reminder_email!' do
+    it 'sends email to user never sent one before' do
+      @user = FactoryGirl.create(:user)
+      @user.send_reminder_email!
+      @user.reload
+      expect(@user.reminder_email_sent_at).to_not eq nil
+    end
+
+    it 'sends email to user sent one over 20 hours ago' do
+      @user = FactoryGirl.create(:user, reminder_email_sent_at: Time.zone.now.ago(20.hours).ago(1.minute))
+      reminder_email_sent_at = @user.reminder_email_sent_at
+
+      @user.send_reminder_email!
+      @user.reload
+      expect(@user.reminder_email_sent_at).to_not eq reminder_email_sent_at
+    end
+
+    it 'does not send email to user sent one less than 20 hours ago' do
+      @user = FactoryGirl.create(:user, reminder_email_sent_at: Time.zone.now.ago(20.hours).since(1.minute))
+      reminder_email_sent_at = @user.reminder_email_sent_at
+
+      @user.send_reminder_email!
+      @user.reload
+      expect(@user.reminder_email_sent_at.to_s).to eq reminder_email_sent_at.to_s
+    end
+
+  end
+
   describe '.configured_to_receive_email_reminders' do
     describe "cohort allows students to manage email reminders" do
       before :each do
