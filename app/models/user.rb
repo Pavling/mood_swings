@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
     if reminder_email_sent_at.nil? || reminder_email_sent_at < Time.now - 20.hours
       Rails.logger.info "REMINDER EMAIL: emailing #{email}"
       UserMailer.reminder(self).deliver
-      update_attribute :reminder_email_sent_at, Time.now
+      User.find(id).update_attribute :reminder_email_sent_at, Time.now # TODO: find out why the users that come from the scope into this method are readonly records
     end
   end
 
