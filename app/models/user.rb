@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   end
 
   def self.configured_to_receive_email_reminders
-    joins(:cohort).where("(cohorts.allow_users_to_manage_email_reminders = :true AND users.skip_email_reminders = :false) OR (cohorts.allow_users_to_manage_email_reminders = :false AND cohorts.skip_email_reminders = :false)", true: true, false: false)
+    joins(:cohort).where("(cohorts.skip_email_reminders = :false AND cohorts.allow_users_to_manage_email_reminders = :true AND users.skip_email_reminders = :false) OR (cohorts.allow_users_to_manage_email_reminders = :false AND cohorts.skip_email_reminders = :false)", true: true, false: false)
   end
 
   def self.mood_swung_today

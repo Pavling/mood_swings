@@ -75,18 +75,36 @@ describe User do
 
     describe "cohort doesn't allow students to manage email reminders" do
       describe "cohort skips email reminders" do
-        before :each do
-          @cohort = FactoryGirl.create(:cohort, allow_users_to_manage_email_reminders: false, skip_email_reminders: true)
-          @user = FactoryGirl.create(:user, cohort: @cohort)
-          @skip_email_users = 2.times.map { FactoryGirl.create(:user, cohort: @cohort, skip_email_reminders: true) }
+        describe "users are allowed to manage their email reminders" do
+          before :each do
+            @cohort = FactoryGirl.create(:cohort, allow_users_to_manage_email_reminders: true, skip_email_reminders: true)
+            @user = FactoryGirl.create(:user, cohort: @cohort)
+            @skip_email_users = 2.times.map { FactoryGirl.create(:user, cohort: @cohort, skip_email_reminders: true) }
+          end
+
+          it "doesn't return students who are configured to receive email reminders" do
+            expect(User.configured_to_receive_email_reminders).to_not include @user
+          end
+
+          it "doesn't return students who are configured to skip email reminders" do
+            expect(User.configured_to_receive_email_reminders).to_not include @skip_email_users.sample
+          end
         end
 
-        it "doesn't return students who are configured to receive email reminders" do
-          expect(User.configured_to_receive_email_reminders).to_not include @user
-        end
+        describe "users are not allowed to manage their email reminders" do
+          before :each do
+            @cohort = FactoryGirl.create(:cohort, allow_users_to_manage_email_reminders: false, skip_email_reminders: true)
+            @user = FactoryGirl.create(:user, cohort: @cohort)
+            @skip_email_users = 2.times.map { FactoryGirl.create(:user, cohort: @cohort, skip_email_reminders: true) }
+          end
 
-        it "doesn't return students who are configured to skip email reminders" do
-          expect(User.configured_to_receive_email_reminders).to_not include @skip_email_users.sample
+          it "doesn't return students who are configured to receive email reminders" do
+            expect(User.configured_to_receive_email_reminders).to_not include @user
+          end
+
+          it "doesn't return students who are configured to skip email reminders" do
+            expect(User.configured_to_receive_email_reminders).to_not include @skip_email_users.sample
+          end
         end
       end
 
