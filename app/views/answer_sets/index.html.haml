@@ -6,6 +6,9 @@
 =form_tag answer_sets_path, method: :get, id: :answer_set_index do
   %fieldset
     .field
+      = label_tag :rebase
+      = select_tag :rebase, options_for_select([:standard, :rebase]) 
+    .field
       = label_tag :from_date
       = text_field_tag :from_date, params[:from_date], placeholder: 'yyyy-mm-dd', class: :datepicker
 
@@ -44,7 +47,7 @@
 
 #myChart{height: 400 }
 
-=content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, labels: @labels, x_labels: @x_labels}
+=content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, labels: @labels, x_labels: @x_labels, parse_time: @parse_time}
 
 #hoverContainer
 

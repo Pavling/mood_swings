@@ -13,7 +13,8 @@ $(function(){
       xLabels: $('#line-chart').data('x-labels'),
       moveHover: false,
       hoverContainer: $('#hoverContainer'),
-      compactLegend: true
+      compactLegend: true,
+      parseTime: $('#line-chart').data('parseTime')
     });
 
   };
