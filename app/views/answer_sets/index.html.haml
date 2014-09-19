@@ -6,8 +6,9 @@
 =form_tag answer_sets_path, method: :get, id: :answer_set_index do
   %fieldset
     .field
+      - rebase_options = %w(standard rebase)
       = label_tag :rebase
-      = select_tag :rebase, options_for_select([:standard, :rebase]) 
+      = select_tag :rebase, options_for_select(rebase_options, params[:rebase]) 
     .field
       = label_tag :from_date
       = text_field_tag :from_date, params[:from_date], placeholder: 'yyyy-mm-dd', class: :datepicker
