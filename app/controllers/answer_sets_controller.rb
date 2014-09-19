@@ -8,10 +8,10 @@ class AnswerSetsController < ApplicationController
   def index
 
     case params[:granularity].to_s.downcase
-      when 'cohort'
-        authorize! :granularity_by_cohort, AnswerSet
-      when 'campus'
-        authorize! :granularity_by_campus, AnswerSet
+    when 'cohort'
+      authorize! :granularity_by_cohort, AnswerSet
+    when 'campus'
+      authorize! :granularity_by_campus, AnswerSet
     end
 
     # set default values into params
@@ -21,8 +21,8 @@ class AnswerSetsController < ApplicationController
 
     @answer_sets = current_user.accessible_answer_sets.for_index(params)
 
-      @chart_data = @answer_sets.for_chart(params)
-  
+    @chart_data = @answer_sets.for_chart(params)
+
     # this checks if we want to rebase the chart.  If we do we need to set the x-axis on the 
     # graph to not parse time. We also get the data out in a different way.
 
@@ -40,13 +40,13 @@ class AnswerSetsController < ApplicationController
     @keys = chart_data_keys(@chart_data)
     @labels = chart_data_labels(@chart_data)
     @x_labels = case params[:group].to_s.downcase
-      when 'hour'
-        'hour'
-      when 'day'
-        'day'
-      when 'week'
-        'month'
-      end
+    when 'hour'
+      'hour'
+    when 'day'
+      'day'
+    when 'week'
+      'month'
+    end
     
     respond_to do |format|
       format.html # index.html.erb
@@ -102,14 +102,22 @@ class AnswerSetsController < ApplicationController
       
       memo = {}
       data_by_cohort.each do |cohort_id, answers|
-          cohort_start_date = Cohort.find(cohort_id).start_on
-          answers.each do |answer|
-            
-            day_count = (answer.created_at.to_date - cohort_start_date).to_f
-              memo["#{day_count}"] =  memo["#{day_count}"] || {}
-              memo["#{day_count}"]["#{cohort_id}##{answer.user_id}##{answer.metric_id}"] = answer.value.to_f.round(1)
-            
-           end
+        cohort_start_date = Cohort.find(cohort_id).start_on
+        answers.each do |answer|
+
+          day_count = case 
+            when answer.attributes.keys.include?('created_at')
+              (answer.created_at.to_date - cohort_start_date).to_f
+            when answer.attributes.keys.include?('created_at_week')
+              (answer.created_at_year + ("%02d" % answer.created_at_week)).to_i - (cohort_start_date.year.to_s + ("%02d" % cohort_start_date.cweek)).to_i
+            else
+              raise "invalid data in rebase"
+          end
+
+          memo["#{day_count}"] ||= {}
+          memo["#{day_count}"]["#{cohort_id}##{answer.user_id}##{answer.metric_id}"] = answer.value.to_f.round(1)
+
+        end
       end
       
       result = []
@@ -123,24 +131,24 @@ class AnswerSetsController < ApplicationController
       end
 
       result.sort{ |x,y| x[:timestamp].to_i <=> y[:timestamp].to_i}
+    end
+
+
+    private
+    def chart_data_keys(data)
+      keys_and_data_for(data).map(&:keys).flatten
+    end
+
+    private
+    def chart_data_labels(data)
+      keys_and_data_for(data).map(&:values).flatten
+    end
+
+    private
+    def keys_and_data_for(data)
+      data.map do |datum|
+        {datum.cohort_id.to_s + '#' + datum.user_id.to_s + '#' + datum.metric_id.to_s => datum.label }
+      end.uniq
+    end
+
   end
-
-
-  private
-  def chart_data_keys(data)
-    keys_and_data_for(data).map(&:keys).flatten
-  end
-
-  private
-  def chart_data_labels(data)
-    keys_and_data_for(data).map(&:values).flatten
-  end
-
-  private
-  def keys_and_data_for(data)
-    data.map do |datum|
-      {datum.cohort_id.to_s + '#' + datum.user_id.to_s + '#' + datum.metric_id.to_s => datum.label }
-    end.uniq
-  end
-
-end
