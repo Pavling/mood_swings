@@ -3,7 +3,14 @@ MoodSwings::Application.routes.draw do
 
   resources :answer_sets, only: [:index, :create], path: :swingings
   resources :campuses
-  resources :cohorts
+  
+  resources :cohorts do
+    member do
+      get :autocomplete_users
+      get :autocomplete_administrators
+    end
+  end
+
   resources :metrics
   resources :users, only: [:index, :show, :edit, :update]
 

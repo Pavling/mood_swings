@@ -56,6 +56,19 @@ describe User do
 
   end
 
+  describe '.excluding' do
+    it 'excludes a users from a finder'
+    it 'excludes an array of users from a finder'
+  end
+
+  describe '.for_autocomplete' do
+    it 'takes a search term and returns users that match the name or email'
+    it "maps the user's name to `value`"
+    it 'only returns id and value'
+    it "doesn't return users already enrolled on other courses"
+    it "doesn't return users with blank names"
+  end
+
   describe '.configured_to_receive_email_reminders' do
     describe "cohort allows students to manage email reminders" do
       before :each do

@@ -19,8 +19,15 @@ class User < ActiveRecord::Base
 
   default_scope order('LOWER(users.name)')
   scope :unenrolled, where(cohort_id: nil)
+  scope :excluding, -> (*users) { where(["users.id NOT IN (?)", (users.compact.flatten.map(&:id) << 0)]) }
 
   validates :name, presence: true
+
+  def self.for_autocomplete(search_term)
+    unenrolled
+        .select("users.id, users.name as value")
+        .where("(users.name != '' or users.name is not null) and users.email ilike :search_term or users.name ilike :search_term", search_term: "%#{search_term}%")
+  end
 
   def self.needing_reminder_email
     where("users.id not in (?)", mood_swung_today << 0).

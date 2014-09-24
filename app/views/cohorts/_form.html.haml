@@ -33,8 +33,11 @@
   .field
     = label_tag :students
     = hidden_field_tag 'cohort[student_ids][]'
+    = text_field_tag :student_search, '', data: {cohort_id: @cohort.id}
+    %br
+    = label_tag :shim, ''
     %ul#cohort_students
-      - (@cohort.students + User.unenrolled).each do |student|
+      - @cohort.students.each do |student|
         %li
           = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
           = label_tag student.name
@@ -44,8 +47,11 @@
   .field
     = label_tag :administrators, 'Admins'
     = hidden_field_tag 'cohort[administrator_ids][]'
+    = text_field_tag :administrator_search, '', data: {cohort_id: @cohort.id}
+    %br
+    = label_tag :shim, ''
     %ul#cohort_administrators
-      - (@cohort.administrators + User.unenrolled).uniq.each do |administrator|
+      - @cohort.administrators.uniq.each do |administrator|
         %li
           = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
           = label_tag administrator.name

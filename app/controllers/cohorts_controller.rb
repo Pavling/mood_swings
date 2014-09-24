@@ -81,6 +81,23 @@ class CohortsController < ApplicationController
     end
   end
 
+  def autocomplete_users
+    @cohort = current_user.accessible_cohorts.find(params[:id])
+    users = User.for_autocomplete(params[:q])
+    .excluding(@cohort.students)
+
+    render json: users
+  end
+
+  def autocomplete_administrators
+    @cohort = current_user.accessible_cohorts.find(params[:id])
+    users = User.for_autocomplete(params[:q])
+    .excluding(@cohort.administrators)
+
+    render json: users
+  end
+
+
   private
   def load_campuses
     @campuses = current_user.accessible_campuses.order(:name)

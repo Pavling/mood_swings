@@ -58,6 +58,44 @@ $(function() {
     }
   });
 
+
+  $("#student_search").autocomplete({ 
+    source: function (request, response) {
+      $.get("/cohorts/"+ $("#student_search").data('cohortId') + "/autocomplete_users", {
+        q: request.term
+      }, function (data) {
+        response(data);
+      });
+    },
+    select: function( event, ui ) {
+      event.preventDefault();
+
+      var checkbox = '<li><input checked="checked" id="student_ids" name="cohort[student_ids][]" type="checkbox" value="' + ui.item.id + '" /><label>' + ui.item.value + '</label></li>';
+
+      $('#cohort_students').prepend(checkbox);
+      $("#student_search").val('');
+    }
+  });
+
+  $("#administrator_search").autocomplete({ 
+    source: function (request, response) {
+      $.get("/cohorts/"+ $("#administrator_search").data('cohortId') + "/autocomplete_administrators", {
+        q: request.term
+      }, function (data) {
+        response(data);
+      });
+    },
+    select: function( event, ui ) {
+      event.preventDefault();
+
+      var checkbox = '<li><input checked="checked" id="administrator_ids" name="cohort[administrator_ids][]" type="checkbox" value="' + ui.item.id + '" /><label>' + ui.item.value + '</label></li>';
+
+      $('#cohort_administrators').prepend(checkbox);
+      $("#administrator_search").val('');
+    }
+  });
+
+
 });
 
 
