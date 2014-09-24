@@ -98,7 +98,7 @@ class AnswerSetsController < ApplicationController
   private
   def chart_data_rebase(data)
       # group by cohort first
-      data_by_cohort = data.group_by{|answer| answer.cohort_id}
+      data_by_cohort = data.group_by {|answer| answer.cohort_id}
       
       memo = {}
       data_by_cohort.each do |cohort_id, answers|
@@ -114,23 +114,19 @@ class AnswerSetsController < ApplicationController
               raise "invalid data in rebase"
           end
 
-          memo["#{day_count}"] ||= {}
-          memo["#{day_count}"]["#{cohort_id}##{answer.user_id}##{answer.metric_id}"] = answer.value.to_f.round(1)
+          memo[day_count] ||= {}
+          memo[day_count]["#{cohort_id}##{answer.user_id}##{answer.metric_id}"] = answer.value.to_f.round(1)
 
         end
       end
       
-      result = []
-      memo.each do |day , results|
-        note = {}
-        note[:timestamp] = day
-        results.each do |key, value|
+      result = memo.reduce([]) do |result, (day, results)|
+        result << results.reduce({timestamp: day}) do |note, (key, value)|
           note[key] = value
+          note
         end
-        result << note
       end
-
-      result.sort{ |x,y| x[:timestamp].to_i <=> y[:timestamp].to_i}
+      result.sort { |x, y| x[:timestamp] <=> y[:timestamp] }
     end
 
 
