@@ -33,7 +33,7 @@
   .field
     = label_tag :students
     = hidden_field_tag 'cohort[student_ids][]'
-    = text_field_tag :student_search, '', data: {cohort_id: @cohort.id}
+    = text_field_tag :student_search, '', placeholder: 'search for students', data: {cohort_id: @cohort.id}
     %br
     = label_tag :shim, ''
     %ul#cohort_students
@@ -47,7 +47,7 @@
   .field
     = label_tag :administrators, 'Admins'
     = hidden_field_tag 'cohort[administrator_ids][]'
-    = text_field_tag :administrator_search, '', data: {cohort_id: @cohort.id}
+    = text_field_tag :administrator_search, '', placeholder: 'search for admins', data: {cohort_id: @cohort.id}
     %br
     = label_tag :shim, ''
     %ul#cohort_administrators
