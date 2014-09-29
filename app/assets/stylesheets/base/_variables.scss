@@ -1,8 +1,8 @@
 // Typography
-$sans-serif: $helvetica;
-$serif: $georgia;
-$base-font-family: $sans-serif;
-$header-font-family: $base-font-family;
+$sans-serif: "PFDinTextCompProBold", Impact, Arial;
+$serif: "News706BT-RomanC", Georgia;
+$base-font-family: $serif;
+$header-font-family: $sans-serif;
 
 // Sizes
 $base-font-size: 1em;
@@ -12,6 +12,11 @@ $header-line-height: $base-font-size * 1.25;
 $base-border-radius: em(3);
 
 // Colors
+$black: black;
+$red: #fa4542;
+$dark-red: #be0201;
+$gray: #ececec;
+
 $blue: #477DCA;
 $dark-gray: #333;
 $medium-gray: #999;
@@ -25,7 +30,7 @@ $base-background-color: white;
 
 // Font Colors
 $base-font-color: $dark-gray;
-$base-accent-color: $blue;
+$base-accent-color: $red;
 
 // Link Colors
 $base-link-color: $base-accent-color;
@@ -51,3 +56,10 @@ $form-box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
 $form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
 $form-font-size: $base-font-size;
 $form-font-family: $base-font-family;
+
+// Navbar
+$navbar-height: 56px;
+$logo-width: 244px;
+$navbar-link-color: white;
+$navbar-link-hover-color: $base-accent-color;
+$navbar-link-hover-background-color: white;

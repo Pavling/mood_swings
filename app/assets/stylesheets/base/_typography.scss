@@ -16,6 +16,10 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: $base-font-size * 2.25; // 16 * 2.25 = 36px
+  // To move later
+  padding-top: 4.75rem;
+  padding-bottom: 4.75rem;
+  background: $gray;
 }
 
 h2 {

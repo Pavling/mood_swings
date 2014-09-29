@@ -1,0 +1,39 @@
+.banner {
+  background: $black;
+  line-height: $navbar-height;
+
+  .masthead {
+    width: $logo-width;
+    float: left;
+    a {
+      display: inline-block;
+      line-height: $navbar-height;
+      img {
+        vertical-align: middle;
+      }
+    }
+    
+  }
+
+  #nav_container {
+    ul {
+      direction: ltr;
+      line-height: $navbar-height;
+      li {
+        display: inline;
+        line-height: $navbar-height;
+        a {
+          display: inline-block;
+          color: $navbar-link-color;
+          font-weight: bold;
+          line-height: $navbar-height;
+          padding: 0 1.5rem;
+          &:hover {
+            color: $navbar-link-hover-color;
+            background: $navbar-link-hover-background-color;
+          }
+        }
+      }
+    }
+  }
+}

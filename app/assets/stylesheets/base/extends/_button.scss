@@ -9,6 +9,10 @@
   line-height: 1;
   padding: .75em 1em;
   text-decoration: none;
+  // Will move to mixin later
+  -webkit-box-shadow: 0 3px 0 0 $dark-red;
+  -moz-box-shadow: 0 3px 0 0 $dark-red;
+  box-shadow: 0 3px 0 0 $dark-red;
 
   &:hover {
     background-color: $hover-button-color;

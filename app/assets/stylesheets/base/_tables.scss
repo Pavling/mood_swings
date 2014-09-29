@@ -20,3 +20,11 @@ td {
 tr, td, th {
   vertical-align: middle;
 }
+
+tr *:first-child {
+  text-align: left;
+}
+
+tr {
+  text-align: right;
+}
