@@ -39,6 +39,9 @@ GEM
       erubis (>= 2.6.6)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bourbon (3.2.3)
+      sass (~> 3.2)
+      thor
     builder (3.0.4)
     byebug (2.7.0)
       columnize (~> 0.3)
@@ -94,6 +97,10 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     multi_json (1.8.4)
+    neat (1.5.1)
+      bourbon (>= 3.1)
+      sass (~> 3.2.19)
+    normalize-rails (3.0.1)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyglot (0.3.4)
@@ -134,7 +141,7 @@ GEM
     rake (10.1.1)
     rdoc (3.12.2)
       json (~> 1.4)
-    sass (3.2.14)
+    sass (3.2.19)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -167,6 +174,7 @@ PLATFORMS
 DEPENDENCIES
   better_errors
   binding_of_caller
+  bourbon (~> 3.2.1)
   cancan
   coffee-rails (~> 3.2.1)
   devise
@@ -176,11 +184,14 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   letter_opener
+  neat (~> 1.5.1)
+  normalize-rails (~> 3.0.0)
   pg
   pry-byebug
   pry-rails
   pry-stack_explorer
   rails (= 3.2.17)
+  sass (~> 3.2.19)
   sass-rails (~> 3.2.3)
   turbolinks
   uglifier (>= 1.0.3)
