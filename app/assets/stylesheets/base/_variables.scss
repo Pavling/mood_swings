@@ -58,6 +58,10 @@ $form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color
 $form-font-size: $base-font-size;
 $form-font-family: $base-font-family;
 
+// Layout 
+$site-width: 960px;
+$site-padding: 0 1.5rem;
+
 // Navbar
 $navbar-height: 56px;
 $navbar-font-family: $serif; 
@@ -68,10 +72,9 @@ $navbar-link-hover-background-color: $white;
 $navbar-dropdown-width: 200px;
 $navbar-dropdown-border: 1px solid #dadada;
 $navbar-dropdown-box-shadow: 0 3px 5px -4px #141414;
+$navbar-padding: $site-padding;
 
 // Footer
 $footer-background-color: $black;
 $footer-height: 200px;
-
-// Layout 
-$site-width: 960px;
+$footer-padding: $site-padding;
