@@ -1,3 +1,10 @@
 footer {
-  
+  background: $footer-background-color;
+  height: $footer-height;
+  color: $gray;
+
+  nav {
+    max-width: $site-width;
+    margin: 0 auto;
+  }
 }

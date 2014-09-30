@@ -23,13 +23,13 @@ header {
       li {
         display: inline;
         position: relative;
-
+        
         &.dropdown {
           &:hover ul {
             display: block;
           }
           ul {
-            display: block;
+            display: none;
             -webkit-box-shadow: $navbar-dropdown-box-shadow;
             -moz-box-shadow: $navbar-dropdown-box-shadow;
             box-shadow: $navbar-dropdown-box-shadow;
@@ -39,10 +39,8 @@ header {
             color: $dark-gray;
             z-index: 1000;
             font-size: 0.8125rem;
-            background-color: white;
-            text-transform: none;
+            background-color: $navbar-link-hover-background-color;
             position: absolute;
-            // top: $navbar-height;
             left: 0;
             padding: 0;
             background: $navbar-link-hover-background-color;
