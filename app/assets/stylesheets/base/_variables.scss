@@ -12,13 +12,14 @@ $header-line-height: $base-font-size * 1.25;
 $base-border-radius: em(3);
 
 // Colors
+$white: white;
 $black: black;
 $red: #fa4542;
 $dark-red: #be0201;
 $gray: #ececec;
 
 $blue: #477DCA;
-$dark-gray: #333;
+$dark-gray: #222;
 $medium-gray: #999;
 $light-gray: #DDD;
 $light-red: #FBE3E4;
@@ -26,7 +27,7 @@ $light-yellow: #FFF6BF;
 $light-green: #E6EFC2;
 
 // Background Color
-$base-background-color: white;
+$base-background-color: $white;
 
 // Font Colors
 $base-font-color: $dark-gray;
@@ -59,7 +60,14 @@ $form-font-family: $base-font-family;
 
 // Navbar
 $navbar-height: 56px;
-$logo-width: 244px;
-$navbar-link-color: white;
+$navbar-font-family: $serif; 
+$navbar-background-color: $black;
+$navbar-link-color: $white;
 $navbar-link-hover-color: $base-accent-color;
-$navbar-link-hover-background-color: white;
+$navbar-link-hover-background-color: $white;
+$navbar-dropdown-width: 200px;
+$navbar-dropdown-border: 1px solid #dadada;
+$navbar-dropdown-box-shadow: 0 3px 5px -4px #141414;
+
+// Layout 
+$site-width: 960px;

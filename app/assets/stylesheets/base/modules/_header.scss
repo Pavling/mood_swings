@@ -1,36 +1,79 @@
-.banner {
-  background: $black;
+header {
+  @include clearfix;
+  background: $navbar-background-color;
   line-height: $navbar-height;
+  font-family: $navbar-font-family;
+  color: $gray;
 
-  .masthead {
-    width: $logo-width;
-    float: left;
-    a {
-      display: inline-block;
-      line-height: $navbar-height;
-      img {
-        vertical-align: middle;
-      }
+  nav {
+    max-width: $site-width;
+    margin: 0 auto;
+    height: $navbar-height;
+
+    img {
+      vertical-align: middle;
+      margin-top: -4px; // Fix to move image up very slightly
     }
-    
-  }
 
-  #nav_container {
     ul {
       direction: ltr;
+      float: right;
       line-height: $navbar-height;
+
       li {
         display: inline;
-        line-height: $navbar-height;
+        position: relative;
+
+        &.dropdown {
+          &:hover ul {
+            display: block;
+          }
+          ul {
+            display: block;
+            -webkit-box-shadow: $navbar-dropdown-box-shadow;
+            -moz-box-shadow: $navbar-dropdown-box-shadow;
+            box-shadow: $navbar-dropdown-box-shadow;
+            border-right: $navbar-dropdown-border;
+            border-bottom: $navbar-dropdown-border;
+            border-left: $navbar-dropdown-border;
+            color: $dark-gray;
+            z-index: 1000;
+            font-size: 0.8125rem;
+            background-color: white;
+            text-transform: none;
+            position: absolute;
+            // top: $navbar-height;
+            left: 0;
+            padding: 0;
+            background: $navbar-link-hover-background-color;
+            li {
+              width: $navbar-dropdown-width;
+              float: none;
+              display: block;
+              a {
+                color: $navbar-background-color;
+                padding: 0 1.5rem;
+                width: 100%;
+                &:hover {
+                  color: $navbar-link-hover-color;
+                  background: $navbar-link-hover-background-color;
+                }
+              }
+            }
+          }
+        }
         a {
-          display: inline-block;
           color: $navbar-link-color;
-          font-weight: bold;
           line-height: $navbar-height;
+          display: inline-block;
+          font-weight: bold;
           padding: 0 1.5rem;
           &:hover {
             color: $navbar-link-hover-color;
             background: $navbar-link-hover-background-color;
+          }
+          img {
+            vertical-align: middle;
           }
         }
       }
