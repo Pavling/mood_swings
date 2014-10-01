@@ -13,7 +13,7 @@
   <header>
     <nav>
       <%= link_to image_tag("ga-lockup.png"), root_path, class: "logo" %>
-      <ul id="main-navigation">
+      <ul id="menu">
         <% if signed_in? %>
           <li>
             Hey, <%= current_user.email %>

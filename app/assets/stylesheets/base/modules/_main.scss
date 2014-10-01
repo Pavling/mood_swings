@@ -2,7 +2,7 @@ main {
 
   #page_content {
     max-width: $site-width;
-    margin: 0 auto;
+    margin: $main-margin;
   }
   
 }

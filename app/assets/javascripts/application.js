@@ -34,6 +34,10 @@ $(function() {
 
   $( ".datepicker" ).datepicker( {"dateFormat": 'yy-mm-dd'} );
 
+  $('#nav-icon').on('click', function(){
+    $('#menu').slideToggle()
+  });
+
 });
 
 
