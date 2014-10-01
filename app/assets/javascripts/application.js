@@ -36,7 +36,11 @@ $(function() {
 
   // Styling-related jQuery
   $('#nav-icon').on('click', function(){
-    $('#menu').slideToggle()
+    $('#menu').slideToggle();
+  });
+
+  $('table td:first-child').on('click', function(){
+    $(this).siblings().toggleClass('important-block');
   });
 
 });

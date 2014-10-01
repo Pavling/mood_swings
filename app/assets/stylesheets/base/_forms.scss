@@ -76,3 +76,11 @@ select {
   max-width: 100%;
   margin-bottom: $base-line-height;
 }
+
+@media screen and (max-width:640px) {
+
+  select {
+    width: 100% !important;
+  }
+
+}

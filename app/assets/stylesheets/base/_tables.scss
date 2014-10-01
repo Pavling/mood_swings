@@ -1,30 +1,82 @@
 table {
   border-collapse: collapse;
   margin: ($base-line-height / 2) 0;
-  table-layout: fixed;
-  width: 100%;
+  width: 100% !important;
+  // table-layout: fixed;
+
+  tr, td, th {
+    vertical-align: middle;
+  }
+
+  th {
+    border-bottom: 1px solid darken($base-border-color, 15%);
+    font-weight: bold;
+    padding: ($base-line-height / 2) 0;
+    text-align: right;
+    padding: 0 1.5em;
+
+    &:first-child {
+      text-align: left;
+    }
+  }
+
+  td {
+    border-bottom: 1px solid $base-border-color;
+    padding: ($base-line-height / 2) 0;
+    padding: 1.5em;
+
+    &:first-child {
+      text-align: left;
+    }
+  }
+
+  tr {
+    text-align: right;
+
+    &:nth-child(even) {
+      background-color: $lighter-gray;
+    }
+  }
+
 }
 
-th {
-  border-bottom: 1px solid darken($base-border-color, 15%);
-  font-weight: bold;
-  padding: ($base-line-height / 2) 0;
-  text-align: left;
-}
+@media screen and (max-width:640px) {
 
-td {
-  border-bottom: 1px solid $base-border-color;
-  padding: ($base-line-height / 2) 0;
-}
+  table {
 
-tr, td, th {
-  vertical-align: middle;
-}
+    .important-block {
+      display: block !important;
+    }
 
-tr *:first-child {
-  text-align: left;
-}
+    th, td {
+      display: none;
+      width: 100%;
 
-tr {
-  text-align: right;
+      &:first-child {
+        display: block !important;
+        padding: 1.5em;
+      }
+    }
+
+    td {
+      padding: 0;
+      text-align: center;
+
+      a {
+        background-color: $base-button-color;
+        color: $white;
+        width: 100%;
+        display: block;
+        padding: 1.5em;
+        -webkit-box-shadow: 0 3px 0 0 $dark-red;
+        -moz-box-shadow: 0 3px 0 0 $dark-red;
+        box-shadow: 0 3px 0 0 $dark-red;
+
+        &:hover {
+          background-color: $hover-button-color;
+          color: white;
+        }
+      }
+    }
+  }
 }
