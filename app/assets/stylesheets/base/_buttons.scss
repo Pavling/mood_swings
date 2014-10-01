@@ -1,3 +1,4 @@
+.submit_button, 
 button,
 input[type="submit"] {
   @extend %button;
@@ -7,6 +8,7 @@ input[type="submit"] {
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
+  text-align: center;
   float: right;
   -webkit-box-shadow: 0 3px 0 0 $dark-red;
   -moz-box-shadow: 0 3px 0 0 $dark-red;
@@ -14,8 +16,9 @@ input[type="submit"] {
   margin: 1rem 0 0;
 }
 
-@media screen and (max-width:960px) {
+@media screen and (max-width:640px) {
 
+  .submit_button, 
   button,
   input[type="submit"] {
     width: 100%;
