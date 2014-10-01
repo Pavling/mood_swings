@@ -2,7 +2,6 @@ table {
   border-collapse: collapse;
   margin: ($base-line-height / 2) 0;
   width: 100% !important;
-  // table-layout: fixed;
 
   tr, td, th {
     vertical-align: middle;
@@ -12,37 +11,47 @@ table {
     border-bottom: 1px solid darken($base-border-color, 15%);
     font-weight: bold;
     padding: ($base-line-height / 2) 0;
-    text-align: right;
     padding: 0 1.5em;
-
-    &:first-child {
-      text-align: left;
-    }
+    text-align: left;
   }
 
   td {
     border-bottom: 1px solid $base-border-color;
     padding: ($base-line-height / 2) 0;
     padding: 1.5em;
-
-    &:first-child {
-      text-align: left;
-    }
   }
 
-  tr {
-    text-align: right;
+  &.responsive {
 
-    &:nth-child(even) {
-      background-color: $lighter-gray;
+    th {
+      text-align: right;
+
+      &:first-child {
+        text-align: left;
+      }
+    }
+
+    td {
+      text-align: right;
+
+      &:first-child {
+        text-align: left;
+      }
+    }
+
+    tr {
+      text-align: right;
+
+      &:nth-child(even) {
+        background-color: $lighter-gray;
+      }
     }
   }
-
 }
 
 @media screen and (max-width:640px) {
 
-  table {
+  table.responsive {
 
     .important-block {
       display: block !important;
