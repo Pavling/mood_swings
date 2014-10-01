@@ -7,4 +7,19 @@ input[type="submit"] {
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
+  float: right;
+  -webkit-box-shadow: 0 3px 0 0 $dark-red;
+  -moz-box-shadow: 0 3px 0 0 $dark-red;
+  box-shadow: 0 3px 0 0 $dark-red;
+  margin: 1rem 0 0;
+}
+
+@media screen and (max-width:960px) {
+
+  button,
+  input[type="submit"] {
+    width: 100%;
+    line-height: 1.5;
+  }
+
 }

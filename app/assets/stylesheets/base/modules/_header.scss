@@ -40,6 +40,7 @@ header {
     }
 
     ul {
+      display: block;
       direction: ltr;
       float: right;
       line-height: $navbar-height;
@@ -128,10 +129,10 @@ header {
         position: relative;
         width: 100%;
         background-color: $navbar-link-hover-background-color;
-        padding: $navbar-padding;
-        -webkit-box-shadow: $navbar-dropdown-box-shadow;
-        -moz-box-shadow: $navbar-dropdown-box-shadow;
-        box-shadow: $navbar-dropdown-box-shadow;
+        padding: 0;
+        // -webkit-box-shadow: $navbar-dropdown-box-shadow;
+        // -moz-box-shadow: $navbar-dropdown-box-shadow;
+        // box-shadow: $navbar-dropdown-box-shadow;
         border-right: $navbar-dropdown-border;
         border-bottom: $navbar-dropdown-border;
         border-left: $navbar-dropdown-border;
@@ -139,9 +140,15 @@ header {
 
         li {
           display: block;
+          border-bottom: $navbar-dropdown-border;
           width: 100%;
+          padding: $navbar-padding;
 
-          &:first-child {
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &.greeting {
             display: none;
           }
 
@@ -152,6 +159,7 @@ header {
           }
 
           &.dropdown {
+            padding: 0;
 
             &:hover ul {
               display: block;
@@ -170,6 +178,9 @@ header {
               border: none;
 
               li {
+                width: 100%;
+                padding: $navbar-padding;
+                border-bottom: $navbar-dropdown-border;
 
                 a {
                   padding: 0;

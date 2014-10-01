@@ -15,7 +15,7 @@
       <%= link_to image_tag("ga-lockup.png"), root_path, class: "logo" %>
       <ul id="menu">
         <% if signed_in? %>
-          <li>
+          <li class="greeting">
             Hey, <%= current_user.email %>
           </li>
           <li class="dropdown">
@@ -70,9 +70,7 @@
     </div>
     
     <% if 'HomeController' == controller.class.name %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
-      <header>
-        <h1>Welcome to the Mood&nbsp;Machine</h1>
-      </header>
+      <h1 class="tagline">Welcome to the Mood&nbsp;Machine</h1>
     <% end %>
 
     <%= yield %>
