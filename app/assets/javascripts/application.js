@@ -40,7 +40,6 @@ $(function() {
   });
 
   $('table td:first-child').on('click', function(){
-    // $(this).siblings().toggleClass('important-block animated fadeInDown');
     $(this).siblings().toggleClass('important-block');
   });
 
