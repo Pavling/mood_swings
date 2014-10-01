@@ -63,7 +63,7 @@
   </header>
 
   <% if 'HomeController' == controller.class.name %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
-    <section class="welcome">
+    <section id="welcome">
       <h1>Welcome to the Mood&nbsp;Machine</h1>
       <%= link_to "Let's crack on", new_user_session_path, class: :signup_button %>
     </section>

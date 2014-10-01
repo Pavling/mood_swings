@@ -59,10 +59,9 @@ table {
 
     th, td {
       display: none;
-      width: 100%;
 
       &:first-child {
-        display: block !important;
+        display: block;
         padding: 1.5em;
       }
     }
