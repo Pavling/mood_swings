@@ -1,3 +1,8 @@
 %clearfix {
   @include clearfix;
 }
+
+// For any cf's in the current code #hack
+.cf {
+  @include clearfix;
+}
