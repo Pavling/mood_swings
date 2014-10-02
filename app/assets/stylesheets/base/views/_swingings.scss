@@ -1,0 +1,30 @@
+#answers {
+  @include clearfix;
+
+  .answer {
+    min-width: 320px;
+    width: 33.33%;
+    float: left;
+    padding: 0 1.5em;
+    text-align: center;
+
+    label {
+      min-height: 3rem;
+    }
+
+    textarea {
+      max-height: 6rem;
+    }
+  }
+}
+
+@media screen and (max-width:960px) {
+
+  #answers {
+
+    .answer {
+      width: 100%;
+    }
+  }
+
+}

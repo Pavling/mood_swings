@@ -62,10 +62,10 @@
     </nav>
   </header>
 
-  <% if 'HomeController' == controller.class.name %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
+  <% if 'HomeController' == controller.class.name && !user_signed_in? %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
     <section id="welcome">
-      <h1>Welcome to the Mood&nbsp;Machine</h1>
-      <%= link_to "Let's crack on", new_user_session_path, class: :signup_button %>
+      <h1 class="animated zoomInLeft">Welcome to the Mood&nbsp;Machine</h1>
+      <%= link_to "Let's crack on", new_user_session_path, class: "signup_button animated zoomInRight"%>
     </section>
   <% end %>
 
