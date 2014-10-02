@@ -109,6 +109,18 @@ header {
   }
 }
 
+@media screen and (min-width:960px) {
+
+  header {
+    nav {
+      > ul {
+        display: block !important;
+      }
+    }
+  }
+
+}
+
 @media screen and (max-width:960px) {
 
   header {
