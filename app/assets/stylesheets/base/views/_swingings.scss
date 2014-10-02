@@ -8,12 +8,22 @@
     padding: 0 1.5em;
     text-align: center;
 
+    // Fix for 5 question answer-set
+    &:nth-child(4) {
+      margin-left: 16.665%;
+    }
+
     label {
-      min-height: 3rem;
+      min-height: 3.5rem;
     }
 
     textarea {
       max-height: 6rem;
+    }
+
+    .knob {
+      position: relative !important;
+      margin: 0 0 0.5em !important;
     }
   }
 }
@@ -24,6 +34,10 @@
 
     .answer {
       width: 100%;
+
+      &:nth-child(4) {
+        margin-left: 0;
+      }
     }
   }
 
