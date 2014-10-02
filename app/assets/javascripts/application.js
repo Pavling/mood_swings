@@ -43,6 +43,16 @@ $(function() {
     $(this).siblings().toggleClass('important-block');
   });
 
+  function scrollToAnchor(aid){
+    var aTag = $("a[name='"+ aid +"']");
+    $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    alert('hi');
+  }
+
+  // $("#refresh_chart").on('click', function() {
+  //    scrollToAnchor('myChart');
+  // });
+
 });
 
 
