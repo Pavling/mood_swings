@@ -39,6 +39,11 @@ $(function() {
     $('#menu').slideToggle();
   });
 
+  $('li.dropdown ul li').on('hover', function(){
+    alert('hi');
+    $(this).parent().css('background', '#fff');
+  });
+
   $('table td:first-child').on('click', function(){
     $(this).siblings().toggleClass('important-block');
   });

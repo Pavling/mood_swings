@@ -25,3 +25,11 @@
   white-space: nowrap; 
   margin:0.1em 0;
 }
+
+@media screen and (max-width:960px) {
+
+  .morris-hover {
+    display: none !important;
+  }
+
+}
