@@ -15,6 +15,10 @@ select {
   display: block;
   font-family: $form-font-family;
   font-size: $form-font-size;
+
+  &:first-child {
+    display: block;
+  }
 }
 
 label {
