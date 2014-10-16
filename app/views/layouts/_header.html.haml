@@ -30,5 +30,8 @@
           = link_to 'Sign Out', destroy_user_session_path, method: :delete
       - else
         %li
-          = link_to 'Sign In', new_user_session_path
-    %a#nav-icon{:href => "#"}
+          - if params[:controller] != "devise" && params[:action] != "new"
+            = link_to 'Sign In', new_user_session_path
+            
+    - if params[:controller] != "devise" && params[:action] != "new"
+      %a#nav-icon{:href => "#"}
