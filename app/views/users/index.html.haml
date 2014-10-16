@@ -7,7 +7,7 @@
     %th Administering
 
   - @users.each do |user|
-    %tr
+    %tr{:class => ('admin' if user.administered_cohorts.map(&:name).any?)}
       %td= link_to user.email, user
       %td= user.cohort.try(:name)
       %td= user.administered_cohorts.map(&:name).to_sentence
