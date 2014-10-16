@@ -1,4 +1,5 @@
 function setup_chart() {
+  var resizeTimer;
   var chart = new Morris.Line({
     element: 'myChart',
     ymax: 5,
@@ -14,14 +15,15 @@ function setup_chart() {
     compactLegend: true
   });
 
-  if ($('#myChart').length) {
-    $(window).on('resize', function(){
-      $('svg').css("width", "100%"); // Improves redraw
-      chart.redraw();
-    });
-  }
+  $(window).on('resize', function(){
+    clearTimeout(resizeTimer);
+    $('svg').css("width", "100%"); // Improves redraw
+    resizeTimer = setTimeout(chart.redraw(), 250);
+  });
 };
 
 $(function(){
-  setup_chart();
+  if ($('#myChart').length) {
+    setup_chart();
+  }
 });
