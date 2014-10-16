@@ -3,7 +3,7 @@ form {
 }
 
 fieldset {
-  background: lighten($base-border-color, 10);
+  background: $lighter-gray;
   border: 1px solid $base-border-color;
   margin: 0 0 ($base-line-height / 2) 0;
   padding: $base-line-height;
