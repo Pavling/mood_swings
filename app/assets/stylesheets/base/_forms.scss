@@ -18,6 +18,7 @@ select {
 }
 
 label {
+  display: inline-block; // Important for Listing Mood Swings 
   font-weight: bold;
   margin-bottom: $base-line-height / 4;
 
