@@ -10,57 +10,7 @@
 </head>
 <body>
 <div class="wrapper">
-  <header>
-    <nav>
-      <%= link_to image_tag("ga-lockup.png"), root_path, class: "logo" %>
-      <ul id="menu">
-        <% if signed_in? %>
-          <li class="greeting">
-            Hey, <%= current_user.email %>
-          </li>
-          <li class="dropdown">
-            <a href="#">Manage <span>&nbsp;&#9662;</span></a>
-            <ul>
-              <li>
-                <%= link_to 'Historic Moods', answer_sets_path %>
-              </li>
-              <% if can? :invite, User %>
-                <li>
-                  <%= link_to 'Invite', new_user_invitation_path %>
-                </li>
-              <% end %>
-              <% if can? :read, Metric %>
-                <li>
-                  <%= link_to 'Metrics', metrics_path %>
-                </li>
-              <% end %>
-              <% if can? :read, Cohort %>
-                <li>
-                  <%= link_to 'Cohorts', cohorts_path %>
-                </li>
-              <% end %>
-              <% if can? :read, User %>
-                <li>
-                  <%= link_to 'Users', users_path %>
-                </li>
-              <% end %>
-            </ul>
-          </li>
-          <li>
-            <%= link_to 'My Profile', edit_user_registration_path %>
-          </li>
-          <li>
-            <%= link_to 'Sign Out', destroy_user_session_path, method: :delete %>
-          </li>
-        <% else %>
-          <li>
-            <%= link_to 'Sign In', new_user_session_path %>
-          </li>
-        <% end %>
-        </ul>
-        <a id="nav-icon" href="#"></a>
-    </nav>
-  </header>
+  <%= render partial: 'layouts/header' %>
 
   <% if 'HomeController' == controller.class.name && !user_signed_in? %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
     <section id="welcome">
