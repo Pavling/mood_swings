@@ -63,6 +63,12 @@ header {
           }
         }
 
+        // Selects parent li when child ul > li is hovered over
+        &.dropdown:hover > a {
+          color: $navbar-link-hover-color;
+          background: $navbar-link-hover-background-color;
+        }
+
         &.dropdown {
 
           &:hover ul {
