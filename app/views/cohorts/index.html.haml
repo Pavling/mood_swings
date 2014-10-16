@@ -4,6 +4,9 @@
   %tr
     %th Name
     %th Admins
+    %th.hide
+    %th.hide
+    %th.hide
 
   - @cohorts.each do |cohort|
     %tr
@@ -12,6 +15,12 @@
       - else
         %td= cohort.name
       %td= cohort.administrators.map(&:email).to_sentence
+      %td.hide
+        = link_to 'Show', cohort 
+      %td.hide
+        = link_to 'Edit', edit_cohort_path(cohort) if can? :update, cohort
+      %td.hide
+        = link_to 'Destroy', cohort, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, cohort
 
 %br
 

@@ -36,7 +36,7 @@ input[type="submit"] {
   @include clearfix;
   text-align: right;
   li {
-    margin: 1rem 0.5rem 0 0;
+    margin: 1rem 0.1rem 0 0;
     display: inline-block;
     &:last-child {
       margin: 1rem 0 0 0;
@@ -52,6 +52,15 @@ input[type="submit"] {
   input[type="submit"] {
     width: 100%;
     line-height: 1.5;
+  }
+
+  #actions {
+    li {
+      display: block;
+      a {
+        width: 100%;
+      }
+    }
   }
 
 }

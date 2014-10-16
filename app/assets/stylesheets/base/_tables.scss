@@ -53,11 +53,15 @@ table {
 
   table.responsive {
 
+    .hide {
+      display: none;
+    }
+
     .important-block {
       display: block !important;
     }
 
-    th, td {
+    th {
       display: none;
 
       &:first-child {
@@ -67,8 +71,12 @@ table {
     }
 
     td {
-      padding: 0;
-      text-align: center;
+      display: none;
+
+      &:first-child {
+        display: block;
+        padding: 1.5em;
+      }
     }
   }
 }
