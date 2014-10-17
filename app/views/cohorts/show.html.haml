@@ -32,12 +32,12 @@
             = administrator.email
 
 %ul#actions
-  - if can? :destroy, @cohort
-    %li
-      = link_to 'Destroy', @cohort, class: :submit_button, :method => :delete, :data => { :confirm => 'Are you sure?' }
   - if can? :update, @cohort
     %li
       = link_to 'Edit', edit_cohort_path(@cohort), class: :submit_button
+  - if can? :destroy, @cohort
+    %li
+      = link_to 'Destroy', @cohort, class: :submit_button, :method => :delete, :data => { :confirm => 'Are you sure?' }
   %li
     = link_to 'Back', cohorts_path, class: :submit_button
   
