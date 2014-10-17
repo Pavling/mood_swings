@@ -23,7 +23,7 @@ function setup_chart() {
 };
 
 $(function(){
-  if ($('#myChart').length) {
+  if ($('#myChart').length && $('#line-chart').data('data').length) {
     setup_chart();
   }
 });
