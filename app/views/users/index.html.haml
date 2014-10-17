@@ -7,9 +7,9 @@
 %table.responsive
   %tr
     %th Name
-    %th Cohort
-    %th Administering
-    %th Manage
+    %th.hide Cohort
+    %th.hide Administering
+    %th.hide Manage
 
   - @users.each do |user|
     %tr{:class => ('admin' if user.administered_cohorts.map(&:name).any?)}
