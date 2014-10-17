@@ -7,7 +7,6 @@
 %table.responsive
   %tr
     %th Name
-    %th.hide Email
     %th.hide Skip Reminders?
     %th.hide Cohort
     %th.hide Administering
@@ -16,8 +15,6 @@
   - @users.each do |user|
     %tr{:class => ('admin' if user.administered_cohorts.map(&:name).any?)}
       %td= link_to user.name, user
-      %td.hide
-        = user.email
       %td.hide
         = user.skip_email_reminders
       %td.hide
