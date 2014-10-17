@@ -1,0 +1,38 @@
+#comments {
+
+  article {
+    padding: 1em;
+    border-left: 0px solid red; // Must define border start point as 0px
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+
+    &:nth-of-type(even) {
+      background: $lighter-gray;
+    }
+
+    &:hover {
+      border-left: 0.5em $red solid;
+    }
+
+    p {
+      color: $red;
+      font-style: italic;
+      margin: 0;
+      &:before {
+        content: "- "
+      }
+    }
+
+    dl:last-child, 
+    dt:first-child, 
+    dd:last-child {
+      margin: 0;
+    }
+  }
+}
+
+@media screen and (max-width:960px) {
+
+}

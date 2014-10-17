@@ -1,18 +1,20 @@
 %h1 Listing users
 
-%table
+%table#mobile.responsive
+  %tr#administering
+    %td Admin
+
+%table.responsive
   %tr
     %th Name
     %th Cohort
     %th Administering
-    %th
 
   - @users.each do |user|
-    %tr
-      %td= user.email
+    %tr{:class => ('admin' if user.administered_cohorts.map(&:name).any?)}
+      %td= link_to user.email, user
       %td= user.cohort.try(:name)
       %td= user.administered_cohorts.map(&:name).to_sentence
-      %td= link_to 'Show', user
 
 %br
 

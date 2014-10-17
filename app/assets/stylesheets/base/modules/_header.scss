@@ -1,0 +1,215 @@
+header {
+  @include clearfix;
+  background: $navbar-background-color;
+  line-height: $navbar-height;
+  font-family: $navbar-font-family;
+  color: $gray;
+
+  nav {
+    max-width: $site-width;
+    margin: 0 auto;
+    height: $navbar-height;
+    position: relative;
+
+    a.logo {
+      float: left;
+    }
+
+    img {
+      vertical-align: middle;
+      margin-top: -4px;
+    }
+
+    #nav-icon {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      &:before { 
+        content: '\2630'; 
+        color: $navbar-link-color;
+        font-size: 2em;
+      }
+
+      &:hover {
+        &:before { 
+          color: $navbar-link-hover-color;
+        }
+      }
+    }
+
+    ul {
+      display: block;
+      direction: ltr;
+      float: right;
+      line-height: $navbar-height;
+      position: relative;
+
+      li {
+        display: inline;
+        position: relative;
+
+        a {
+          color: $navbar-link-color;
+          line-height: $navbar-height;
+          display: inline-block;
+          font-weight: bold;
+          padding: $navbar-padding;
+
+          &:hover {
+            color: $navbar-link-hover-color;
+            background: $navbar-link-hover-background-color;
+          }
+        }
+
+        // Selects parent li when child ul > li is hovered over
+        &.dropdown:hover > a {
+          color: $navbar-link-hover-color;
+          background: $navbar-link-hover-background-color;
+        }
+
+        &.dropdown {
+
+          &:hover ul {
+            display: block
+          }
+
+          ul {
+            display: none;
+            -webkit-box-shadow: $navbar-dropdown-box-shadow;
+            -moz-box-shadow: $navbar-dropdown-box-shadow;
+            box-shadow: $navbar-dropdown-box-shadow;
+            border-right: $navbar-dropdown-border;
+            border-bottom: $navbar-dropdown-border;
+            border-left: $navbar-dropdown-border;
+            color: $dark-gray;
+            z-index: 1000;
+            background-color: $navbar-link-hover-background-color;
+            position: absolute;
+            left: 0;
+            padding: 0;
+            background: $navbar-link-hover-background-color;
+
+            li {
+              width: $navbar-dropdown-width;
+              float: none;
+              display: block;
+
+              a {
+                color: $navbar-background-color;
+                padding: $navbar-padding;
+                width: 100%;
+                font-weight: normal;
+
+                &:hover {
+                  color: $navbar-link-hover-color;
+                  background: $navbar-link-hover-background-color;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width:960px) {
+
+  header {
+    nav {
+      > ul {
+        display: block !important;
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width:960px) {
+
+  header {
+    nav {
+      line-height: $navbar-height; 
+
+      a.logo {
+        width: 100%;
+        padding: $navbar-padding;
+      }
+
+      #nav-icon {
+        display: block;
+        padding: $navbar-padding;
+      }
+
+      ul {
+        display: none;
+        position: relative;
+        width: 100%;
+        background-color: $navbar-link-hover-background-color;
+        padding: 0;
+        border-right: $navbar-dropdown-border;
+        border-bottom: $navbar-dropdown-border;
+        border-left: $navbar-dropdown-border;
+        color: $dark-gray;
+
+        li {
+          display: block;
+          border-bottom: $navbar-dropdown-border;
+          width: 100%;
+          padding: $navbar-padding;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &.greeting {
+            display: none;
+          }
+
+          a {
+            color: $navbar-background-color;
+            width: 100%;
+            padding: 0;
+          }
+
+          &.dropdown {
+            padding: 0;
+
+            &:hover ul {
+              display: block;
+            }
+
+            > a {
+              display: none;
+            }
+
+            ul {
+              display: block;
+              position: relative;
+              -webkit-box-shadow: none;
+              -moz-box-shadow: none;
+              box-shadow: none;
+              border: none;
+
+              li {
+                width: 100%;
+                padding: $navbar-padding;
+                border-bottom: $navbar-dropdown-border;
+
+                a {
+                  padding: 0;
+                  font-weight: bold;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+

@@ -1,8 +1,8 @@
 // Typography
-$sans-serif: $helvetica;
-$serif: $georgia;
-$base-font-family: $sans-serif;
-$header-font-family: $base-font-family;
+$sans-serif: "PFDinTextCompProBold", Impact, Arial;
+$serif: "News706BT-RomanC", Georgia;
+$base-font-family: $serif;
+$header-font-family: $sans-serif;
 
 // Sizes
 $base-font-size: 1em;
@@ -12,20 +12,26 @@ $header-line-height: $base-font-size * 1.25;
 $base-border-radius: em(3);
 
 // Colors
+$white: white;
+$black: black;
+$red: #fa4542;
+$dark-red: #be0201;
 $blue: #477DCA;
-$dark-gray: #333;
+$gray: #ececec;
+$dark-gray: #222;
 $medium-gray: #999;
 $light-gray: #DDD;
+$lighter-gray: lighten($light-gray, 10);
 $light-red: #FBE3E4;
 $light-yellow: #FFF6BF;
 $light-green: #E6EFC2;
 
 // Background Color
-$base-background-color: white;
+$base-background-color: $white;
 
 // Font Colors
 $base-font-color: $dark-gray;
-$base-accent-color: $blue;
+$base-accent-color: $red;
 
 // Link Colors
 $base-link-color: $base-accent-color;
@@ -51,3 +57,28 @@ $form-box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
 $form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
 $form-font-size: $base-font-size;
 $form-font-family: $base-font-family;
+
+// Layout 
+$site-width: 960px;
+$site-padding: 0 1.5rem;
+
+// Main
+$main-margin: 3rem auto 6rem ; 
+$main-padding: $site-padding;
+
+// Navbar
+$navbar-height: 56px;
+$navbar-font-family: $serif; 
+$navbar-background-color: $black;
+$navbar-link-color: $white;
+$navbar-link-hover-color: $base-accent-color;
+$navbar-link-hover-background-color: $white;
+$navbar-dropdown-width: 200px;
+$navbar-dropdown-border: 1px solid #dadada;
+$navbar-dropdown-box-shadow: 0 3px 5px -4px #141414;
+$navbar-padding: $site-padding;
+
+// Footer
+$footer-background-color: $black;
+$footer-height: 200px;
+$footer-padding: $site-padding;

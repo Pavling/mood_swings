@@ -1,3 +1,5 @@
+.signup_button,
+.submit_button, 
 button,
 input[type="submit"] {
   @extend %button;
@@ -7,4 +9,58 @@ input[type="submit"] {
   user-select: none;
   vertical-align: middle;
   white-space: nowrap;
+  text-align: center;
+  float: right;
+  -webkit-box-shadow: 0 3px 0 0 $dark-red;
+  -moz-box-shadow: 0 3px 0 0 $dark-red;
+  box-shadow: 0 3px 0 0 $dark-red;
+  margin: 1rem 0 0 0;
+}
+
+.signup_button {
+  background-color: $lighter-gray;
+  -webkit-box-shadow: 0 3px 0 0 #a2a2a2;
+  -moz-box-shadow: 0 3px 0 0 #a2a2a2;
+  box-shadow: 0 3px 0 0 #a2a2a2;
+  color: $base-font-color;
+  float: none;
+  line-height: 1.5;
+
+  &:hover {
+    background: $white;
+    color: $base-font-color;
+  }
+}
+
+#actions {
+  @include clearfix;
+  text-align: right;
+  li {
+    margin: 1rem 0.1rem 0 0;
+    display: inline-block;
+    &:last-child {
+      margin: 1rem 0 0 0;
+    }
+  }
+  
+}
+
+@media screen and (max-width:640px) {
+
+  .submit_button, 
+  button,
+  input[type="submit"] {
+    width: 100%;
+    line-height: 1.5;
+  }
+
+  #actions {
+    li {
+      display: block;
+      a {
+        width: 100%;
+      }
+    }
+  }
+
 }

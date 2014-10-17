@@ -1,0 +1,39 @@
+@media screen and (min-width:640px) {
+
+  table.responsive {
+    &#mobile {
+      display: none;
+    }
+  }
+
+}
+
+@media screen and (max-width:640px) {
+
+  table.responsive {
+    tr {
+      display: block;
+      box-sizing: border-box;
+      &.admin {
+        border-right: 0.5em $red solid;
+      }
+      td {
+        padding: 0;
+        &:first-child {
+          padding: 0;
+        }
+        a {
+          display: block;
+          padding: 1.5em;
+        }
+      }
+    }
+
+    &#mobile {
+      tr#administering {
+        border-right: 0.5em $red solid;
+      }
+    }
+  }
+
+}

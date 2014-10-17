@@ -9,10 +9,18 @@
       <%= f.object.email %>
     </div>
 
+    <br />
+
     <div class='field'>
       <%= f.label :cohort %>
-      <%= f.object.cohort.try(:name) %>
+      <% if f.object.cohort.try(:name) %>
+        <%= f.object.cohort.try(:name) %>
+      <% else %>
+        This user is not in a cohort.
+      <% end %>
     </div>
+
+    <br />
 
     <div class='field'>
       <%= f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders %>

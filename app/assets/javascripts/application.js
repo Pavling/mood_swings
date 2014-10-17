@@ -34,6 +34,17 @@ $(function() {
 
   $( ".datepicker" ).datepicker( {"dateFormat": 'yy-mm-dd'} );
 
+  // Styling-related jQuery
+  $('#nav-icon').on('click', function(){
+    $('#menu').slideToggle();
+  });
+
+  function scrollToAnchor(aid){
+    var aTag = $("a[name='"+ aid +"']");
+    $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    alert('hi');
+  }
+
 });
 
 
