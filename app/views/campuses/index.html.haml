@@ -1,16 +1,16 @@
 %h1 Listing campuses
 
-%table
+%table.responsive
   %tr
     %th Name
-    %th Admins
-    %th
-    %th
-    %th
+    %th.hide Admins
+    %th.hide
+    %th.hide
+    %th.hide
 
   - @campuses.each do |campus|
     %tr
-      %td= campus.name
+      %td= link_to campus.name, campus if can? :read, campus
       %td= campus.administrators.map(&:name).to_sentence
       %td= link_to 'Show', campus if can? :read, campus
       %td= link_to 'Edit', edit_campus_path(campus) if can? :update, campus
