@@ -13,10 +13,13 @@ header {
 
     a.logo {
       float: left;
+      height: $navbar-height;
+      line-height: $navbar-height;
     }
 
     img {
       vertical-align: middle;
+      margin-top: -4px;
     }
 
     #nav-icon {
