@@ -3,27 +3,22 @@
 %table.responsive
   %tr
     %th Measure
-    %th Active
-    %th
-    %th
-    %th Manage
+    %th.hide Active
+    %th.hide
+    %th.hide
+    %th.hide Manage
 
   - @metrics.each do |metric|
     %tr
       %td= link_to metric.measure, metric
-      %td= metric.active
-<<<<<<< HEAD
       %td.hide
-        = link_to 'Show', metric
+        = metric.active
       %td.hide
-        = link_to 'Edit', edit_metric_path(metric)
+        = link_to 'Show', metric if can? :show, metric
       %td.hide
-        = link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' }
-=======
-      %td= link_to 'Show', metric if can? :show, metric
-      %td= link_to 'Edit', edit_metric_path(metric) if can? :edit, metric
-      %td= link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, metric 
->>>>>>> upstream/master
+        = link_to 'Edit', edit_metric_path(metric) if can? :edit, metric
+      %td.hide
+        = link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, metric
 
 %br
 
