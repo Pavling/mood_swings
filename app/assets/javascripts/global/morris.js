@@ -125,7 +125,7 @@
       gridLineColor: '#aaa',
       gridStrokeWidth: 0.5,
       gridTextColor: '#999',
-      gridTextSize: 12,
+      gridTextSize: 14,
       gridTextFamily: '"PFDinTextCompProBold", Impact, Arial, sans-serif',
       gridTextWeight: 'normal',
       hideHover: false,
