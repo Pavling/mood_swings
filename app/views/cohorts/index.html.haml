@@ -3,6 +3,9 @@
 %table.responsive
   %tr
     %th Name
+    %th Skip email reminders
+    %th Users can manage email reminders
+    %th Campus
     %th Admins
     %th.hide
     %th.hide
@@ -10,6 +13,7 @@
 
   - @cohorts.each do |cohort|
     %tr
+<<<<<<< HEAD
       - if can? :read, cohort
         %td= link_to cohort.name, cohort
       - else
@@ -21,6 +25,16 @@
         = link_to 'Edit', edit_cohort_path(cohort) if can? :update, cohort
       %td.hide
         = link_to 'Destroy', cohort, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, cohort
+=======
+      %td= cohort.name
+      %td= cohort.skip_email_reminders
+      %td= cohort.allow_users_to_manage_email_reminders
+      %td= cohort.campus.try :name
+      %td= cohort.administrators.map(&:name).to_sentence
+      %td= link_to 'Show', cohort if can? :read, cohort
+      %td= link_to 'Edit', edit_cohort_path(cohort) if can? :update, cohort
+      %td= link_to 'Destroy', cohort, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, cohort
+>>>>>>> upstream/master
 
 %br
 

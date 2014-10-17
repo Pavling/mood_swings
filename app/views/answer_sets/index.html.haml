@@ -15,21 +15,28 @@
 
     .field
       - granularity_options = %w(metric person)
+      - granularity_options << 'person_metric' if can?(:granularity_by_person_metric, AnswerSet)
       - granularity_options << 'cohort' if can?(:granularity_by_cohort, AnswerSet)
+      - granularity_options << 'campus' if can?(:granularity_by_campus, AnswerSet)
       = label_tag :granularity
-      = select_tag :granularity, options_for_select(granularity_options, params[:granularity])
+      = select_tag :granularity, options_for_select(granularity_options.map{|o| [o.humanize, o]}, params[:granularity])
 
     .field
       - group_options = %w(moment hour day week)
       = label_tag :group
       = select_tag :group, options_for_select(group_options, params[:group])
 
-    - if current_user.accessible_cohorts.count > 1
+    - if current_user.accessible_cohorts.any?
       .field
-        = label_tag :cohort_ids
-        - current_user.accessible_cohorts.each do |cohort|
-          = check_box_tag :'cohort_ids[]', cohort.id, params[:cohort_ids].include?(cohort.id.to_s), id: "cohort_id_#{cohort.id}"
-          = label_tag "cohort_id_#{cohort.id}", cohort.name
+        = field_set_tag 'Cohorts', id: :cohorts_container do
+          - current_user.accessible_cohorts_by_campus.each do |campus, cohorts|
+            .cohorts
+              - if current_user.accessible_cohorts_by_campus.count > 1
+                = label_tag :campus, campus.name, class: :cohorts_label
+              - cohorts.each do |cohort|
+                .cohort
+                  = check_box_tag :'cohort_ids[]', cohort.id, params[:cohort_ids].include?(cohort.id.to_s), id: "cohort_id_#{cohort.id}"
+                  = label_tag "cohort_id_#{cohort.id}", cohort.name
 
   .actions
     = submit_tag "Refresh Chart", class: :submit_button, id: :refresh_chart
@@ -46,8 +53,10 @@
     %h2 Comments on #{date}
     - answer_sets[date].group_by(&:user_id).each do |_, answer_sets|
       %article
-        - if current_user.admin?
-          %p= answer_sets.first.user.email
+        - if current_user.admin? || current_user.campus_admin? || current_user.cohort_admin?
+          %p
+            = answer_sets.first.user.name
+            = "- #{answer_sets.first.cohort.name}" if params[:cohort_ids].count > 1
         - answer_sets.map(&:answers).flatten.each do |answer|
           - if answer.comments.present?
             %dl
@@ -55,6 +64,9 @@
                 =answer.metric.measure
               %dd
                 =answer.comments
+                - if current_user.admin? || current_user.campus_admin? || current_user.cohort_admin?
+                  %span.score
+                    #{answer.value}
 
 
 

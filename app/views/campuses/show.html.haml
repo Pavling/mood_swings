@@ -1,0 +1,32 @@
+%h1 Show campus
+
+%fieldset
+    
+  .field
+    = label_tag :name
+    = @campus.name
+
+  -if @campus.cohorts.any?
+    .field
+      = label_tag :cohorts
+      %ul#campus_cohorts
+        - @campus.cohorts.each do |cohort|
+          %li
+            =link_to cohort.name, cohort
+  
+  -if @campus.administrators.any?
+    %hr
+
+    .field
+      = label_tag :admins
+      %ul#campus_administrators
+        - @campus.administrators.each do |administrator|
+          %li
+            = administrator.name
+
+%ul#actions
+  - if can? :update, @campus
+    %li
+      = link_to 'Edit', edit_campus_path(@campus), class: :submit_button
+  %li
+    = link_to 'Back', campuses_path, class: :submit_button

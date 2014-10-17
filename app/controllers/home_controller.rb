@@ -1,9 +1,7 @@
 class HomeController < ApplicationController
+  before_filter :check_for_currently_running!
 
   def index
-    if current_user && !current_user.cohort.try(:currently_running?)
-      redirect_to answer_sets_path, notice: "you are not in a cohort that's currently running" and return
-    end
   end
 
 end

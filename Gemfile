@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.17'
+gem 'rails', '3.2.18'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -14,12 +14,27 @@ gem 'high_voltage'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 
+gem 'newrelic_rpm', group: :production
+
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
   gem 'binding_of_caller'
   gem 'better_errors'
+  gem 'dotenv-rails'
+
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'faker'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'guard-rspec'
+  gem 'launchy'
+  gem 'simplecov', '~> 0.7.1', :require => false
+  gem 'database_cleaner'
 end
 
 gem 'letter_opener', group: :development

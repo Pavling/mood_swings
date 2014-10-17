@@ -4,29 +4,51 @@ class User < ActiveRecord::Base
   devise :invitable, :database_authenticatable, :registerable, :invitable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
+  attr_accessible :email, :name, :password, :password_confirmation, :remember_me, :skip_email_reminders, :cohort_id
 
+  before_validation :syncronise_email_reminder_with_cohort, on: :create
+  before_destroy :ensure_no_answer_sets_exist
 
   has_many :answer_sets
   has_many :answers, through: :answer_sets
   has_many :cohort_administrations, foreign_key: :administrator_id, class_name: 'CohortAdministrator'
   has_many :administered_cohorts, through: :cohort_administrations, source: :cohort
+  has_many :campus_administrations, foreign_key: :administrator_id, class_name: 'CampusAdministrator'
+  has_many :administered_campuses, through: :campus_administrations, source: :campus
   belongs_to :cohort
 
+  default_scope order('LOWER(users.name)')
   scope :unenrolled, where(cohort_id: nil)
+  scope :excluding, -> (*users) { where(["users.id NOT IN (?)", (users.compact.flatten.map(&:id) << 0)]) }
 
-  def self.needing_reminder_email
-    where("users.id not in (?)", mood_swung_today << 0).joins(:cohort).merge(Cohort.currently_running)
+  validates :name, presence: true
+
+  def self.for_autocomplete(search_term)
+    unenrolled
+        .select("users.id, users.name as value")
+        .where("(users.name != '' or users.name is not null) and users.email ilike :search_term or users.name ilike :search_term", search_term: "%#{search_term}%")
   end
 
-  def self.desiring_email_reminder
-    where(skip_email_reminders: false)
+  def self.needing_reminder_email
+    where("users.id not in (?)", mood_swung_today << 0).
+    joins(:cohort).
+    merge(Cohort.currently_running.
+      where("(cohorts.allow_users_to_manage_email_reminders = :true AND users.skip_email_reminders = false) OR
+        (cohorts.allow_users_to_manage_email_reminders = :false AND cohorts.skip_email_reminders = :false)", true: true, false: false)
+      )
+  end
+
+  def self.configured_to_receive_email_reminders
+    joins(:cohort).where("(cohorts.skip_email_reminders = :false AND cohorts.allow_users_to_manage_email_reminders = :true AND users.skip_email_reminders = :false) OR (cohorts.allow_users_to_manage_email_reminders = :false AND cohorts.skip_email_reminders = :false)", true: true, false: false)
   end
 
   def self.mood_swung_today
     ids = joins(:answer_sets).where("answer_sets.created_at > ?", Time.now - 1.day).map(&:id)
     where(id: ids)
+  end
+
+  def first_name
+    name.to_s.split.first
   end
 
   def last_answer_set
@@ -37,34 +59,65 @@ class User < ActiveRecord::Base
     admin? || cohort_admin? ? :cohort : :person
   end
 
+  def default_cohort_ids_for_filter
+    # return the ids of the currently running, accessible cohorts - but if there's none running, return the ids of all accessible cohorts
+    ids = accessible_cohorts.currently_running.pluck(:id)
+    ids = ids.any? ? ids : accessible_cohorts.pluck(:id)
+    ids.map(&:to_s)
+  end
+
   def invitable_cohorts
     accessible_cohorts.current_and_future
   end
 
+  def accessible_users
+    @accessible_users ||= User.scoped if admin?
+    return @accessible_users if @accessible_users
+
+    accessible_cohort_ids = [
+      administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
+      administered_cohorts.pluck(:cohort_id)
+    ].flatten.delete_if(&:blank?)
+    @accessible_users = User.where(cohort_id: accessible_cohort_ids)
+  end
+
   def accessible_cohorts
-    case
-      when admin?
-        Cohort.scoped
+    @accessible_cohorts ||= Cohort.scoped if admin?
+    return @accessible_cohorts if @accessible_cohorts
 
-      when cohort_admin?
-        administered_cohorts
+    accessible_cohort_ids = [
+      administered_campuses.flat_map { |campus| campus.cohorts.pluck(:id) },
+      administered_cohorts.pluck(:id),
+      cohort_id
+    ].flatten.delete_if(&:blank?)
+   @accessible_cohorts = Cohort.where(id: accessible_cohort_ids)
+  end
 
-      else
-        Cohort.where(id: cohort.id)
-    end
+  def accessible_cohorts_by_campus
+    @accessible_cohorts_by_campus ||= accessible_cohorts.includes(:campus).group_by(&:campus)
+  end
+
+  def accessible_campuses
+    @accessible_campuses ||= Campus.scoped if admin?
+    return @accessible_campuses if @accessible_campuses
+
+    accessible_campus_ids = [
+      administered_campuses.pluck(:id),
+      administered_cohorts.pluck(:campus_id)
+    ].flatten.delete_if(&:blank?)
+   @accessible_campuses = Campus.where(id: accessible_campus_ids)
   end
 
   def accessible_answer_sets
-    if admin?
-      AnswerSet.scoped
-    else
-      # @answer_sets = current_user.answer_sets
-      administered_cohort_answer_sets_sql = AnswerSet.joins(cohort: :administrators).where(cohort_administrators: {administrator_id: id}).to_sql
-      own_answer_sets_sql = answer_sets.to_sql
+    @accessible_answer_sets ||= AnswerSet.scoped if admin?
+    return @accessible_answer_sets if @accessible_answer_sets
 
-      answer_set_ids = AnswerSet.find_by_sql("#{administered_cohort_answer_sets_sql} UNION #{own_answer_sets_sql}").map(&:id)
-      AnswerSet.where(id: answer_set_ids)
-    end
+    accessible_answer_set_ids = [
+      administered_campuses.flat_map(&:cohorts).flat_map(&:answer_sets).map(&:id),
+      administered_cohorts.flat_map(&:answer_sets).map(&:id),
+      answer_set_ids
+    ].flatten.delete_if(&:blank?)
+    @accessible_answer_sets = AnswerSet.where(id: accessible_answer_set_ids)
   end
 
   def admin?
@@ -72,7 +125,42 @@ class User < ActiveRecord::Base
   end
 
   def cohort_admin?
-    cohort_administrations.any?
+    return @cohort_admin if [false, true].include?(@cohort_admin)
+    @cohort_admin = cohort_administrations.any?
   end
+
+  def campus_admin?
+    return @campus_admin if [false, true].include?(@campus_admin)
+    @campus_admin = campus_administrations.any?
+  end
+
+  def can_manage_email_reminders?
+    cohort.blank? || cohort.allow_users_to_manage_email_reminders?
+  end
+
+  def send_reminder_email!
+    if reminder_email_sent_at.nil? || reminder_email_sent_at < Time.now - 20.hours
+      Rails.logger.info "REMINDER EMAIL: emailing #{email}"
+      UserMailer.reminder(self).deliver
+      User.find(id).update_attribute :reminder_email_sent_at, Time.now # TODO: find out why the users that come from the scope into this method are readonly records
+    end
+  end
+
+  private
+  def ensure_no_answer_sets_exist
+    if answer_sets.any?
+      errors.add :base, "cannot delete user if they have swung their mood"
+      return false
+    end
+  end
+
+  private
+  def syncronise_email_reminder_with_cohort
+    if cohort
+      self.skip_email_reminders = cohort.skip_email_reminders unless cohort.allow_users_to_manage_email_reminders
+    end
+    return true # unless this method returns truthy, it can halt the validation chain
+  end
+
 
 end

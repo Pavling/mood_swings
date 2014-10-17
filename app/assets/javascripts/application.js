@@ -34,11 +34,76 @@ $(function() {
 
   $( ".datepicker" ).datepicker( {"dateFormat": 'yy-mm-dd'} );
 
+<<<<<<< HEAD
   // Styling-related jQuery
   $('#nav-icon').on('click', function(){
     $('#menu').slideToggle();
   });
 
+=======
+  $('.not-applicable-answer :checkbox').click(function() {
+    makeNotApplicable = $(this).is(':checked');
+    $parent = $(this).parent().parent();
+    inputs = $parent.find(':input:not(:checkbox)');
+    inputs.prop('disabled', makeNotApplicable);
+
+    if (makeNotApplicable) {
+      $('<div>', {
+                  class: 'overlay',
+                  css: {
+                      position: 'absolute',
+                      width: $parent.outerWidth(),
+                      height: $parent.outerHeight() - 25,
+                      top: $parent.position().top,
+                      left: $parent.position().left,
+                      backgroundColor: 'rgba(255,255,255,0.7)',
+                      zIndex: 10
+                  }
+      }).appendTo( $parent );
+    } else {
+      $parent.find('.overlay').remove();
+    }
+  });
+
+
+  $("#student_search").autocomplete({ 
+    source: function (request, response) {
+      $.get("/cohorts/"+ $("#student_search").data('cohortId') + "/autocomplete_users", {
+        q: request.term
+      }, function (data) {
+        response(data);
+      });
+    },
+    select: function( event, ui ) {
+      event.preventDefault();
+
+      var checkbox = '<li><input checked="checked" id="student_ids" name="cohort[student_ids][]" type="checkbox" value="' + ui.item.id + '" /><label>' + ui.item.value + '</label></li>';
+
+      $('#cohort_students').prepend(checkbox);
+      $("#student_search").val('');
+    }
+  });
+
+  $("#administrator_search").autocomplete({ 
+    source: function (request, response) {
+      $.get("/cohorts/"+ $("#administrator_search").data('cohortId') + "/autocomplete_administrators", {
+        q: request.term
+      }, function (data) {
+        response(data);
+      });
+    },
+    select: function( event, ui ) {
+      event.preventDefault();
+
+      var checkbox = '<li><input checked="checked" id="administrator_ids" name="cohort[administrator_ids][]" type="checkbox" value="' + ui.item.id + '" /><label>' + ui.item.value + '</label></li>';
+
+      $('#cohort_administrators').prepend(checkbox);
+      $("#administrator_search").val('');
+    }
+  });
+
+
+>>>>>>> upstream/master
 });
 
 

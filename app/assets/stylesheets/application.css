@@ -1,0 +1,349 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require reset
+ *= require morris-0.4.3.min
+ *= require_self
+ *= require_tree
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family:"News706BT-RomanC",Georgia;
+  color:#222;
+  font-size:100%;
+  line-height:1.5;
+  background:#fff;
+  padding-bottom: 5rem;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family:"PFDinTextCompProBold",Impact,Arial;
+  text-transform:uppercase;
+  font-weight:normal;
+  color:#000;
+  line-height:0.9;
+  margin:1rem 0
+  }
+
+h1 {
+  font-size:2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+label {
+  font-size: 1.2rem;
+  display: inline-block;
+  width: 120px;
+  vertical-align: top;
+}
+
+input, select {
+  font-size: 1.2rem;
+}
+
+th {
+  font-weight: bold;
+  padding-right: 10px
+}
+
+td {
+  padding-right: 10px
+}
+
+#header h1 {
+  font-size:4.5rem;
+}
+
+#page_content {
+  margin:auto;
+  max-width:62rem;
+  position:relative;
+  padding-top:6rem;
+  padding-left:2rem;
+  padding-right:2rem;
+}
+
+#answers {
+  text-align: center;
+}
+
+.answer {
+  display: inline-block;
+  padding: 5px;
+}
+
+.answer li {
+  list-style: none;
+  text-align: center;
+}
+
+.answer li.label {
+  padding-bottom: 0.8em;
+}
+
+.answer li label {
+    width: 250px;
+}
+
+#new_answer_set #actions {
+  text-align: center;
+}
+
+#new_answer_set #actions { 
+  padding-top: 2rem;
+}
+
+#new_answer_set textarea.answer-comments { 
+  height: 3rem;
+}
+
+#new_answer_set .not-applicable-answer input, #new_answer_set .not-applicable-answer label {
+  width: inherit;
+  font-size: 10px;
+  vertical-align: middle;
+}
+
+.submit_button { 
+  min-width:8rem;
+  padding:0.5rem;
+  margin-top: 15px;
+  border:none;
+  border-bottom:3px solid #c20027;
+  background:#f03;
+  color:#fff;
+  font-family:"PFDinTextCompProBold",Impact,Arial;
+  font-size:1.35rem;
+  text-transform:uppercase;
+  text-align:center;-webkit-font-smoothing:antialiased;-webkit-appearance:none;
+  text-decoration: none;
+  cursor:pointer;
+
+  -webkit-transition:all 0.15s ease-in-out;
+  -moz-transition:all 0.15s ease-in-out;
+  -o-transition:all 0.15s ease-in-out;
+  transition:all 0.15s ease-in-out;
+}
+
+.submit_button:hover { 
+  background-color: #E6002E; 
+}
+
+.banner {
+  top:0;
+  padding:0 1rem;
+  position:absolute;
+  z-index:888;
+  width:100%;
+  background: #000;
+}
+
+.masthead {
+  display: inline;
+  height:3.5rem;
+}
+
+.masthead img {
+  margin:1em 0 0.5em;
+  width: 14em;
+}
+.masthead a.skip {
+  display:none
+}
+
+.banner #nav_container {
+  padding-top: .7rem;
+  display: inline;
+  float: right;
+}
+
+.banner li, .banner a {
+  color: #eee;
+  font-size: 0.9rem;
+}
+
+.banner #nav_container li {
+  display: inline-block;
+  margin-left: 1em;
+}
+
+.banner #nav_container a {
+  text-decoration: none;
+}
+
+.banner #nav_container a:hover {
+  text-decoration: underline;
+}
+
+.login-notice {
+  text-align: center;
+  font-size: 1.35rem;
+  line-height: 1.4rem;
+}
+
+.splash {
+  text-align: center;
+  line-height: 1.4rem;
+  margin-top: 2rem;
+}
+
+.cta {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  font-family: sans-serif;
+}
+
+.footer-note {
+  padding-top: 4rem;
+  color: silver;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
+  letter-spacing: 0.08rem;
+}
+
+#answer_set_index {
+  display: inline-block;
+  font-size: 1.2rem;
+}
+
+#new_answer_set input, #new_answer_set select { 
+  width: 100px;
+}
+
+#answer_set_index .actions {
+  padding: 10px 0;
+  display: inline-block;
+  float:right;
+}
+
+#answer_set_index .actions {
+
+}
+
+#answer_set_index .submit_button { 
+  min-width: 10rem;
+}
+
+#comments p {
+  color: silver;
+}
+
+#comments .score {
+  color: silver;
+  margin-left: 5px;
+}
+
+#comments dt {
+  font-family: sans-serif;
+  display: inline-block;
+  font-style: italic;
+  padding-right: 0.5rem;
+  color: rgb(114, 114, 114);
+}
+
+#comments dd {
+  display: inline-block;
+}
+
+#comments dl {
+  -webkit-transition:all 0.15s ease-in-out;
+  -moz-transition:all 0.15s ease-in-out;
+  -o-transition:all 0.15s ease-in-out;
+  transition:all 0.15s ease-in-out;
+  margin-right: 340px;
+}
+
+#comments dl:hover { 
+  background-color: rgb(250, 215, 215); 
+}
+
+.morris-hover { 
+  position: relative;
+  display: inline;
+  float: right;
+  width: 300px;
+  margin-top: 25px; 
+}
+
+.morris-hover.morris-default-style .morris-hover-point {
+  white-space: normal;
+}
+
+form.edit_user label { 
+  width: 210px;
+}
+
+label.skip_email_reminders { 
+  width: auto; 
+  margin-right: 10px;
+}
+
+form.edit_user label { 
+  width: 210px;
+}
+
+form.new_user .submit_button { 
+  margin-bottom: 15px;
+}
+
+form.new_user label.remember_me { 
+  width: auto; 
+  /*margin-right: 10px;*/
+}
+
+ul#actions li {
+  display: inline-block;
+}
+
+ul#actions li a {
+  display: block;
+}
+
+ul#cohort_students {
+  display: inline-block;
+}
+
+ul#campus_administrators {
+  display: inline-block;
+}
+
+ul#campus_cohorts {
+  display: inline-block;
+}
+
+ul#cohort_administrators {
+  display: inline-block;
+}
+
+ul#administered_cohorts {
+  display: inline-block;
+}
+
+#answer_set_index {
+  width: 100%
+}
+
+#cohorts_container .cohorts {
+  display: inline-block;
+}
+
+#cohorts_container .cohort {
+    display: inline-block;
+}
+
+tr:hover { 
+  background-color: rgb(250, 215, 215); 
+}

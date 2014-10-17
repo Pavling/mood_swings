@@ -1,9 +1,14 @@
 %h1 Show cohort
 
 %fieldset
+    
   .field
     = label_tag :name
     = @cohort.name
+
+  .field
+    = label_tag :campus
+    = @cohort.campus.try :name
 
   .field
     = label_tag :start
@@ -13,13 +18,21 @@
     = label_tag :end_on
     = @cohort.end_on
 
+  .field
+    = label_tag :skip_email_reminders, 'Do not send email reminders', class: :skip_email_reminders
+    = @cohort.skip_email_reminders
+
+  .field
+    = label_tag :allow_users_to_manage_email_reminders, 'Allow users to manage email reminders', class: :skip_email_reminders
+    = @cohort.allow_users_to_manage_email_reminders
+
   -if @cohort.students.any?
     .field
       = label_tag :students
       %ul#cohort_students
         - @cohort.students.each do |student|
           %li
-            = student.email
+            = student.name
   
   -if @cohort.administrators.any?
     %hr
@@ -29,7 +42,7 @@
       %ul#cohort_administrators
         - @cohort.administrators.each do |administrator|
           %li
-            = administrator.email
+            = administrator.name
 
 %ul#actions
   - if can? :update, @cohort
