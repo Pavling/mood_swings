@@ -12,12 +12,12 @@
     <% end -%>
 
     <div class='field'>
-      <%= f.label :name %><br />
+      <%= f.label :name %>
       <%= f.text_field :name %>
     </div>
 
     <div class='field'>
-      <%= f.label :cohort_id, 'Cohort' %><br />
+      <%= f.label :cohort_id, 'Cohort' %>
       <%= f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose' %>
     </div>
 
