@@ -7,8 +7,6 @@
     %th Users can manage email reminders
     %th Campus
     %th Admins
-    %th.hide
-    %th.hide
     %th.hide Manage
 
   - @cohorts.each do |cohort|
@@ -22,11 +20,7 @@
       %td= cohort.campus.try :name
       %td= cohort.administrators.map(&:name).to_sentence
       %td.hide
-        = link_to 'Show', cohort if can? :read, cohort
-      %td.hide
         = link_to 'Edit', edit_cohort_path(cohort) if can? :update, cohort
-      %td.hide
-        = link_to 'Destroy', cohort, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, cohort
 
 %br
 
