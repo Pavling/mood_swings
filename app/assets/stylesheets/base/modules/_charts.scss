@@ -8,7 +8,7 @@
   #myChart {
     width: 100%;
     padding: 1.5em;
-    height: 400px;
+    height: 0; // Will be set using javascript as chart will not show without
     float: left;
   }
 

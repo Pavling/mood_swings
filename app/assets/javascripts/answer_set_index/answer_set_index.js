@@ -15,6 +15,8 @@ function setup_chart() {
     compactLegend: true
   });
 
+  $('#myChart').css('height', '400px');
+
   $(window).on('resize', function(){
     clearTimeout(resizeTimer);
     $('svg').css("width", "100%"); // Improves redraw
