@@ -1,6 +1,6 @@
 // Typography
-$sans-serif: "PFDinTextCompProBold", Impact, Arial;
-$serif: "News706BT-RomanC", Georgia;
+$sans-serif: "PFDinTextCompProBold", Impact, Arial, sans-serif;
+$serif: "News706BT-RomanC", Georgia, serif;
 $base-font-family: $serif;
 $header-font-family: $sans-serif;
 
@@ -16,6 +16,7 @@ $white: white;
 $black: black;
 $red: #fa4542;
 $dark-red: #be0201;
+$light-blue: #afd8f8;
 $blue: #477DCA;
 $gray: #ececec;
 $dark-gray: #222;

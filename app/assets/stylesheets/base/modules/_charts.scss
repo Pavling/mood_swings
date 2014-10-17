@@ -1,30 +1,29 @@
 .chart-container { // Similar to form
   @include clearfix;
   margin: 1em 0 0 0;
-  background: $white;
   margin: 1.5em 0;
+  background: lighten($light-blue, 15%);
+  border: 1px solid $light-blue;
 
   #myChart {
     width: 100%;
+    padding: 1.5em;
     height: 400px;
     float: left;
   }
 
   #hoverContainer {
-    width: 160px;
+    width: 158px; // Allow for border 
+    padding: 1.5em 1.5em 1.5em 0;
     float: right;
 
     .morris-hover {
       @include clearfix;
       position: relative;
       text-align: right;
-      margin: 0 0 1.5em;
     }
 
     .morris-hover.morris-default-style {
-      padding: 1em 0 0;
-      font-size: 12px;
-      text-align: center;
     }
 
     .morris-hover.morris-default-style .morris-hover-row-label {
