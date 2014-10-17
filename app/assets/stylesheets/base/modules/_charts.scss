@@ -3,16 +3,21 @@
   margin: 1em 0 0 0;
   margin: 1.5em 0;
   background: lighten($light-blue, 15%);
-  border: 1px solid $light-blue;
 
   #myChart {
+    display: none;
     width: 100%;
     padding: 1.5em;
     height: 0; // Will be set using javascript as chart will not show without
     float: left;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
   }
 
   #hoverContainer {
+    display: none;
     width: 158px; // Allow for border 
     padding: 1.5em 1.5em 1.5em 0;
     float: right;

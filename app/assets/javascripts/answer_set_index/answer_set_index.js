@@ -15,7 +15,8 @@ function setup_chart() {
     compactLegend: true
   });
 
-  $('#myChart').css('height', '400px');
+  $('#hoverContainer').css('border', '1px solid #afd8f8').show();
+  $('#myChart').css('height', '400px').show();
 
   $(window).on('resize', function(){
     clearTimeout(resizeTimer);
