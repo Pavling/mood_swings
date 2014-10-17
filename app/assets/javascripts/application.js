@@ -34,13 +34,10 @@ $(function() {
 
   $( ".datepicker" ).datepicker( {"dateFormat": 'yy-mm-dd'} );
 
-<<<<<<< HEAD
-  // Styling-related jQuery
   $('#nav-icon').on('click', function(){
     $('#menu').slideToggle();
   });
 
-=======
   $('.not-applicable-answer :checkbox').click(function() {
     makeNotApplicable = $(this).is(':checked');
     $parent = $(this).parent().parent();
@@ -102,8 +99,6 @@ $(function() {
     }
   });
 
-
->>>>>>> upstream/master
 });
 
 
