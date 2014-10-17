@@ -31,9 +31,11 @@
 }
 
 // Noty
-
-.noty_bar, .noty_message, #noty_bottom_layout_container, .i-am-new {
-  border: 0;
+.noty_bar, 
+.noty_message, 
+#noty_bottom_layout_container, 
+.i-am-new {
+  border: none;
   box-shadow: none;
 }
 
