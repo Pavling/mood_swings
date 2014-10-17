@@ -1,6 +1,12 @@
 function setup_chart() {
   var resizeTimer;
-  var chart = new Morris.Line({
+  var chart;
+
+  $('.chart-container').css('border', '1px solid #afd8f8').show();
+  $('#hoverContainer').show();
+  $('#myChart').css('height', '400px').show();
+
+  chart = new Morris.Line({
     element: 'myChart',
     ymax: 5,
     ymin: 1,
@@ -14,9 +20,6 @@ function setup_chart() {
     hoverContainer: $('#hoverContainer'),
     compactLegend: true
   });
-
-  $('#hoverContainer').css('border', '1px solid #afd8f8').show();
-  $('#myChart').css('height', '400px').show();
 
   $(window).on('resize', function(){
     clearTimeout(resizeTimer);
