@@ -9,7 +9,6 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<<<<<<< HEAD
 <div class="wrapper">
   <%= render partial: 'layouts/header' %>
 
@@ -18,70 +17,6 @@
       <h1 class="animated zoomInLeft">Welcome to the Mood&nbsp;Machine</h1>
       <%= link_to "Let's crack on", new_user_session_path, class: "signup_button animated zoomInRight"%>
     </section>
-=======
-
-<div class="banner">
-  <div class="masthead">
-    <%= link_to image_tag("ga-lockup.png"), root_path %>
-    <%#= link_to image_tag('general-assembly.svg'), "#navigation", class: :skip %>
-  </div>
-
-  <div id='nav_container'>
-    <% if signed_in? %>
-      <ul>
-        <li>
-          <%= link_to "Welcome, #{current_user.first_name}", edit_user_registration_path %>
-        </li>
-        <li>
-          <%= link_to 'historic moods', answer_sets_path %>
-        </li>
-        <% if can? :invite, User %>
-          <li>
-            <%= link_to 'invite', new_user_invitation_path %>
-          </li>
-        <% end %>
-        <% if can? :read, Metric %>
-          <li>
-            <%= link_to 'metrics', metrics_path %>
-          </li>
-        <% end %>
-        <% if can? :read, Cohort %>
-          <li>
-            <%= link_to 'cohorts', cohorts_path %>
-          </li>
-        <% end %>
-        <% if can? :read, Campus %>
-          <li>
-            <%= link_to 'campuses', campuses_path %>
-          </li>
-        <% end %>
-        <% if can? :read, User %>
-          <li>
-            <%= link_to 'users', users_path %>
-          </li>
-        <% end %>
-        <li>
-          <%= link_to 'sign out', destroy_user_session_path, method: :delete %>
-        </li>
-      </ul>
-    <% else %>
-      <%= link_to 'sign in', new_user_session_path %>
-    <% end %>
-  </div>
-
-</div>
-
-<div id="page_content">
-  <div id="notices">
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-  </div>
-  
-  <% if 'HomeController' == controller.class.name %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
-    <header>
-      <h1>Welcome to the Mood&nbsp;Machine</h1>
-    </header>
->>>>>>> upstream/master
   <% end %>
 
   <main>
