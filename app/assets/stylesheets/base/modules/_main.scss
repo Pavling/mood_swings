@@ -1,6 +1,7 @@
 main {
 
   #page_content {
+    @include clearfix;
     max-width: $site-width;
     margin: $main-margin;
   }
