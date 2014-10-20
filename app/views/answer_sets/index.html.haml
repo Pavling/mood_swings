@@ -34,9 +34,8 @@
               - if current_user.accessible_cohorts_by_campus.count > 1
                 = label_tag :campus, campus.name, class: :cohorts_label
               - cohorts.each do |cohort|
-                .cohort
-                  = check_box_tag :'cohort_ids[]', cohort.id, params[:cohort_ids].include?(cohort.id.to_s), id: "cohort_id_#{cohort.id}"
-                  = label_tag "cohort_id_#{cohort.id}", cohort.name
+                = check_box_tag :'cohort_ids[]', cohort.id, params[:cohort_ids].include?(cohort.id.to_s), id: "cohort_id_#{cohort.id}"
+                = label_tag "cohort_id_#{cohort.id}", cohort.name
 
   .actions
     = submit_tag "Refresh Chart", class: :submit_button, id: :refresh_chart
