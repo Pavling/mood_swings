@@ -20,6 +20,4 @@
       %td.hide
         = link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, metric
 
-%br
-
 = link_to 'New Metric', new_metric_path, class: :submit_button
