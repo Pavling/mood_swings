@@ -20,9 +20,14 @@ form {
     }
 
     label {
-      display: inline-block; // Important for Listing Mood Swings 
-      font-weight: bold;
+      display: inline-block; // Important for Listing Mood Swing
       margin-bottom: $base-line-height / 4;
+      padding-right: 1.5em;
+
+      &:first-child {
+        font-weight: bold;
+        padding: 0;
+      }
 
       &.required:after {
         content: "*";
@@ -95,6 +100,10 @@ form {
     -moz-border-radius: 0.1875em;
     -webkit-border-radius: 0.1875em;
   }
+
+  // label {
+  //   display: block !important;
+  // }
 
 }
 
