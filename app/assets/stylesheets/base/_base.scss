@@ -6,6 +6,7 @@
 
 // Vendor 
 @import 'vendor/overrides';
+@import 'vendor/_noty';
 
 // Neat Settings -- uncomment if using Neat -- must be imported before Neat
 // @import 'grid-settings';
@@ -35,8 +36,8 @@
 
 // View Specifics
 @import 'views/application';
-@import 'views/swingings-user';
-@import 'views/swingings-admin';
+@import 'views/swingings';
+@import 'views/swingings-new';
 @import 'views/users';
 @import 'views/cohorts';
 

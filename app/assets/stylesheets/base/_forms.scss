@@ -22,11 +22,9 @@ form {
     label {
       display: inline-block; // Important for Listing Mood Swing
       margin-bottom: $base-line-height / 4;
-      padding-right: 1.5em;
 
       &:first-child {
         font-weight: bold;
-        padding: 0;
       }
 
       &.required:after {
@@ -44,6 +42,8 @@ form {
       @include box-sizing(border-box);
       @include transition(border-color);
       background-color: white;
+      -moz-border-radius: $form-border-radius;
+      -webkit-border-radius: $form-border-radius;
       border-radius: $form-border-radius;
       border: 1px solid $form-border-color;
       box-shadow: $form-box-shadow;
@@ -72,7 +72,12 @@ form {
       @include appearance(none);
     }
 
-    input[type="checkbox"], input[type="radio"] {
+    input[type="radio"] {
+      display: inline;
+      margin-right: $base-line-height / 4;
+    }
+
+    input[type="checkbox"] {
       display: inline;
       margin-right: $base-line-height / 4;
     }
@@ -100,10 +105,6 @@ form {
     -moz-border-radius: 0.1875em;
     -webkit-border-radius: 0.1875em;
   }
-
-  // label {
-  //   display: block !important;
-  // }
 
 }
 

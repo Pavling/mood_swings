@@ -5,16 +5,16 @@
     %th Measure
     %th.hide Active
     %th.hide
-    %th.hide
     %th.hide Manage
 
   - @metrics.each do |metric|
     %tr
-      %td= link_to metric.measure, metric
+      - if can? :show, metric
+        %td= link_to metric.measure, metric
+      - else
+        %td= metric.measure
       %td.hide
         = metric.active
-      %td.hide
-        = link_to 'Show', metric if can? :show, metric
       %td.hide
         = link_to 'Edit', edit_metric_path(metric) if can? :edit, metric
       %td.hide

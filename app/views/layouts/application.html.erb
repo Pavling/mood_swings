@@ -4,11 +4,14 @@
   <title>MoodSwings</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= content_for :header %> 
 
   <%= csrf_meta_tags %>
 </head>
 <body>
+  
+
 <div class="wrapper">
   <%= render partial: 'layouts/header' %>
 
@@ -20,7 +23,13 @@
   <% end %>
 
   <main>
-  <div id="page_content">
+  <div id="page_content" data-role="content">
+    <form>
+        <label>
+            <input type="checkbox" name="checkbox-0 ">Check me
+        </label>
+    </form>
+
     <div id="notices">
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
