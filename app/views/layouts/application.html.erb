@@ -11,37 +11,30 @@
 </head>
 <body>
   
+  <div class="wrapper">
+    <%= render partial: 'layouts/header' %>
 
-<div class="wrapper">
-  <%= render partial: 'layouts/header' %>
+    <% if 'HomeController' == controller.class.name && !user_signed_in? %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
+      <section id="welcome">
+        <h1 class="animated zoomInLeft">Welcome to the Mood&nbsp;Machine</h1>
+        <%= link_to "Let's crack on", new_user_session_path, class: "signup_button animated zoomInRight"%>
+      </section>
+    <% end %>
 
-  <% if 'HomeController' == controller.class.name && !user_signed_in? %><%# gross stink... TODO: either yield specific content_for or setup different layouts%>
-    <section id="welcome">
-      <h1 class="animated zoomInLeft">Welcome to the Mood&nbsp;Machine</h1>
-      <%= link_to "Let's crack on", new_user_session_path, class: "signup_button animated zoomInRight"%>
-    </section>
-  <% end %>
-
-  <main>
-  <div id="page_content" data-role="content">
-    <form>
-        <label>
-            <input type="checkbox" name="checkbox-0 ">Check me
-        </label>
-    </form>
-
-    <div id="notices">
-      <p class="notice"><%= notice %></p>
-      <p class="alert"><%= alert %></p>
+    <main>
+    <div id="page_content">
+      <div id="notices">
+        <p class="notice"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
+      </div>
+    
+      <%= yield %>
     </div>
-  
-    <%= yield %>
-  </div>
-  </main>
+    </main>
 
-<div class="push"></div>
-</div>
-<%= render partial: 'layouts/footer' %>
+  <div class="push"></div>
+  </div>
+  <%= render partial: 'layouts/footer' %>
 
 </body>
 </html>
