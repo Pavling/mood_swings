@@ -1,0 +1,44 @@
+%h1
+  Edit #{resource_name.to_s.humanize}
+= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
+  = devise_error_messages!
+  %fieldset
+    .field
+      = f.label :email
+      = f.object.email
+    %br/
+    .field
+      = f.label :cohort
+      - if f.object.cohort.try(:name)
+        = f.object.cohort.try(:name)
+      - else
+        This user is not in a cohort.
+    %br/
+    - if @user.can_manage_email_reminders?
+      .field
+        = f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders
+        = f.check_box :skip_email_reminders
+    - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+      %div
+        Currently waiting confirmation for: #{resource.unconfirmed_email}
+    %hr/
+    .field
+      = f.label :name
+      = f.text_field :name
+    .field
+      = f.label :password
+      = f.password_field :password, :autocomplete => "off"
+      %i (leave blank if you don't want to change it)
+    .field
+      = f.label :password_confirmation
+      = f.password_field :password_confirmation, :autocomplete => "off"
+    %hr/
+    .field
+      = f.label :current_password
+      = f.password_field :current_password
+      %i (we need your current password to confirm your changes)
+    .field= f.submit "Update", class: :submit_button
+- if false
+  %h3 Cancel my account
+  %p
+    Unhappy? #{button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, class: :submit_button, :method => :delete}

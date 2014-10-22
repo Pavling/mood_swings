@@ -1,0 +1,24 @@
+!!!
+%html
+  %head
+    %title MoodSwings
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
+    = content_for :header
+    = csrf_meta_tags
+  %body
+    .wrapper
+      = render partial: 'layouts/header'
+      - if 'HomeController' == controller.class.name && !user_signed_in?
+        %section#welcome
+          %h1.animated.zoomInLeft Welcome to the Mood&nbsp;Machine
+          = link_to "Let's crack on", new_user_session_path, class: "signup_button animated zoomInRight"
+      %main
+        #page_content
+          #notices
+            %p.notice= notice
+            %p.alert= alert
+          = yield
+      .push
+    = render partial: 'layouts/footer'
