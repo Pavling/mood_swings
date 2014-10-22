@@ -98,6 +98,12 @@ form {
 
 @media screen and (max-width:640px) {
 
+  input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
   select {
     width: 100% !important;
     border-radius: 0.1875em;
