@@ -93,7 +93,42 @@ form {
       margin-bottom: $base-line-height;
       border: 1px solid $light-gray;
     }
+
+    .checkbox {
+      display: inline-block;
+      position: relative;
+
+      label {
+        border: 1px solid $base-border-color;
+        -moz-border-radius: $form-border-radius;
+        -webkit-border-radius: $form-border-radius;
+        border-radius: $form-border-radius;
+        padding: 0.5em 1.5em 0.5em 2.5em;
+        background: lighten(#ddd, 8%);
+
+        &:hover {
+          background: lighten(#ddd, 20%);
+        }
+      }
+
+      input[type="checkbox"] {
+        position: absolute;
+        margin: 0.8em;
+      }
+    }
   }
+}
+
+@media screen and (max-width:960px) {
+
+  .checkbox {
+    display: block;
+
+    label {
+      display: block;
+    }
+  }
+
 }
 
 @media screen and (max-width:640px) {

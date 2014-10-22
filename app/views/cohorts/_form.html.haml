@@ -11,11 +11,11 @@
       = f.label :name
       = f.text_field :name
 
-    .field
+    .checkbox
       = f.label :skip_email_reminders, 'Do not send email reminders', class: :skip_email_reminders
       = f.check_box :skip_email_reminders
 
-    .field
+    .checkbox
       = f.label :allow_users_to_manage_email_reminders, 'Allow users to manage email reminders', class: :skip_email_reminders
       = f.check_box :allow_users_to_manage_email_reminders
 
@@ -35,13 +35,11 @@
       = label_tag :students
       = hidden_field_tag 'cohort[student_ids][]'
       = text_field_tag :student_search, '', placeholder: 'search for students', data: {cohort_id: @cohort.id}
-      %br
       = label_tag :shim, ''
-      %ul#cohort_students
-        - @cohort.students.each do |student|
-          %li
-            = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
-            = label_tag student.name
+      - @cohort.students.each do |student|
+        .checkbox
+          = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
+          = label_tag student.name
 
     %hr
     
@@ -49,13 +47,11 @@
       = label_tag :administrators, 'Admins'
       = hidden_field_tag 'cohort[administrator_ids][]'
       = text_field_tag :administrator_search, '', placeholder: 'search for admins', data: {cohort_id: @cohort.id}
-      %br
       = label_tag :shim, ''
-      %ul#cohort_administrators
-        - @cohort.administrators.uniq.each do |administrator|
-          %li
-            = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
-            = label_tag administrator.name
+      - @cohort.administrators.uniq.each do |administrator|
+        .checkbox
+          = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
+          = label_tag administrator.name
 
     .actions
       = link_to 'Destroy', @cohort, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: :submit_button if can? :destroy, @cohort
