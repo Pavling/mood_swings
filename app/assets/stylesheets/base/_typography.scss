@@ -12,12 +12,12 @@ h1, h2, h3, h4, h5, h6 {
   line-height: $header-line-height;
   margin: 0;
   text-rendering: optimizeLegibility; // Fix the character spacing for headings
+  text-transform: uppercase;
 }
 
 h1 {
   font-size: $base-font-size * 2.25; // 16 * 2.25 = 36px
   margin-bottom: 0.5em;
-  text-transform: uppercase;
 }
 
 h2 {
@@ -64,7 +64,7 @@ hr {
   border-left: none;
   border-right: none;
   border-top: none;
-  margin: $base-line-height 0;
+  margin: 0.5em 0 1em;
 }
 
 img {
@@ -86,4 +86,33 @@ cite {
   &:before {
     content: '\2014 \00A0';
   }
+}
+
+@media screen and (max-width:640px) {
+
+  h1 {
+    font-size: $base-font-size * 2;
+    margin-bottom: 0.5em;
+  }
+
+  h2 {
+    font-size: $base-font-size * 1.75;
+  }
+
+  h3 {
+    font-size: $base-font-size * 1.5;
+  }
+
+  h4 {
+    font-size: $base-font-size * 1.25;
+  }
+
+  h5 {
+    font-size: $base-font-size * 1;
+  }
+
+  h6 {
+    font-size: $base-font-size * 0.8;
+  }
+
 }
