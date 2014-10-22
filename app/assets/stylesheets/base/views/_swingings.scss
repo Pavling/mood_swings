@@ -1,5 +1,13 @@
 #comments {
 
+  h2 {
+    margin: 0.5em 0;
+
+    &:first-child {
+      margin: 1em 0;
+    }
+  }
+
   article {
     padding: 1em;
     border-left: 0px solid red; // Must define border start point as 0px
