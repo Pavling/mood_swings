@@ -165,7 +165,7 @@ header {
           display: block;
           border-bottom: $navbar-dropdown-border;
           width: 100%;
-          padding: $navbar-padding;
+          padding: 0;
 
           &:last-child {
             border-bottom: none;
@@ -178,7 +178,7 @@ header {
           a {
             color: $navbar-background-color;
             width: 100%;
-            padding: 0;
+            padding: $navbar-padding;
           }
 
           &.dropdown {
@@ -202,11 +202,9 @@ header {
 
               li {
                 width: 100%;
-                padding: $navbar-padding;
                 border-bottom: $navbar-dropdown-border;
 
                 a {
-                  padding: 0;
                   font-weight: bold;
                 }
               }
