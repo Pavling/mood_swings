@@ -28,15 +28,18 @@
       color: $medium-gray;
       font-style: italic;
       margin: 0;
-      &:before {
-        content: "- "
-      }
     }
 
     dl:last-child, 
     dt:first-child, 
     dd:last-child {
       margin: 0;
+    }
+
+    dd {
+      &:before {
+        content: "- "
+      }
     }
 
     .score {
