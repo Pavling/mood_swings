@@ -25,7 +25,7 @@
     }
 
     p {
-      color: $red;
+      color: $medium-gray;
       font-style: italic;
       margin: 0;
       &:before {
@@ -37,6 +37,11 @@
     dt:first-child, 
     dd:last-child {
       margin: 0;
+    }
+
+    .score {
+      color: $red;
+      font-family: $header-font-family;
     }
   }
 }
