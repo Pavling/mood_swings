@@ -10,10 +10,11 @@
     .field
       = f.label :name
       = f.text_field :name
-    %hr
+    
     .field
       = label_tag :administrators, 'Admins'
       = hidden_field_tag 'campus[administrator_ids][]'
+      %hr
       #campus_administrators
         - (@campus.administrators + User.unenrolled).uniq.each do |administrator|
           .checkbox
