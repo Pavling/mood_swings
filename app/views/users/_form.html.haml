@@ -6,24 +6,25 @@
         - @user.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :email
-    - if can? :alter_email, @user
-      = f.text_field :email
-    - else
-      = @user.email
+  %fieldset
+    .field
+      = f.label :email
+      - if can? :alter_email, @user
+        = f.text_field :email
+      - else
+        = @user.email
 
-  .field
-    = f.label :name
-    = f.text_field :name
+    .field
+      = f.label :name
+      = f.text_field :name
 
-  .field
-    = f.label :cohort_id, 'Cohort'
-    = f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose', include_blank: !!f.object.cohort
+    .field
+      = f.label :cohort_id, 'Cohort'
+      = f.collection_select :cohort_id, @cohorts, :id, :name, prompt: 'Please choose', include_blank: !!f.object.cohort
 
-  .field
-    = f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders
-    = f.check_box :skip_email_reminders
+    .checkbox
+      = f.label :skip_email_reminders, 'I do not want to receive email reminders', class: :skip_email_reminders
+      = f.check_box :skip_email_reminders
 
-  .actions
-    = f.submit 'Save', class: :submit_button
+    .actions
+      = f.submit 'Save', class: :submit_button
