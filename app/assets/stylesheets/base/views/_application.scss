@@ -23,3 +23,17 @@ section#welcome {
     border-top: 20px solid $gray;
   }
 }
+
+@media screen and (max-width:960px) {
+
+  section#welcome {
+    padding: 2rem 1.5em;
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0;
+    }
+
+  }
+
+}

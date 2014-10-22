@@ -15,6 +15,10 @@ header {
       float: left;
       height: $navbar-height;
       line-height: $navbar-height;
+      background: url("logo-large.png");
+      background-position: center center;
+      background-repeat: no-repeat;
+      width: 244px;
     }
 
     img {
@@ -23,6 +27,8 @@ header {
     }
 
     #nav-icon {
+      height: $navbar-height;
+      line-height: $navbar-height;
       display: none;
       position: absolute;
       top: 0;
@@ -135,9 +141,8 @@ header {
     nav {
       line-height: $navbar-height; 
 
-      a.logo {
-        width: 100%;
-        padding: $navbar-padding;
+      a.logo { 
+        margin-left: 1.5em;
       }
 
       #nav-icon {
@@ -211,6 +216,27 @@ header {
       }
     }
   }
+}
+
+@media screen and (max-width:640px) {
+  
+  header {
+    nav {
+      a.logo {
+        background: url('logo-small.png');
+        background-position: center center;
+        background-repeat: no-repeat;
+        width: 200px;
+      }
+
+      #nav-icon {
+        &:before {
+          font-size: 1.5em;
+        }
+      }
+    }
+  }
+
 }
 
 
