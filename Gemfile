@@ -25,7 +25,6 @@ group :development, :test do
   gem 'dotenv-rails'
 
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
   gem 'faker'
 end
 
@@ -35,6 +34,7 @@ group :test do
   gem 'launchy'
   gem 'simplecov', '~> 0.7.1', :require => false
   gem 'database_cleaner'
+  gem 'factory_girl_rails'
 end
 
 gem 'letter_opener', group: :development
