@@ -57,7 +57,11 @@ describe User do
   end
 
   describe '.excluding' do
-    it 'excludes a users from a finder'
+    it 'excludes a users from a finder' do
+      user = FactoryGirl.create(:user)
+      5.times { FactoryGirl.create(:user) }
+      expect(User.excluding(user)).to_not include(User.find(user))
+    end
     it 'excludes an array of users from a finder'
   end
 
