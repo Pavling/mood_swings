@@ -2,11 +2,19 @@
   @include clearfix;
 
   .answer {
-    min-width: 320px;
-    width: 33.33%;
+    min-width: 300px;
+    width: 300px;
     float: left;
-    padding: 3em 1.5em;
+
+    // Similar to the form
     text-align: center;
+    background: $lighter-gray;
+    border: 1px solid $base-border-color;
+    padding: $base-line-height;
+
+    &:nth-child(even) {
+      margin: 0 $base-line-height $base-line-height;
+    }
 
     // Fix for 5 question answer-set
     &:nth-child(4) {
@@ -15,6 +23,8 @@
 
     .label {
       height: 3rem;
+      font-weight: bold;
+      text-rendering: optimizeLegibility;
     }
 
     textarea {
@@ -64,6 +74,8 @@
 
     .answer {
       width: 100%;
+      padding: 1.5em;
+      margin: 0 0 $base-line-height !important;
 
       &:nth-child(4) {
         margin-left: 0;
