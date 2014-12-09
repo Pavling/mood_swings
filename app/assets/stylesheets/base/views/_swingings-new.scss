@@ -5,7 +5,7 @@
     min-width: 320px;
     width: 33.33%;
     float: left;
-    padding: 0 1.5em;
+    padding: 3em 1.5em;
     text-align: center;
 
     // Fix for 5 question answer-set
@@ -13,12 +13,25 @@
       margin-left: 16.665%;
     }
 
-    label {
-      min-height: 3.5rem;
+    .label {
+      height: 3rem;
     }
 
     textarea {
       max-height: 6rem;
+      @include box-sizing(border-box);
+      @include transition(border-color);
+      background-color: white;
+      -moz-border-radius: $form-border-radius;
+      -webkit-border-radius: $form-border-radius;
+      border-radius: $form-border-radius;
+      border: 1px solid $form-border-color;
+      box-shadow: $form-box-shadow;
+      font-family: $form-font-family;
+      font-size: $form-font-size;
+      margin-bottom: $base-line-height / 2;
+      padding: ($base-line-height / 3) ($base-line-height / 3);
+      width: 100%;
     }
 
     .knob-slider {
