@@ -71,6 +71,12 @@ header {
           }
         }
 
+        &.swing {
+          a {
+            color: $navbar-link-hover-color;
+          }
+        }
+
         // Selects parent li when child ul > li is hovered over
         &.dropdown:hover > a {
           color: $navbar-link-hover-color;
@@ -169,10 +175,6 @@ header {
 
           &:last-child {
             border-bottom: none;
-          }
-
-          &.greeting {
-            display: none;
           }
 
           a {

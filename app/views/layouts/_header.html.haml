@@ -3,8 +3,8 @@
     = link_to "", root_path, class: "logo"
     %ul#menu
       - if signed_in?
-        %li.greeting
-          Hey, #{current_user.email}
+        %li.swing
+          = link_to "Swing your mood!", root_path
         %li.dropdown
           %a{:href => "#"}
             Manage
