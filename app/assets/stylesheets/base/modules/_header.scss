@@ -223,9 +223,7 @@ header {
   header {
     nav {
       a.logo {
-        background: url('logo-small.png');
-        background-position: center center;
-        background-repeat: no-repeat;
+        background: url('logo-small.png') center center no-repeat !important;
         width: 200px;
       }
 
