@@ -18,7 +18,6 @@
 
   #hoverContainer {
     display: none;
-    width: 158px; // Allow for border 
     padding: 1.5em 1.5em 1.5em 0;
     float: right;
 
@@ -46,7 +45,7 @@
 @media screen and (min-width: 960px) {
   
   #myChart {
-    max-width: 800px;
+    max-width: 100%;
   }
 
   #hoverContainer {
@@ -57,7 +56,7 @@
 @media screen and (max-width:960px) {
 
   #myChart {
-    max-width: 960px;
+    max-width: 100%;
   }
 
   #hoverContainer {

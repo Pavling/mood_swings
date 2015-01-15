@@ -153,6 +153,14 @@ form {
 
 }
 
+// Moved outside form for #hoverContainer styling, to clean up
+fieldset {
+  background: $lighter-gray;
+  border: 1px solid $base-border-color;
+  margin: 0 0 ($base-line-height / 2) 0;
+  padding: $base-line-height;
+}
+
 // Fix for enlarging select for mobile
 @media screen and (-webkit-min-device-pixel-ratio:0) {  /*safari and chrome*/
   select {

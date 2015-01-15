@@ -43,7 +43,9 @@
 
 .chart-container
   #myChart
-  #hoverContainer
+
+%fieldset
+  #hoverContainer  
 
 =content_tag :div, "", id: "line-chart", data: {data: @data.to_json, keys: @keys.to_json, labels: @labels, x_labels: @x_labels}
 
