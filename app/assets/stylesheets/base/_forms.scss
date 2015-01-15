@@ -1,124 +1,124 @@
 form {
   @include clearfix;
+}
 
-  fieldset {
-    background: $lighter-gray;
-    border: 1px solid $base-border-color;
-    margin: 0 0 ($base-line-height / 2) 0;
-    padding: $base-line-height;
+fieldset {
+  background: $lighter-gray;
+  border: 1px solid $base-border-color;
+  margin: 0 0 ($base-line-height / 2) 0;
+  padding: $base-line-height;
 
-    input,
-    label,
-    select {
+  input,
+  label,
+  select {
+    display: block;
+    font-family: $form-font-family;
+    font-size: $form-font-size;
+
+    &:first-child {
       display: block;
-      font-family: $form-font-family;
-      font-size: $form-font-size;
-
-      &:first-child {
-        display: block;
-      }
     }
+  }
+
+  label {
+    display: inline-block; // Important for Listing Mood Swing
+    margin-bottom: $base-line-height / 4;
+
+    &:first-child {
+      font-weight: bold;
+    }
+
+    &.required:after {
+      content: "*";
+    }
+
+    abbr {
+      display: none;
+    }
+  }
+
+  textarea,
+  #{$all-text-inputs},
+  select[multiple=multiple] {
+    @include box-sizing(border-box);
+    @include transition(border-color);
+    background-color: white;
+    -moz-border-radius: $form-border-radius;
+    -webkit-border-radius: $form-border-radius;
+    border-radius: $form-border-radius;
+    border: 1px solid $form-border-color;
+    box-shadow: $form-box-shadow;
+    font-family: $form-font-family;
+    font-size: $form-font-size;
+    margin-bottom: $base-line-height / 2;
+    padding: ($base-line-height / 3) ($base-line-height / 3);
+    width: 100%;
+
+    &:hover {
+      border-color: $form-border-color-hover;
+    }
+
+    &:focus {
+      border-color: $form-border-color-focus;
+      box-shadow: $form-box-shadow-focus;
+      outline: none;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input[type="search"] {
+    @include appearance(none);
+  }
+
+  input[type="radio"] {
+    display: inline;
+    margin-right: $base-line-height / 4;
+  }
+
+  input[type="checkbox"] {
+    display: inline;
+    margin-right: $base-line-height / 4;
+  }
+
+  input[type="file"] {
+    margin-bottom: $base-line-height / 2;
+    padding-bottom: ($base-line-height / 3);
+    width: 100%;
+  }
+
+  select {
+    width: 100%;
+    margin-bottom: $base-line-height;
+    border: 1px solid $light-gray;
+  }
+
+  .checkbox {
+    display: inline-block;
+    position: relative;
 
     label {
-      display: inline-block; // Important for Listing Mood Swing
-      margin-bottom: $base-line-height / 4;
-
-      &:first-child {
-        font-weight: bold;
-      }
-
-      &.required:after {
-        content: "*";
-      }
-
-      abbr {
-        display: none;
-      }
-    }
-
-    textarea,
-    #{$all-text-inputs},
-    select[multiple=multiple] {
-      @include box-sizing(border-box);
-      @include transition(border-color);
-      background-color: white;
+      border: 1px solid $base-border-color;
       -moz-border-radius: $form-border-radius;
       -webkit-border-radius: $form-border-radius;
       border-radius: $form-border-radius;
-      border: 1px solid $form-border-color;
-      box-shadow: $form-box-shadow;
-      font-family: $form-font-family;
-      font-size: $form-font-size;
-      margin-bottom: $base-line-height / 2;
-      padding: ($base-line-height / 3) ($base-line-height / 3);
-      width: 100%;
+      padding: 0.5em 1.5em 0.5em 2.5em;
+      background: lighten(#ddd, 8%);
+
+      &:after {
+        content: " "
+      }
 
       &:hover {
-        border-color: $form-border-color-hover;
+        background: lighten(#ddd, 20%);
       }
-
-      &:focus {
-        border-color: $form-border-color-focus;
-        box-shadow: $form-box-shadow-focus;
-        outline: none;
-      }
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
-    input[type="search"] {
-      @include appearance(none);
-    }
-
-    input[type="radio"] {
-      display: inline;
-      margin-right: $base-line-height / 4;
     }
 
     input[type="checkbox"] {
-      display: inline;
-      margin-right: $base-line-height / 4;
-    }
-
-    input[type="file"] {
-      margin-bottom: $base-line-height / 2;
-      padding-bottom: ($base-line-height / 3);
-      width: 100%;
-    }
-
-    select {
-      width: 100%;
-      margin-bottom: $base-line-height;
-      border: 1px solid $light-gray;
-    }
-
-    .checkbox {
-      display: inline-block;
-      position: relative;
-
-      label {
-        border: 1px solid $base-border-color;
-        -moz-border-radius: $form-border-radius;
-        -webkit-border-radius: $form-border-radius;
-        border-radius: $form-border-radius;
-        padding: 0.5em 1.5em 0.5em 2.5em;
-        background: lighten(#ddd, 8%);
-
-        &:after {
-          content: " "
-        }
-
-        &:hover {
-          background: lighten(#ddd, 20%);
-        }
-      }
-
-      input[type="checkbox"] {
-        position: absolute;
-        margin: 0.8em;
-      }
+      position: absolute;
+      margin: 0.8em;
     }
   }
 }
