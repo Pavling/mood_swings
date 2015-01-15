@@ -53,7 +53,7 @@ $(function() {
                       height: $parent.outerHeight() - 25,
                       top: $parent.position().top,
                       left: $parent.position().left,
-                      backgroundColor: 'rgba(255,255,255,0.7)',
+                      backgroundColor: '#f7f7f7',
                       zIndex: 10
                   }
       }).appendTo( $parent );
