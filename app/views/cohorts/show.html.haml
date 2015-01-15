@@ -5,26 +5,32 @@
   .field
     = label_tag :name
     = @cohort.name
+  %br 
 
   .field
     = label_tag :campus
     = @cohort.campus.try :name
+  %br 
 
   .field
     = label_tag :start
     = @cohort.start_on
+  %br 
 
   .field
     = label_tag :end_on
     = @cohort.end_on
+  %br 
 
   .field
     = label_tag :skip_email_reminders, 'Do not send email reminders', class: :skip_email_reminders
     = @cohort.skip_email_reminders
+  %br 
 
   .field
     = label_tag :allow_users_to_manage_email_reminders, 'Allow users to manage email reminders', class: :skip_email_reminders
     = @cohort.allow_users_to_manage_email_reminders
+  %br 
 
   -if @cohort.students.any?
     .field
