@@ -4,16 +4,8 @@ section#welcome {
   padding: 10rem 0;
   text-align: center;
   position: relative;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: top center;
-  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.701961), rgba(0, 0, 0, 0.701961)), url(https://s3.amazonaws.com/ga-core/core/core-static/metros/default-background.jpg); /* For Safari 5.1 to 6.0 */
-  background-image: -o-linear-gradient(rgba(0, 0, 0, 0.701961), rgba(0, 0, 0, 0.701961)), url(https://s3.amazonaws.com/ga-core/core/core-static/metros/default-background.jpg); /* For Opera 11.1 to 12.0 */
-  background-image: -moz-linear-gradient(rgba(0, 0, 0, 0.701961), rgba(0, 0, 0, 0.701961)), url(https://s3.amazonaws.com/ga-core/core/core-static/metros/default-background.jpg); /* For Firefox 3.6 to 15 */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.701961), rgba(0, 0, 0, 0.701961)), url(https://s3.amazonaws.com/ga-core/core/core-static/metros/default-background.jpg);
 
   h1 {
-    color: white;
     font-size: 3.5rem;
     margin-bottom: 0;
   }
