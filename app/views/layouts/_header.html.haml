@@ -4,7 +4,10 @@
     %ul#menu
       - if signed_in?
         %li.swing
-          = link_to "Swing your mood!", root_path
+          - if current_user.role == 'admin'
+            = link_to "Analytics", root_path
+          - else 
+            = link_to "Swing your mood!", root_path
         %li.dropdown
           %a{:href => "#"}
             Manage
