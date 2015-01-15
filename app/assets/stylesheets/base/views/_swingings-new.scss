@@ -5,6 +5,9 @@
     min-width: 300px;
     width: 300px;
     float: left;
+    -moz-border-radius: $form-border-radius;
+    -webkit-border-radius: $form-border-radius;
+    border-radius: $form-border-radius;
 
     // Similar to the form
     text-align: center;
