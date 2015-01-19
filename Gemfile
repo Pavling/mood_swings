@@ -24,7 +24,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'dotenv-rails'
 
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 2.14'
   gem 'factory_girl_rails'
   gem 'faker'
 end
