@@ -1,0 +1,39 @@
+section#welcome {
+  background: $gray;
+  width: 100%;
+  padding: 10rem 0;
+  text-align: center;
+  position: relative;
+
+  h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    margin-left: -20px;
+    width: 0; 
+    height: 0; 
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid $gray;
+  }
+}
+
+@media screen and (max-width:960px) {
+
+  section#welcome {
+    padding: 2rem 1.5em;
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0;
+    }
+
+  }
+
+}

@@ -1,0 +1,186 @@
+form {
+  @include clearfix;
+}
+
+fieldset {
+  background: $lighter-gray;
+  border: 1px solid $base-border-color;
+  margin: 0 0 ($base-line-height / 2) 0;
+  padding: $base-line-height;
+
+  input,
+  label,
+  select {
+    display: block;
+    font-family: $form-font-family;
+    font-size: $form-font-size;
+
+    &:first-child {
+      display: block;
+    }
+  }
+
+  label {
+    display: inline-block; // Important for Listing Mood Swing
+    margin-bottom: $base-line-height / 4;
+
+    &:first-child {
+      font-weight: bold;
+    }
+
+    &.required:after {
+      content: "*";
+    }
+
+    abbr {
+      display: none;
+    }
+  }
+
+  textarea,
+  #{$all-text-inputs},
+  select[multiple=multiple] {
+    @include box-sizing(border-box);
+    @include transition(border-color);
+    background-color: white;
+    -moz-border-radius: $form-border-radius;
+    -webkit-border-radius: $form-border-radius;
+    border-radius: $form-border-radius;
+    border: 1px solid $form-border-color;
+    box-shadow: $form-box-shadow;
+    font-family: $form-font-family;
+    font-size: $form-font-size;
+    margin-bottom: $base-line-height / 2;
+    padding: ($base-line-height / 3) ($base-line-height / 3);
+    width: 100%;
+
+    &:hover {
+      border-color: $form-border-color-hover;
+    }
+
+    &:focus {
+      border-color: $form-border-color-focus;
+      box-shadow: $form-box-shadow-focus;
+      outline: none;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input[type="search"] {
+    @include appearance(none);
+  }
+
+  input[type="radio"] {
+    display: inline;
+    margin-right: $base-line-height / 4;
+  }
+
+  input[type="checkbox"] {
+    display: inline;
+    margin-right: $base-line-height / 4;
+  }
+
+  input[type="file"] {
+    margin-bottom: $base-line-height / 2;
+    padding-bottom: ($base-line-height / 3);
+    width: 100%;
+  }
+
+  select {
+    width: 100%;
+    margin-bottom: $base-line-height;
+    border: 1px solid $light-gray;
+  }
+
+  .checkbox {
+    display: inline-block;
+    position: relative;
+
+    label {
+      border: 1px solid $base-border-color;
+      -moz-border-radius: $form-border-radius;
+      -webkit-border-radius: $form-border-radius;
+      border-radius: $form-border-radius;
+      padding: 0.5em 1.5em 0.5em 2.5em;
+      background: lighten(#ddd, 8%);
+
+      &:after {
+        content: " "
+      }
+
+      &:hover {
+        background: lighten(#ddd, 20%);
+      }
+    }
+
+    input[type="checkbox"] {
+      position: absolute;
+      margin: 0.8em;
+    }
+  }
+}
+
+@media screen and (max-width:960px) {
+
+  .checkbox {
+    display: block;
+    width: 100%;
+
+    label {
+      display: block;
+    }
+  }
+
+}
+
+@media screen and (max-width:640px) {
+
+  input[type="text"], textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  select {
+    width: 100% !important;
+    border-radius: 0.1875em;
+    -moz-border-radius: 0.1875em;
+    -webkit-border-radius: 0.1875em;
+  }
+
+}
+
+// Moved outside form for #hoverContainer styling, to clean up
+fieldset {
+  background: $lighter-gray;
+  border: 1px solid $base-border-color;
+  margin: 0 0 ($base-line-height / 2) 0;
+  padding: $base-line-height;
+}
+
+// Fix for enlarging select for mobile
+@media screen and (-webkit-min-device-pixel-ratio:0) {  /*safari and chrome*/
+  select {
+    height: 2.2rem;
+    line-height: 2.2rem;
+    background: $white;
+  } 
+}
+select::-moz-focus-inner { /*Remove button padding in FF*/ 
+  border: 0;
+  padding: 0;
+}
+@-moz-document url-prefix() { /* targets Firefox only */
+  select {
+    padding: 1.1rem 0 !important;
+  }
+}        
+@media screen\0 { /* IE Hacks: targets IE 8, 9 and 10 */        
+  select {
+    height: 2.2rem;
+    line-height: 2.2rem;
+  }     
+}

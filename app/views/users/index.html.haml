@@ -1,24 +1,31 @@
 %h1 Listing users
 
-%table
+%table#mobile.responsive
+  %tr#administering
+    %td Admin
+
+%table.responsive
   %tr
     %th Name
-    %th Email
-    %th Skip Reminders?
-    %th Cohort
-    %th Administering
-    %th
-    %th
+    %th.hide Skip Reminders?
+    %th.hide Cohort
+    %th.hide Administering
+    %th.hide
+    %th.hide Manage
 
   - @users.each do |user|
-    %tr
-      %td= user.name
-      %td= user.email
-      %td= user.skip_email_reminders
-      %td= user.cohort.try(:name)
-      %td= user.administered_cohorts.map(&:name).to_sentence
-      %td= link_to 'Show', user if can? :show, user
-      %td= link_to 'Edit', edit_user_path(user) if can? :update, user
+    %tr{:class => ('admin' if user.administered_cohorts.map(&:name).any?)}
+      %td= link_to user.name, user
+      %td.hide
+        = user.skip_email_reminders
+      %td.hide
+        = user.cohort.try(:name)
+      %td.hide
+        = user.administered_cohorts.map(&:name).to_sentence
+      %td.hide
+        = link_to 'Show', user
+      %td.hide
+        = link_to 'Edit', edit_user_path(user) if can? :update, user
 
 %br
 

@@ -1,0 +1,63 @@
+.signup_button,
+.submit_button,
+.button, 
+button,
+input[type="submit"] {
+  @extend %button;
+  @include appearance(none);
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  float: right;
+  -webkit-box-shadow: 0 3px 0 0 $dark-red;
+  -moz-box-shadow: 0 3px 0 0 $dark-red;
+  box-shadow: 0 3px 0 0 $dark-red;
+  margin: 1rem 0 0 0;
+}
+
+.signup_button {
+  float: none;
+  line-height: 1.5;
+}
+
+#actions {
+  @include clearfix;
+  text-align: right;
+
+  li {
+    margin: 1rem 0.1rem 0 0;
+    display: inline-block;
+    &:last-child {
+      margin: 1rem 0 0 0;
+    }
+  }
+  
+}
+
+#button-share-mood {
+  margin: 0 auto !important;
+}
+
+@media screen and (max-width:640px) {
+
+  .submit_button, 
+  button,
+  .button,
+  input[type="submit"] {
+    width: 100%;
+    line-height: 1.5;
+  }
+
+  #actions {
+    li {
+      display: block;
+      a {
+        width: 100%;
+      }
+    }
+  }
+
+}

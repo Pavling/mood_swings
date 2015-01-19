@@ -1,0 +1,43 @@
+%header
+  %nav
+    = link_to "", root_path, class: "logo"
+    %ul#menu
+      - if signed_in?
+        %li.swing
+          - if current_user.role == 'admin'
+            = link_to "Analytics", root_path
+          - else 
+            = link_to "Swing your mood!", root_path
+        %li.dropdown
+          %a{:href => "#"}
+            Manage
+            %span  ▾
+          %ul
+            %li
+              = link_to 'Historic Moods', answer_sets_path
+            - if can? :invite, User
+              %li
+                = link_to 'Invite', new_user_invitation_path
+            - if can? :read, Metric
+              %li
+                = link_to 'Metrics', metrics_path
+            - if can? :read, Cohort
+              %li
+                = link_to 'Cohorts', cohorts_path
+            - if can? :read, Campus
+              %li
+                = link_to 'Campuses', campuses_path
+            - if can? :read, User
+              %li
+                = link_to 'Users', users_path
+        %li
+          = link_to 'My Profile', edit_user_registration_path
+        %li
+          = link_to 'Sign Out', destroy_user_session_path, method: :delete
+      - else
+        %li
+          - unless params[:controller] == "devise/sessions" && params[:action] == "new"
+            = link_to 'Sign In', new_user_session_path
+            
+    - unless params[:controller] == "devise/sessions" && params[:action] == "new"
+      %a#nav-icon{:href => "#"}

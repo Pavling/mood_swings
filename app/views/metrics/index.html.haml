@@ -1,21 +1,23 @@
 %h1 Listing metrics
 
-%table
+%table.responsive
   %tr
     %th Measure
-    %th Active
-    %th
-    %th
-    %th
+    %th.hide Active
+    %th.hide
+    %th.hide Manage
 
   - @metrics.each do |metric|
     %tr
-      %td= metric.measure
-      %td= metric.active
-      %td= link_to 'Show', metric if can? :show, metric
-      %td= link_to 'Edit', edit_metric_path(metric) if can? :edit, metric
-      %td= link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, metric 
-
-%br
+      - if can? :show, metric
+        %td= link_to metric.measure, metric
+      - else
+        %td= metric.measure
+      %td.hide
+        = metric.active
+      %td.hide
+        = link_to 'Edit', edit_metric_path(metric) if can? :edit, metric
+      %td.hide
+        = link_to 'Destroy', metric, :method => :delete, :data => { :confirm => 'Are you sure?' } if can? :destroy, metric
 
 = link_to 'New Metric', new_metric_path, class: :submit_button

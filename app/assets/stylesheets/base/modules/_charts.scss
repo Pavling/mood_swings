@@ -1,0 +1,66 @@
+.chart-container { // Similar to form
+  @include clearfix;
+  margin: 1em 0 0 0;
+  margin: 1.5em 0;
+  background: lighten($light-blue, 15%);
+
+  #myChart {
+    display: none;
+    width: 100%;
+    padding: 1.5em;
+    height: 0; // Will be set using javascript as chart will not show without
+    float: left;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+  }
+
+  #hoverContainer {
+    display: none;
+    padding: 1.5em 1.5em 1.5em 0;
+    float: right;
+
+    .morris-hover {
+      @include clearfix;
+      position: relative;
+      text-align: right;
+    }
+
+    .morris-hover.morris-default-style {
+    }
+
+    .morris-hover.morris-default-style .morris-hover-row-label {
+      font-weight: bold;
+      margin: 0.25em 0;
+    }
+
+    .morris-hover.morris-default-style .morris-hover-point {
+      white-space: nowrap; 
+      margin:0.1em 0;
+    }
+  }
+}
+
+@media screen and (min-width: 960px) {
+  
+  #myChart {
+    max-width: 100%;
+  }
+
+  #hoverContainer {
+    display: block;
+  }
+}
+
+@media screen and (max-width:960px) {
+
+  #myChart {
+    max-width: 100%;
+  }
+
+  #hoverContainer {
+    display: none !important;
+  }
+
+}

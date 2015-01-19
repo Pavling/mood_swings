@@ -1,0 +1,50 @@
+#comments {
+
+  h2 {
+    margin: 0.5em 0;
+
+    &:first-child {
+      margin: 1em 0;
+    }
+  }
+
+  article {
+    padding: 1em;
+    border-left: 0px solid red; // Must define border start point as 0px
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+
+    &:nth-of-type(even) {
+      background: $lighter-gray;
+    }
+
+    &:hover {
+      border-left: 0.5em $red solid;
+    }
+
+    p {
+      color: $medium-gray;
+      font-style: italic;
+      margin: 0;
+    }
+
+    dl:last-child, 
+    dt:first-child, 
+    dd:last-child {
+      margin: 0;
+    }
+
+    dd {
+      &:before {
+        content: "- "
+      }
+    }
+
+    .score {
+      color: $red;
+      font-family: $header-font-family;
+    }
+  }
+}

@@ -1,10 +1,14 @@
-%p
-  %b Measure:
-  = @metric.measure
-%p
-  %b Active:
-  = @metric.active
 
-= link_to 'Edit', edit_metric_path(@metric)
-\|
-= link_to 'Back', metrics_path
+%fieldset
+  .field
+    = label_tag :measure 
+    = @metric.measure
+  %br
+
+  .field
+    = label_tag :active
+    = @metric.active
+
+%ul#actions
+  %li= link_to 'Edit', edit_metric_path(@metric), class: :button
+  %li= link_to 'Back', metrics_path, class: :button

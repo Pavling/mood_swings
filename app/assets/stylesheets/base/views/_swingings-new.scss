@@ -1,0 +1,90 @@
+#answers {
+  @include clearfix;
+
+  .answer {
+    min-width: 300px;
+    width: 300px;
+    float: left;
+    -moz-border-radius: $form-border-radius;
+    -webkit-border-radius: $form-border-radius;
+    border-radius: $form-border-radius;
+
+    // Similar to the form
+    text-align: center;
+    background: $lighter-gray;
+    border: 1px solid $base-border-color;
+    padding: $base-line-height;
+
+    &:nth-child(even) {
+      margin: 0 $base-line-height $base-line-height;
+    }
+
+    // Fix for 5 question answer-set
+    &:nth-child(4) {
+      margin-left: 16.665%;
+    }
+
+    .label {
+      height: 3rem;
+      font-weight: bold;
+      text-rendering: optimizeLegibility;
+    }
+
+    textarea {
+      max-height: 6rem;
+      @include box-sizing(border-box);
+      @include transition(border-color);
+      background-color: white;
+      -moz-border-radius: $form-border-radius;
+      -webkit-border-radius: $form-border-radius;
+      border-radius: $form-border-radius;
+      border: 1px solid $form-border-color;
+      box-shadow: $form-box-shadow;
+      font-family: $form-font-family;
+      font-size: $form-font-size;
+      margin-bottom: $base-line-height / 2;
+      padding: ($base-line-height / 3) ($base-line-height / 3);
+      width: 100%;
+
+      &:focus {
+        border-color: $form-border-color-focus;
+        box-shadow: $form-box-shadow-focus;
+        outline: none;
+      }
+    }
+    
+    .knob-slider {
+      height: 75px;
+      margin: 1em 0 1.5em;
+      position: relative;
+
+      div {
+        width: 100%;
+        height: 100%;
+
+        input.knob {
+          display: inline-block; 
+          margin: 0 auto;
+          box-shadow: none !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width:960px) {
+
+  #answers {
+
+    .answer {
+      width: 100%;
+      padding: 1.5em;
+      margin: 0 0 $base-line-height !important;
+
+      &:nth-child(4) {
+        margin-left: 0;
+      }
+    }
+  }
+
+}

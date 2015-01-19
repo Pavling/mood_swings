@@ -1,60 +1,60 @@
 = form_for @cohort do |f|
-  - if @cohort.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@cohort.errors.count, "error")} prohibited this cohort from being saved:"
-      %ul
-        - @cohort.errors.full_messages.each do |msg|
-          %li= msg
+  %fieldset
+    - if @cohort.errors.any?
+      #error_explanation
+        %h2= "#{pluralize(@cohort.errors.count, "error")} prohibited this cohort from being saved:"
+        %ul
+          - @cohort.errors.full_messages.each do |msg|
+            %li= msg
 
-  .field
-    = f.label :name
-    = f.text_field :name
+    .field
+      = f.label :name
+      = f.text_field :name
 
-  .field
-    = f.label :skip_email_reminders, 'Do not send email reminders', class: :skip_email_reminders
-    = f.check_box :skip_email_reminders
+    .checkbox
+      = f.check_box :skip_email_reminders
+      = f.label :skip_email_reminders, 'Do not send email reminders', class: :skip_email_reminders
 
-  .field
-    = f.label :allow_users_to_manage_email_reminders, 'Allow users to manage email reminders', class: :skip_email_reminders
-    = f.check_box :allow_users_to_manage_email_reminders
+    .checkbox
+      = f.check_box :allow_users_to_manage_email_reminders
+      = f.label :allow_users_to_manage_email_reminders, 'Allow users to manage email reminders', class: :skip_email_reminders
 
-  .field
-    = f.label :campus_id, 'Campus'
-    = f.collection_select :campus_id, @campuses, :id, :name, prompt: true
+    .field
+      = f.label :campus_id, 'Campus'
+      = f.collection_select :campus_id, @campuses, :id, :name, prompt: true
 
-  .field
-    = f.label :start_on
-    = f.text_field :start_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+    .field
+      = f.label :start_on
+      = f.text_field :start_on, placeholder: 'yyyy-mm-dd', class: :datepicker
 
-  .field
-    = f.label :end_on
-    = f.text_field :end_on, placeholder: 'yyyy-mm-dd', class: :datepicker
+    .field
+      = f.label :end_on
+      = f.text_field :end_on, placeholder: 'yyyy-mm-dd', class: :datepicker
 
-  .field
-    = label_tag :students
-    = hidden_field_tag 'cohort[student_ids][]'
-    = text_field_tag :student_search, '', placeholder: 'search for students', data: {cohort_id: @cohort.id}
-    %br
-    = label_tag :shim, ''
-    %ul#cohort_students
-      - @cohort.students.each do |student|
-        %li
-          = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
-          = label_tag student.name
+    .field
+      = label_tag :students
+      = hidden_field_tag 'cohort[student_ids][]'
+      = text_field_tag :student_search, '', placeholder: 'search for students', data: {cohort_id: @cohort.id}
+      = label_tag :shim, ''
+      #cohort_students
+        - @cohort.students.each do |student|
+          .checkbox
+            = check_box_tag :student_ids, student.id, @cohort.students.include?(student), name: 'cohort[student_ids][]'
+            = label_tag student.name
 
-  %hr
+    %hr
+    
+    .field
+      = label_tag :administrators, 'Admins'
+      = hidden_field_tag 'cohort[administrator_ids][]'
+      = text_field_tag :administrator_search, '', placeholder: 'search for admins', data: {cohort_id: @cohort.id}
+      = label_tag :shim, ''
+      #cohort_administrators
+        - @cohort.administrators.uniq.each do |administrator|
+          .checkbox
+            = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
+            = label_tag administrator.name
 
-  .field
-    = label_tag :administrators, 'Admins'
-    = hidden_field_tag 'cohort[administrator_ids][]'
-    = text_field_tag :administrator_search, '', placeholder: 'search for admins', data: {cohort_id: @cohort.id}
-    %br
-    = label_tag :shim, ''
-    %ul#cohort_administrators
-      - @cohort.administrators.uniq.each do |administrator|
-        %li
-          = check_box_tag :administrator_ids, administrator.id, @cohort.administrators.include?(administrator), name: 'cohort[administrator_ids][]'
-          = label_tag administrator.name
-
-  .actions
-    = f.submit 'Save', class: :submit_button
+    .actions
+      = link_to 'Destroy', @cohort, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: :submit_button if can? :destroy, @cohort
+      = f.submit 'Save', class: :submit_button
