@@ -15,9 +15,8 @@ header {
       float: left;
       height: $navbar-height;
       line-height: $navbar-height;
-      background: url("logo-large.png");
-      background-position: center center;
-      background-repeat: no-repeat;
+      background: url("logo-400.png") center center no-repeat;
+      background-size: 244px 24px !important;
       width: 244px;
     }
 
@@ -223,7 +222,8 @@ header {
   header {
     nav {
       a.logo {
-        background: url('logo-small.png') center center no-repeat !important;
+        background: url('logo-400.png') center center no-repeat !important;
+        background-size: 200px 22px !important;
         width: 200px;
       }
 
