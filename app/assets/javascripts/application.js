@@ -13,7 +13,17 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
-//= require_tree ./global
+// 
+//= VENDOR
+//= require jquery-ui-1.10.4.custom
+//= require jquery.knob
+//= require jquery.noty.packaged
+//= require morris
+//= require noty-config
+//= require raphael-min
+// 
+//= require_tree ./answer_set_index
+//= require_self
 
 $(function() {
   $(".knob").knob({
