@@ -30,11 +30,11 @@
       = f.label :name
       = f.text_field :name
     .field
-      = f.label :password
+      = f.label :password, "Change password"
       = f.password_field :password, :autocomplete => "off"
       %i (leave blank if you don't want to change it)
     .field
-      = f.label :password_confirmation
+      = f.label :password_confirmation, "Change password confirmation"
       = f.password_field :password_confirmation, :autocomplete => "off"
     %hr/
     .field
