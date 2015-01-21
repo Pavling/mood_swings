@@ -1,17 +1,15 @@
-@charset 'utf-8';
-
-/*
+/* VENDOR
+ *= require reset/_meyer-reset
+ *= require animate/animate.min
+ *= require ui-lightness/jquery-ui-1.10.4.custom.min
+ *= require noty/_noty 
  *= require_self
 */
 
-// Vendor
-@import 'base/vendor/ui-lightness/jquery-ui-1.10.4.custom.css';
-@import 'base/vendor/animate/animate.css';
+@charset 'utf-8';
 
 // Local
-@import 'base/reset/_meyer-reset.scss';
 @import 'bourbon';
 @import 'base/grid-settings';
 @import 'neat';
 @import 'base/base';
-

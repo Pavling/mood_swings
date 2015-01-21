@@ -1,9 +1,10 @@
 section#welcome {
   background: $gray;
   width: 100%;
-  padding: 10rem 0;
+  padding: 2rem 0;
   text-align: center;
   position: relative;
+  z-index: -2;
 
   h1 {
     font-size: 3.5rem;
