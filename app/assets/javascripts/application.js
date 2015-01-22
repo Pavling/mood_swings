@@ -22,7 +22,6 @@
 //= require noty-config
 //= require raphael-min
 // 
-//= require_tree ./answer_set_index
 //= require_self
 
 $(function() {
