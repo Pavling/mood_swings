@@ -14,7 +14,10 @@ gem 'high_voltage'
 gem 'turbolinks'
 gem 'jquery-turbolinks'
 
-gem 'newrelic_rpm', group: :production
+group :production do
+  gem 'newrelic_rpm'
+  gem 'rails_12factor'
+end
 
 group :development, :test do
   gem 'pry-rails'
@@ -23,7 +26,6 @@ group :development, :test do
   gem 'binding_of_caller'
   gem 'better_errors'
   gem 'dotenv-rails'
-
   gem 'rspec-rails', '~> 2.14'
   gem 'factory_girl_rails'
   gem 'faker'
