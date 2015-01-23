@@ -47,6 +47,10 @@ pfdintextcomppro-medium.ttf: pfdintextcomppro-medium-f8e6364fc7e6f9f8424ea4c6ea2
 pfdintextcomppro-medium/index.ttf: pfdintextcomppro-medium-f8e6364fc7e6f9f8424ea4c6ea263ba8.ttf
 pfdintextcomppro-medium.woff: pfdintextcomppro-medium-6884dc9f0811d1e7c2f85adba4a125e0.woff
 pfdintextcomppro-medium/index.woff: pfdintextcomppro-medium-6884dc9f0811d1e7c2f85adba4a125e0.woff
+apple-touch-icon-152x152.png: apple-touch-icon-152x152-889fb0b687336310a82bb5a53c5cf2b2.png
+apple-touch-icon-152x152/index.png: apple-touch-icon-152x152-889fb0b687336310a82bb5a53c5cf2b2.png
+favicon.ico: favicon-cce3aaa2a5ff1560b7a6a4f894beef3c.ico
+favicon/index.ico: favicon-cce3aaa2a5ff1560b7a6a4f894beef3c.ico
 logo-400.png: logo-400-caafb60d504f39b70539b0ab822a371a.png
 logo-400/index.png: logo-400-caafb60d504f39b70539b0ab822a371a.png
 logo-large.png: logo-large-72ecc168258af243c6180e1052776064.png

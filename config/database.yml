@@ -45,5 +45,5 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: mood_swings_development
+  database: mood_swings_production
   pool: 5
